@@ -1,486 +1,442 @@
-use std::mem::transmute;
-use sys;
+use sys::input_event;
+use ::{
+    EventTime, RangeError, KeyState,
+    EventKind, SynchronizeKind, Key, RelativeAxis, AbsoluteAxis,
+    SwitchKind, MiscKind, LedKind, AutorepeatKind, SoundKind,
+};
 
-pub type RangeError = ();
-
-#[repr(u16)]
+#[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-pub enum EventKind {
-    Synchronize = sys::EV_SYN as _,
-    Key = sys::EV_KEY as _,
-    Relative = sys::EV_REL as _,
-    Absolute = sys::EV_ABS as _,
-    Misc = sys::EV_MSC as _,
-    Switch = sys::EV_SW as _,
-    Unknown6,
-    Unknown7,
-    Unknown8,
-    Unknown9,
-    UnknownA,
-    UnknownB,
-    UnknownC,
-    UnknownD,
-    UnknownE,
-    UnknownF,
-    Unknown10,
-
-    Led = sys::EV_LED as _,
-    Sound = sys::EV_SND as _,
-    Unknown13,
-
-    Autorepeat = sys::EV_REP as _,
-    ForceFeedback = sys::EV_FF as _,
-    Power = sys::EV_PWR as _,
-    ForceFeedbackStatus = sys::EV_FF_STATUS as _,
-    Unknown18,
-    Unknown19,
-    Unknown1A,
-    Unknown1B,
-    Unknown1C,
-    Unknown1D,
-    Unknown1E,
-    Unknown1F,
-
-    Count,
-
-    Uinput = sys::EV_UINPUT as _,
+pub struct SynchronizeEvent {
+    pub time: EventTime,
+    event: EventKind,
+    pub kind: SynchronizeKind,
+    pub value: i32,
 }
 
-#[repr(u16)]
+#[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-pub enum SynchronizeKind {
-    Report = sys::SYN_REPORT as _,
-    Config = sys::SYN_CONFIG as _,
-    MultitouchReport = sys::SYN_MT_REPORT as _,
-    Dropped = sys::SYN_DROPPED as _,
-    Unknown4,
-    Unknown5,
-    Unknown6,
-    Unknown7,
-    Unknown8,
-    Unknown9,
-    UnknownA,
-    UnknownB,
-    UnknownC,
-    UnknownD,
-    UnknownE,
-    UnknownF,
-
-    Count,
+pub struct KeyEvent {
+    pub time: EventTime,
+    event: EventKind,
+    pub key: Key,
+    pub value: i32,
 }
 
-// XXX: sure would be nice if Rust knew these weren't overlapping and allowed #[repr(i32)]
+#[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-pub enum KeyState {
-    Released, // 0
-    Pressed, // 1
-    Autorepeat, // 2
-    Unknown(i32),
+pub struct RelativeEvent {
+    pub time: EventTime,
+    event: EventKind,
+    pub axis: RelativeAxis,
+    pub value: i32,
 }
 
-#[repr(u16)]
+#[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-pub enum RelativeAxis {
-    X = sys::REL_X as _,
-    Y = sys::REL_Y as _,
-    Z = sys::REL_Z as _,
-    RX = sys::REL_RX as _,
-    RY = sys::REL_RY as _,
-    RZ = sys::REL_RZ as _,
-    HorizontalWheel = sys::REL_HWHEEL as _,
-    Dial = sys::REL_DIAL as _,
-    Wheel = sys::REL_WHEEL as _,
-    Misc = sys::REL_MISC as _,
-    UnknownA,
-    UnknownB,
-    UnknownC,
-    UnknownD,
-    UnknownE,
-    UnknownF,
-
-    Count,
+pub struct AbsoluteEvent {
+    pub time: EventTime,
+    event: EventKind,
+    pub axis: AbsoluteAxis,
+    pub value: i32,
 }
 
-#[repr(u16)]
+#[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-pub enum AbsoluteAxis {
-    X = sys::ABS_X as _,
-    Y = sys::ABS_Y as _,
-    Z = sys::ABS_Z as _,
-    RX = sys::ABS_RX as _,
-    RY = sys::ABS_RY as _,
-    RZ = sys::ABS_RZ as _,
-    Throttle = sys::ABS_THROTTLE as _,
-    Rudder = sys::ABS_RUDDER as _,
-    Wheel = sys::ABS_WHEEL as _,
-    Gas = sys::ABS_GAS as _,
-    Brake = sys::ABS_BRAKE as _,
-    UnknownB,
-    UnknownC,
-    UnknownD,
-    UnknownE,
-    UnknownF,
-
-    Hat0X = sys::ABS_HAT0X as _,
-    Hat0Y = sys::ABS_HAT0Y as _,
-    Hat1X = sys::ABS_HAT1X as _,
-    Hat1Y = sys::ABS_HAT1Y as _,
-    Hat2X = sys::ABS_HAT2X as _,
-    Hat2Y = sys::ABS_HAT2Y as _,
-    Hat3X = sys::ABS_HAT3X as _,
-    Hat3Y = sys::ABS_HAT3Y as _,
-    Pressure = sys::ABS_PRESSURE as _,
-    Distance = sys::ABS_DISTANCE as _,
-    TiltX = sys::ABS_TILT_X as _,
-    TiltY = sys::ABS_TILT_Y as _,
-    ToolWidth = sys::ABS_TOOL_WIDTH as _,
-    Unknown1D,
-    Unknown1E,
-    Unknown1F,
-
-    Volume = sys::ABS_VOLUME as _,
-    Unknown21,
-    Unknown22,
-    Unknown23,
-    Unknown24,
-    Unknown25,
-    Unknown26,
-    Unknown27,
-
-    Misc = sys::ABS_MISC as _,
-    Unknown29,
-    Unknown2A,
-    Unknown2B,
-    Unknown2C,
-    Unknown2D,
-    Unknown2E,
-
-    /// MT slot being modified
-    MultitouchSlot = sys::ABS_MT_SLOT as _,
-    /// Major axis of touching ellipse
-    MultitouchTouchMajor = sys::ABS_MT_TOUCH_MAJOR as _,
-    /// Minor axis (omit if circular)
-    MultitouchTouchMinor = sys::ABS_MT_TOUCH_MINOR as _,
-    /// Major axis of approaching ellipse
-    MultitouchWidthMajor = sys::ABS_MT_WIDTH_MAJOR as _,
-    /// Minor axis (omit if circular)
-    MultitouchWidthMinor = sys::ABS_MT_WIDTH_MINOR as _,
-    /// Ellipse orientation
-    MultitouchOrientation = sys::ABS_MT_ORIENTATION as _,
-    /// Center X touch position
-    MultitouchPositionX = sys::ABS_MT_POSITION_X as _,
-    /// Center Y touch position
-    MultitouchPositionY = sys::ABS_MT_POSITION_Y as _,
-    /// Type of touching device
-    MultitouchToolType = sys::ABS_MT_TOOL_TYPE as _,
-    /// Group a set of packets as a blob
-    MultitouchBlobId = sys::ABS_MT_BLOB_ID as _,
-    /// Unique ID of initiated contact
-    MultitouchTrackingId = sys::ABS_MT_TRACKING_ID as _,
-    /// Pressure on contact area
-    MultitouchPressure = sys::ABS_MT_PRESSURE as _,
-    /// Contact hover distance
-    MultitouchDistance = sys::ABS_MT_DISTANCE as _,
-    /// Center X tool position
-    MultitouchToolX = sys::ABS_MT_TOOL_X as _,
-    /// Center Y tool position
-    MultitouchToolY = sys::ABS_MT_TOOL_Y as _,
-    Unknown3E,
-    Unknown3F,
-
-    Count,
+pub struct SwitchEvent {
+    pub time: EventTime,
+    event: EventKind,
+    pub switch: SwitchKind,
+    pub value: i32,
 }
 
-#[repr(u16)]
+#[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-pub enum SwitchKind {
-    /// set = lid shut
-    Lid = sys::SW_LID as _,
-    /// set = tablet mode
-    TabletMode = sys::SW_TABLET_MODE as _,
-    /// set = inserted
-    HeadphoneInsert = sys::SW_HEADPHONE_INSERT as _,
-    /// set = radio enabled
-    RfKillAll = sys::SW_RFKILL_ALL as _,
-    // Radio = sys::SW_RADIO as _ = RfKillAll,
-    /// set = inserted
-    MicrophoneInsert = sys::SW_MICROPHONE_INSERT as _,
-    /// set = plugged into dock
-    Dock = sys::SW_DOCK as _,
-    /// set = inserted
-    LineoutInsert = sys::SW_LINEOUT_INSERT as _,
-    /// set = mechanical switch set
-    JackPhysicalInsert = sys::SW_JACK_PHYSICAL_INSERT as _,
-    /// set = inserted
-    VideoOutInsert = sys::SW_VIDEOOUT_INSERT as _,
-    /// set = lens covered
-    CameraLensCover = sys::SW_CAMERA_LENS_COVER as _,
-    /// set = keypad slide out
-    KeypadSlide = sys::SW_KEYPAD_SLIDE as _,
-    /// set = front proximity sensor active
-    FrontProximity = sys::SW_FRONT_PROXIMITY as _,
-    /// set = rotate locked/disabled
-    RotateLock = sys::SW_ROTATE_LOCK as _,
-    /// set = inserted
-    LineInInsert = sys::SW_LINEIN_INSERT as _,
-    /// set = device disabled
-    MuteDevice = sys::SW_MUTE_DEVICE as _,
-    /// set = pen inserted
-    PenInserted = sys::SW_PEN_INSERTED as _,
-
-    Count,
+pub struct MiscEvent {
+    pub time: EventTime,
+    event: EventKind,
+    pub kind: MiscKind,
+    pub value: i32,
 }
 
-#[repr(u16)]
+#[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-pub enum MiscKind {
-    /// Serial number, only exported for tablets ("Transducer Serial Number")
-    Serial = sys::MSC_SERIAL as _,
-    /// Only used by the PowerMate driver, right now.
-    PulseLed = sys::MSC_PULSELED as _,
-    /// Completely unused
-    Gesture = sys::MSC_GESTURE as _,
-    /// "Raw" event, rarely used.
-    Raw = sys::MSC_RAW as _,
-    /// Key scancode
-    Scancode = sys::MSC_SCAN as _,
-    /// Completely unused
-    Timestamp = sys::MSC_TIMESTAMP as _,
-    Unknown6,
-    Unknown7,
-
-    Count,
+pub struct LedEvent {
+    pub time: EventTime,
+    event: EventKind,
+    pub led: LedKind,
+    pub value: i32,
 }
 
-#[repr(u16)]
+#[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-pub enum LedKind {
-    NumLock = sys::LED_NUML as _,
-    CapsLock = sys::LED_CAPSL as _,
-    ScrollLock = sys::LED_SCROLLL as _,
-    Compose = sys::LED_COMPOSE as _,
-    Kana = sys::LED_KANA as _,
-    Sleep = sys::LED_SLEEP as _,
-    Suspend = sys::LED_SUSPEND as _,
-    Mute = sys::LED_MUTE as _,
-    Misc = sys::LED_MISC as _,
-    Mail = sys::LED_MAIL as _,
-    Charging = sys::LED_CHARGING as _,
-    UnknownB,
-    UnknownC,
-    UnknownD,
-    UnknownE,
-    UnknownF,
-
-    Count,
+pub struct AutorepeatEvent {
+    pub time: EventTime,
+    event: EventKind,
+    pub kind: AutorepeatKind,
+    pub value: i32,
 }
 
-#[repr(u16)]
+#[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-pub enum AutorepeatKind {
-    Delay = sys::REP_DELAY as _,
-    Period = sys::REP_PERIOD as _,
-
-    Count,
+pub struct SoundEvent {
+    pub time: EventTime,
+    event: EventKind,
+    pub sound: SoundKind,
+    pub value: i32,
 }
 
-#[repr(u16)]
+#[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-pub enum SoundKind {
-    Click = sys::SND_CLICK as _,
-    Bell = sys::SND_BELL as _,
-    Tone = sys::SND_TONE as _,
-    Unknown3,
-    Unknown4,
-    Unknown5,
-    Unknown6,
-    Unknown7,
-
-    Count,
+pub struct InputEvent {
+    pub time: EventTime,
+    pub kind: EventKind,
+    pub code: u16,
+    pub value: i32,
 }
 
-impl EventKind {
-    pub fn from_type(code: u16) -> Result<Self, RangeError> {
-        const EV_UINPUT: u16 = sys::EV_UINPUT as _;
+impl KeyEvent {
+    pub fn key_state(&self) -> KeyState {
+        KeyState::from(self.value)
+    }
+}
 
-        match code {
-            0...0x1f | EV_UINPUT => Ok(unsafe { transmute(code) }),
-            _ => return Err(Default::default()),
+macro_rules! event_impl {
+    (@impl_event InputEvent $($tt:tt)*) => { };
+    (@impl_event $name:ident $code:ident $kind:path, $codekind:ident) => {
+        impl GenericEvent for $name {
+            fn event_kind(&self) -> EventKind { $kind }
+            fn time(&self) -> &EventTime { &self.time }
+            fn code(&self) -> u16 { self.$code as _ }
+            fn value(&self) -> i32 { self.value }
+
+            fn from_ref(event: &InputEvent) -> Result<&Self, RangeError> {
+                $codekind::from_code(event.code)
+                    .and_then(move |_| if event.kind == $kind {
+                        Ok(unsafe { Self::from_event(event) })
+                    } else {
+                        Err(Default::default())
+                    })
+            }
+
+            fn from_mut(event: &mut InputEvent) -> Result<&mut Self, RangeError> {
+                $codekind::from_code(event.code)
+                    .and_then(move |_| if event.kind == $kind {
+                        Ok(unsafe { Self::from_event_mut(event) })
+                    } else {
+                        Err(Default::default())
+                    })
+            }
         }
-    }
-}
 
-#[cfg(feature = "unstable")]
-impl TryFrom<u16> for EventKind {
-    type Error = RangeError;
-
-    fn try_from(code: u16) -> Result<Self, Self::Error> {
-        Self::from_type(code)
-    }
-}
-
-impl SynchronizeKind {
-    pub fn from_code(code: u16) -> Result<Self, RangeError> {
-        match code {
-            0...0x0f => Ok(unsafe { transmute(code) }),
-            _ => return Err(Default::default()),
+        impl<'a> From<&'a $name> for &'a InputEvent {
+            fn from(event: &'a $name) -> Self {
+                event.as_event()
+            }
         }
-    }
-}
 
-#[cfg(feature = "unstable")]
-impl TryFrom<u16> for SynchronizeKind {
-    type Error = RangeError;
-
-    fn try_from(code: u16) -> Result<Self, Self::Error> {
-        Self::from_code(code)
-    }
-}
-
-impl From<i32> for KeyState {
-    fn from(key: i32) -> Self {
-        match key {
-            0 => KeyState::Released,
-            1 => KeyState::Pressed,
-            2 => KeyState::Autorepeat,
-            key => KeyState::Unknown(key),
+        impl<'a> From<&'a $name> for InputEvent {
+            fn from(event: &'a $name) -> Self {
+                event.as_event().clone()
+            }
         }
-    }
-}
 
-impl From<KeyState> for i32 {
-    fn from(k: KeyState) -> Self {
-        match k {
-            KeyState::Released => 0,
-            KeyState::Pressed => 1,
-            KeyState::Autorepeat => 2,
-            KeyState::Unknown(key) => key,
+        impl From<$name> for InputEvent {
+            fn from(event: $name) -> Self {
+                From::from(&event)
+            }
         }
-    }
-}
 
-impl RelativeAxis {
-    pub fn from_code(code: u16) -> Result<Self, RangeError> {
-        match code {
-            0...0x0f => Ok(unsafe { transmute(code) }),
-            _ => return Err(Default::default()),
+        impl AsRef<InputEvent> for $name {
+            fn as_ref(&self) -> &InputEvent {
+                self.as_event()
+            }
         }
-    }
-}
 
-#[cfg(feature = "unstable")]
-impl TryFrom<u16> for RelativeAxis {
-    type Error = RangeError;
+        impl<'a> $name {
+            pub unsafe fn from_event<E: AsRef<input_event>>(event: &E) -> &Self {
+                let raw = event.as_ref() as *const _ as *const _;
+                &*raw
+            }
 
-    fn try_from(code: u16) -> Result<Self, Self::Error> {
-        Self::from_code(code)
-    }
-}
+            pub unsafe fn from_event_mut(event: &mut InputEvent) -> &mut Self {
+                let raw = event as *mut _ as *mut _;
+                &mut *raw
+            }
 
-impl AbsoluteAxis {
-    pub fn from_code(code: u16) -> Result<Self, RangeError> {
-        match code {
-            0...0x3f => Ok(unsafe { transmute(code) }),
-            _ => return Err(Default::default()),
+            pub fn as_event(&self) -> &InputEvent {
+                let raw = self as *const _ as *const _;
+                unsafe { &*raw }
+            }
+
+            pub unsafe fn as_event_mut(&mut self) -> &mut InputEvent {
+                let raw = self as *mut _ as *mut _;
+                &mut *raw
+            }
         }
-    }
-}
-
-#[cfg(feature = "unstable")]
-impl TryFrom<u16> for AbsoluteAxis {
-    type Error = RangeError;
-
-    fn try_from(code: u16) -> Result<Self, Self::Error> {
-        Self::from_code(code)
-    }
-}
-
-impl SwitchKind {
-    pub fn from_code(code: u16) -> Result<Self, RangeError> {
-        match code {
-            0...0x0f => Ok(unsafe { transmute(code) }),
-            _ => return Err(Default::default()),
+    };
+    (@impl $name:ident $code:ident $kind:path, $codekind:ident) => {
+        event_impl! {
+            @impl_event $name $code $kind, $codekind
         }
-    }
-}
 
-#[cfg(feature = "unstable")]
-impl TryFrom<u16> for SwitchKind {
-    type Error = RangeError;
-
-    fn try_from(code: u16) -> Result<Self, Self::Error> {
-        Self::from_code(code)
-    }
-}
-
-impl MiscKind {
-    pub fn from_code(code: u16) -> Result<Self, RangeError> {
-        match code {
-            0...0x07 => Ok(unsafe { transmute(code) }),
-            _ => return Err(Default::default()),
+        impl AsRef<input_event> for $name {
+            fn as_ref(&self) -> &input_event {
+                let raw = self as *const _ as *const _;
+                unsafe { &*raw }
+            }
         }
+    };
+    ($(struct $name:ident : $kind:path { $code:ident: $codekind:ident })*) => {
+        $(
+            event_impl! {
+                @impl $name $code $kind, $codekind
+            }
+        )*
+    };
+}
+
+pub trait GenericEvent: AsRef<InputEvent> + AsRef<input_event> {
+    fn event_kind(&self) -> EventKind;
+    fn time(&self) -> &EventTime;
+    fn code(&self) -> u16;
+    fn value(&self) -> i32;
+
+    fn from_ref(event: &InputEvent) -> Result<&Self, RangeError>;
+    fn from_mut(event: &mut InputEvent) -> Result<&mut Self, RangeError>;
+}
+
+event_impl! {
+    struct SynchronizeEvent : EventKind::Synchronize { kind: SynchronizeKind }
+    struct KeyEvent : EventKind::Key { key: Key }
+    struct RelativeEvent : EventKind::Relative { axis: RelativeAxis }
+    struct AbsoluteEvent : EventKind::Absolute { axis: AbsoluteAxis }
+    struct SwitchEvent : EventKind::Switch { switch: SwitchKind }
+    struct MiscEvent : EventKind::Misc { kind: MiscKind }
+    struct LedEvent : EventKind::Led { led: LedKind }
+    struct AutorepeatEvent : EventKind::Autorepeat { kind: AutorepeatKind }
+    struct SoundEvent : EventKind::Sound { sound: SoundKind }
+    struct InputEvent : Unknown { code: u16 }
+}
+
+impl GenericEvent for InputEvent {
+    fn event_kind(&self) -> EventKind { self.kind }
+    fn time(&self) -> &EventTime { &self.time }
+    fn code(&self) -> u16 { self.code }
+    fn value(&self) -> i32 { self.value }
+
+    fn from_ref(event: &InputEvent) -> Result<&Self, RangeError> {
+        Ok(event)
+    }
+
+    fn from_mut(event: &mut InputEvent) -> Result<&mut Self, RangeError> {
+        Ok(event)
     }
 }
 
-#[cfg(feature = "unstable")]
-impl TryFrom<u16> for Misc {
-    type Error = RangeError;
-
-    fn try_from(code: u16) -> Result<Self, Self::Error> {
-        Self::from_code(code)
+impl AsRef<InputEvent> for InputEvent {
+    fn as_ref(&self) -> &InputEvent {
+        self
     }
 }
 
-impl LedKind {
-    pub fn from_code(code: u16) -> Result<Self, RangeError> {
-        match code {
-            0...0x0f => Ok(unsafe { transmute(code) }),
-            _ => return Err(Default::default()),
+impl InputEvent {
+    pub fn from_raw(event: &input_event) -> Result<&Self, RangeError> {
+        EventKind::from_type(event.type_).map(|_| {
+            let raw = event as *const _ as *const _;
+            unsafe { &*raw }
+        })
+    }
+
+    pub fn from_raw_mut(event: &mut input_event) -> Result<&mut Self, RangeError> {
+        EventKind::from_type(event.type_).map(|_| {
+            let raw = event as *mut _ as *mut _;
+            unsafe { &mut *raw }
+        })
+    }
+
+    pub fn as_raw(&self) -> &input_event {
+        let raw = self as *const _ as *const _;
+        unsafe { &*raw }
+    }
+
+    pub unsafe fn as_raw_mut(&mut self) -> &mut input_event {
+        let raw = self as *mut _ as *mut _;
+        &mut *raw
+    }
+}
+
+macro_rules! input_event_enum {
+    ($($variant:ident($ty:ident),)*) => {
+        #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+        pub enum Event {
+        $(
+            $variant($ty),
+        )*
+            Unknown(InputEvent),
         }
-    }
-}
 
-#[cfg(feature = "unstable")]
-impl TryFrom<u16> for LedKind {
-    type Error = RangeError;
-
-    fn try_from(code: u16) -> Result<Self, Self::Error> {
-        Self::from_code(code)
-    }
-}
-
-impl AutorepeatKind {
-    pub fn from_code(code: u16) -> Result<Self, RangeError> {
-        match code {
-            0...0x01 => Ok(unsafe { transmute(code) }),
-            _ => return Err(Default::default()),
+        #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+        pub enum EventRef<'a> {
+        $(
+            $variant(&'a $ty),
+        )*
+            Unknown(&'a InputEvent),
         }
-    }
-}
 
-#[cfg(feature = "unstable")]
-impl TryFrom<u16> for AutorepeatKind {
-    type Error = RangeError;
-
-    fn try_from(code: u16) -> Result<Self, Self::Error> {
-        Self::from_code(code)
-    }
-}
-
-impl SoundKind {
-    pub fn from_code(code: u16) -> Result<Self, RangeError> {
-        match code {
-            0...0x07 => Ok(unsafe { transmute(code) }),
-            _ => return Err(Default::default()),
+        #[derive(PartialEq, Eq, Hash, Debug)]
+        pub enum EventMut<'a> {
+        $(
+            $variant(&'a mut $ty),
+        )*
+            Unknown(&'a mut InputEvent),
         }
-    }
+
+        impl Event {
+            pub fn new(event: InputEvent) -> Result<Self, RangeError> {
+                match event.kind {
+                $(
+                    EventKind::$variant => $ty::from_ref(&event).map(Clone::clone).map(Event::$variant),
+                )*
+                    _ => Ok(Event::Unknown(event)),
+                }
+            }
+        }
+
+        impl<'a> EventRef<'a> {
+            pub fn new(event: &'a InputEvent) -> Result<Self, RangeError> {
+                match event.kind {
+                $(
+                    EventKind::$variant => $ty::from_ref(event).map(EventRef::$variant),
+                )*
+                    _ => Ok(EventRef::Unknown(event)),
+                }
+            }
+        }
+
+        impl<'a> EventMut<'a> {
+            pub fn new(event: &'a mut InputEvent) -> Result<Self, RangeError> {
+                match event.kind {
+                $(
+                    EventKind::$variant => $ty::from_mut(event).map(EventMut::$variant),
+                )*
+                    _ => Ok(EventMut::Unknown(event)),
+                }
+            }
+        }
+
+        $(
+        impl From<$ty> for Event {
+            fn from(event: $ty) -> Self {
+                Event::$variant(event)
+            }
+        }
+        )*
+
+        $(
+        impl<'a> From<&'a $ty> for EventRef<'a> {
+            fn from(event: &'a $ty) -> Self {
+                EventRef::$variant(event)
+            }
+        }
+        )*
+
+        $(
+        impl<'a> From<&'a mut $ty> for EventMut<'a> {
+            fn from(event: &'a mut $ty) -> Self {
+                EventMut::$variant(event)
+            }
+        }
+        )*
+
+        impl From<Event> for InputEvent {
+            fn from(event: Event) -> Self {
+                match event {
+                $(
+                    Event::$variant(ref event) => <&InputEvent as From<_>>::from(event).clone(),
+                )*
+                    Event::Unknown(event) => event,
+                }
+            }
+        }
+
+        impl<'a> From<&'a Event> for EventRef<'a> {
+            fn from(event: &'a Event) -> Self {
+                match *event {
+                $(
+                    Event::$variant(ref event) => EventRef::$variant(event),
+                )*
+                    Event::Unknown(ref event) => EventRef::Unknown(event),
+                }
+            }
+        }
+
+        impl<'a> From<&'a mut Event> for EventMut<'a> {
+            fn from(event: &'a mut Event) -> Self {
+                match *event {
+                $(
+                    Event::$variant(ref mut event) => EventMut::$variant(event),
+                )*
+                    Event::Unknown(ref mut event) => EventMut::Unknown(event),
+                }
+            }
+        }
+
+        impl<'a> From<EventRef<'a>> for &'a InputEvent {
+            fn from(event: EventRef<'a>) -> Self {
+                match event {
+                $(
+                    EventRef::$variant(event) => event.as_ref(),
+                )*
+                    EventRef::Unknown(event) => event,
+                }
+            }
+        }
+
+        impl<'a> From<&'a EventMut<'a>> for &'a InputEvent {
+            fn from(event: &'a EventMut<'a>) -> Self {
+                match *event {
+                $(
+                    EventMut::$variant(ref event) => event.as_ref(),
+                )*
+                    EventMut::Unknown(ref event) => event,
+                }
+            }
+        }
+
+        impl AsRef<InputEvent> for Event {
+            fn as_ref(&self) -> &InputEvent {
+                match *self {
+                $(
+                    Event::$variant(ref event) => event.as_ref(),
+                )*
+                    Event::Unknown(ref event) => event.as_ref(),
+                }
+            }
+        }
+
+        impl<'a> AsRef<InputEvent> for EventRef<'a> {
+            fn as_ref(&self) -> &InputEvent {
+                From::from(*self)
+            }
+        }
+
+        impl<'a> AsRef<InputEvent> for EventMut<'a> {
+            fn as_ref(&self) -> &InputEvent {
+                From::from(self)
+            }
+        }
+    };
 }
 
-#[cfg(feature = "unstable")]
-impl TryFrom<u16> for SoundKind {
-    type Error = RangeError;
-
-    fn try_from(code: u16) -> Result<Self, Self::Error> {
-        Self::from_code(code)
-    }
+input_event_enum! {
+    Synchronize(SynchronizeEvent),
+    Key(KeyEvent),
+    Relative(RelativeEvent),
+    Absolute(AbsoluteEvent),
+    Switch(SwitchEvent),
+    Misc(MiscEvent),
+    Led(LedEvent),
+    Autorepeat(AutorepeatEvent),
+    Sound(SoundEvent),
 }

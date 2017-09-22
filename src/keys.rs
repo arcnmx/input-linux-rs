@@ -1,9 +1,10 @@
 use sys;
 
-/// Keys and buttons
-/// Most of the keys/buttons are modeled after USB HUT 1.12
-/// (see http://www.usb.org/developers/hidpage).
-/// Abbreviations in the comments:
+/// Keys and Buttons
+///
+/// Most of the keys/buttons are modeled after USB HUT 1.12 (see http://www.usb.org/developers/hidpage).
+///
+/// ## Comment Abbreviations
 /// AC - Application Control
 /// AL - Application Launch Button
 /// SC - System Control
