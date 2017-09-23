@@ -88,108 +88,101 @@ impl EvdevHandle {
 
     evdev_impl! {
         {
-            /// EVIOCGVERSION
+            /// `EVIOCGVERSION`
             @get driver_version = ev_get_version -> i32
         }
         {
-            /// EVIOCGID
+            /// `EVIOCGID`
             @get device_id = ev_get_id -> InputId
         }
         {
-            /// EVIOGREP
+            /// `EVIOGREP`
             @get repeat_settings = ev_get_rep -> [u32; 2]
         }
         {
-            /// EVIOSREP
+            /// `EVIOSREP`
             @set set_repeat_settings(&[u32; 2]) = ev_set_rep
         }
         {
-            /// EVIOCGKEYCODE
+            /// `EVIOCGKEYCODE`
             @get keycode_legacy = ev_get_keycode -> [u32; 2]
         }
         {
-            /// EVIOCGKEYCODE_V2
+            /// `EVIOCGKEYCODE`_V2
             @get keycode = ev_get_keycode_v2 -> sys::input_keymap_entry
         }
         {
-            /// EVIOCSKEYCODE
+            /// `EVIOCSKEYCODE`
             @set set_keycode_legacy(&[u32; 2]) = ev_set_keycode
         }
         {
-            /// EVIOCSKEYCODE_V2
+            /// `EVIOCSKEYCODE`_V2
             @set set_keycode(&sys::input_keymap_entry) = ev_set_keycode_v2
         }
         {
-            /// EVIOCGNAME
+            /// `EVIOCGNAME`
             @get_str device_name, device_name_buf = ev_get_name
         }
         {
-            /// EVIOCGPHYS
+            /// `EVIOCGPHYS`
             @get_str physical_location, physical_location_buf = ev_get_phys
         }
         {
-            /// EVIOCGUNIQ
+            /// `EVIOCGUNIQ`
             @get_str unique_id, unique_id_buf = ev_get_uniq
         }
         {
-            /// EVIOCGPROP
+            /// `EVIOCGPROP`
             @get_buf device_properties = ev_get_prop
         }
         {
-            /// EVIOCGMTSLOTS
+            /// `EVIOCGMTSLOTS`
             @get_buf multi_touch_slots = ev_get_mtslots
         }
         {
-            /// EVIOCGKEY
+            /// `EVIOCGKEY`
             @get_buf key_state = ev_get_key
         }
         {
-            /// EVIOCGLED
+            /// `EVIOCGLED`
             @get_buf led_state = ev_get_led
         }
         {
-            /// EVIOCGSND
+            /// `EVIOCGSND`
             @get_buf sounds_state = ev_get_snd
         }
         {
-            /// EVIOCGSW
+            /// `EVIOCGSW`
             @get_buf switch_state = ev_get_sw
         }
         {
-            /// EVIOCSFF
+            /// `EVIOCSFF`
             @set send_force_feedback(&mut sys::ff_effect) = ev_send_ff
         }
         {
-            /// EVIOCRMFF
+            /// `EVIOCRMFF`
             @set erase_force_feedback(i16) = ev_erase_ff
         }
         {
-            /// EVIOCGEFFECTS
+            /// `EVIOCGEFFECTS`
             @get effects_count = ev_get_effects -> i32
         }
         {
-            /// EVIOCGRAB
-            @set grab(i32) = ev_grab
-        }
-        {
-            /// EVIOCREVOKE
-            @set revoke(i32) = ev_revoke
-        }
-        {
-            /// EVIOCGMASK
+            /// `EVIOCGMASK`
             @get event_mask = ev_get_mask -> sys::input_mask
         }
         {
-            /// EVIOCSMASK
+            /// `EVIOCSMASK`
             @set set_event_mask(&sys::input_mask) = ev_set_mask
         }
         {
-            /// EVIOCSCLOCKID
+            /// `EVIOCSCLOCKID`
             @set set_clock_id(i32) = ev_set_clockid
+            // XXX: libc::clockid_t
         }
     }
 
-    /// EVIOCGBIT
+    /// `EVIOCGBIT`
     pub fn event_bits(&self, ev: usize, buffer: &mut [u8]) -> io::Result<()> {
         unsafe {
             sys::ev_get_bit(self.0, ev as _, buffer)
@@ -198,19 +191,38 @@ impl EvdevHandle {
         }
     }
 
-    /// EVIOCGABS
-    pub fn abs_info(&self, abs: usize, info: &mut sys::input_absinfo) -> io::Result<()> {
+    /// `EVIOCGABS`
+    pub fn abs_info(&self, abs: usize) -> io::Result<sys::input_absinfo> {
         unsafe {
-            sys::ev_get_abs(self.0, abs as _, info)
+            let mut info = uninitialized();
+            sys::ev_get_abs(self.0, abs as _, &mut info)
+                .map(|_| info)
+                .map_err(convert_error)
+        }
+    }
+
+    /// `EVIOCSABS`
+    pub fn set_abs_info(&self, abs: usize, info: &sys::input_absinfo) -> io::Result<()> {
+        unsafe {
+            sys::ev_set_abs(self.0, abs as _, info)
                 .map(drop)
                 .map_err(convert_error)
         }
     }
 
-    /// EVIOCSABS
-    pub fn set_abs_info(&self, abs: usize, info: &sys::input_absinfo) -> io::Result<()> {
+    /// `EVIOCGRAB`
+    pub fn grab(&self, grab: bool) -> io::Result<()> {
         unsafe {
-            sys::ev_set_abs(self.0, abs as _, info)
+            sys::ev_grab(self.0, if grab { 1 } else { 0 })
+                .map(drop)
+                .map_err(convert_error)
+        }
+    }
+
+    /// `EVIOCREVOKE`
+    pub fn revoke(&self) -> io::Result<()> {
+        unsafe {
+            sys::ev_revoke(self.0, 0)
                 .map(drop)
                 .map_err(convert_error)
         }

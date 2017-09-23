@@ -1,5 +1,5 @@
 [package]
-name = "input_linux"
+name = "input-linux"
 version = "0.0.1"
 authors = ["arcnmx"]
 
