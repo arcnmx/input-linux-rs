@@ -175,11 +175,6 @@ impl EvdevHandle {
             /// `EVIOCSMASK`
             @set set_event_mask(&sys::input_mask) = ev_set_mask
         }
-        {
-            /// `EVIOCSCLOCKID`
-            @set set_clock_id(i32) = ev_set_clockid
-            // XXX: libc::clockid_t
-        }
     }
 
     /// `EVIOCGBIT`
@@ -223,6 +218,15 @@ impl EvdevHandle {
     pub fn revoke(&self) -> io::Result<()> {
         unsafe {
             sys::ev_revoke(self.0, 0)
+                .map(drop)
+                .map_err(convert_error)
+        }
+    }
+
+    /// `EVIOCSCLOCKID`
+    pub fn set_clock_id(&self, value: i32) -> io::Result<()> {
+        unsafe {
+            sys::ev_set_clockid(self.0, &value)
                 .map(drop)
                 .map_err(convert_error)
         }
