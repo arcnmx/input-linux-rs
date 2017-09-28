@@ -163,6 +163,15 @@ macro_rules! event_impl {
         }
 
         impl<'a> $name {
+            pub fn new(time: EventTime, $code: $codekind, value: i32) -> Self {
+                $name {
+                    time: time,
+                    event: $kind,
+                    $code: $code,
+                    value: value,
+                }
+            }
+
             pub unsafe fn from_event<E: AsRef<input_event>>(event: &E) -> &Self {
                 let raw = event.as_ref() as *const _ as *const _;
                 &*raw
