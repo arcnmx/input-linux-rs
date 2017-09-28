@@ -2,7 +2,7 @@ use sys::input_event;
 use ::{
     EventTime, RangeError, KeyState,
     EventKind, SynchronizeKind, Key, RelativeAxis, AbsoluteAxis,
-    SwitchKind, MiscKind, LedKind, AutorepeatKind, SoundKind,
+    SwitchKind, MiscKind, LedKind, AutorepeatKind, SoundKind, UInputKind,
 };
 
 #[repr(C)]
@@ -83,6 +83,15 @@ pub struct SoundEvent {
     pub time: EventTime,
     event: EventKind,
     pub sound: SoundKind,
+    pub value: i32,
+}
+
+#[repr(C)]
+#[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+pub struct UInputEvent {
+    pub time: EventTime,
+    event: EventKind,
+    pub code: UInputKind,
     pub value: i32,
 }
 
@@ -216,6 +225,7 @@ event_impl! {
     struct LedEvent : EventKind::Led { led: LedKind }
     struct AutorepeatEvent : EventKind::Autorepeat { kind: AutorepeatKind }
     struct SoundEvent : EventKind::Sound { sound: SoundKind }
+    struct UInputEvent : EventKind::UInput { code: UInputKind }
     struct InputEvent : Unknown { code: u16 }
 }
 
@@ -439,4 +449,5 @@ input_event_enum! {
     Led(LedEvent),
     Autorepeat(AutorepeatEvent),
     Sound(SoundEvent),
+    UInput(UInputEvent),
 }

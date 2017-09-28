@@ -12,4 +12,5 @@ readme = "README.md"
 license = "MIT"
 
 [dependencies]
-input-linux-sys = "^0.1.5"
+input-linux-sys = "^0.2.1"
+nix = "^0.9.0"

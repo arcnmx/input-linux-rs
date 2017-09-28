@@ -5,6 +5,44 @@ pub type RangeError = ();
 
 #[repr(u16)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+pub enum InputProperty {
+    Pointer = sys::INPUT_PROP_POINTER as _,
+    Direct = sys::INPUT_PROP_DIRECT as _,
+    ButtonPad = sys::INPUT_PROP_BUTTONPAD as _,
+    SemiMultiTouch = sys::INPUT_PROP_SEMI_MT as _,
+    TopButtonPad = sys::INPUT_PROP_TOPBUTTONPAD as _,
+    PointingStick = sys::INPUT_PROP_POINTING_STICK as _,
+    Accelerometer = sys::INPUT_PROP_ACCELEROMETER as _,
+    Unknown07,
+    Unknown08,
+    Unknown09,
+    Unknown0A,
+    Unknown0B,
+    Unknown0C,
+    Unknown0D,
+    Unknown0E,
+    Unknown0F,
+    Unknown10,
+    Unknown11,
+    Unknown12,
+    Unknown13,
+    Unknown14,
+    Unknown15,
+    Unknown16,
+    Unknown17,
+    Unknown18,
+    Unknown19,
+    Unknown1A,
+    Unknown1B,
+    Unknown1C,
+    Unknown1D,
+    Unknown1E,
+    Unknown1F,
+    Count,
+}
+
+#[repr(u16)]
+#[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
 pub enum EventKind {
     Synchronize = sys::EV_SYN as _,
     Key = sys::EV_KEY as _,
@@ -43,7 +81,16 @@ pub enum EventKind {
 
     Count,
 
-    Uinput = sys::EV_UINPUT as _,
+    UInput = sys::EV_UINPUT as _,
+}
+
+#[repr(u16)]
+#[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+pub enum UInputKind {
+    Unknown0 = 0,
+    ForceFeedbackUpload = sys::UI_FF_UPLOAD as _,
+    ForceFeedbackErase = sys::UI_FF_ERASE as _,
+    Count,
 }
 
 #[repr(u16)]
@@ -299,6 +346,24 @@ pub enum SoundKind {
     Count,
 }
 
+impl InputProperty {
+    pub fn from_code(code: u16) -> Result<Self, RangeError> {
+        match code {
+            0...0x1f => Ok(unsafe { transmute(code) }),
+            _ => return Err(Default::default()),
+        }
+    }
+}
+
+#[cfg(feature = "unstable")]
+impl TryFrom<u16> for InputProperty {
+    type Error = RangeError;
+
+    fn try_from(code: u16) -> Result<Self, Self::Error> {
+        Self::from_code(code)
+    }
+}
+
 impl EventKind {
     pub fn from_type(code: u16) -> Result<Self, RangeError> {
         const EV_UINPUT: u16 = sys::EV_UINPUT as _;
@@ -316,6 +381,24 @@ impl TryFrom<u16> for EventKind {
 
     fn try_from(code: u16) -> Result<Self, Self::Error> {
         Self::from_type(code)
+    }
+}
+
+impl UInputKind {
+    pub fn from_code(code: u16) -> Result<Self, RangeError> {
+        match code {
+            0...0x02 => Ok(unsafe { transmute(code) }),
+            _ => return Err(Default::default()),
+        }
+    }
+}
+
+#[cfg(feature = "unstable")]
+impl TryFrom<u16> for UInputKind {
+    type Error = RangeError;
+
+    fn try_from(code: u16) -> Result<Self, Self::Error> {
+        Self::from_code(code)
     }
 }
 

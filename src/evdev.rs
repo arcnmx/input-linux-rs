@@ -1,8 +1,11 @@
 use std::io;
-use std::mem::uninitialized;
+use std::mem::{uninitialized, size_of};
+use std::slice::from_raw_parts_mut;
 use std::os::unix::io::{RawFd, AsRawFd};
+use nix;
 use sys;
 use ::{InputId};
+use macros::convert_error;
 
 pub use sys::EV_VERSION;
 
@@ -11,69 +14,6 @@ pub use sys::EV_VERSION;
 /// Ownership of the file descriptor is not transferred, and it must stay open
 /// for this object's lifetime. It will not be closed automatically.
 pub struct EvdevHandle(RawFd);
-
-const STRING_BUFFER_LENGTH: usize = 0x200;
-
-fn convert_error(e: sys::Error) -> io::Error {
-    match e {
-        sys::Error::Sys(errno) => errno.into(),
-        _ => sys::Errno::EINVAL.into(),
-    }
-}
-
-macro_rules! evdev_impl {
-    ($(#[$attr:meta])* @get $f:ident = $ev:ident -> $ret:ty) => {
-        $(#[$attr])*
-        pub fn $f(&self) -> io::Result<$ret> {
-            unsafe {
-                let mut v = uninitialized();
-                sys::$ev(self.0, &mut v)
-                    .map(|_| v.into())
-                    .map_err(convert_error)
-            }
-        }
-    };
-    ($(#[$attr:meta])* @get_buf $f:ident = $ev:ident) => {
-        $(#[$attr])*
-        pub fn $f(&self, buffer: &mut [u8]) -> io::Result<usize> {
-            unsafe {
-                sys::$ev(self.0, buffer)
-                    .map(|len| len as _)
-                    .map_err(convert_error)
-            }
-        }
-    };
-    ($(#[$attr:meta])* @get_str $f:ident, $fbuf:ident = $ev:ident) => {
-        evdev_impl! {
-            $(#[$attr])*
-            @get_buf $fbuf = $ev
-        }
-
-        $(#[$attr])*
-        pub fn $f(&self) -> io::Result<Vec<u8>> {
-            let mut buf = vec![0; STRING_BUFFER_LENGTH];
-            self.$fbuf(&mut buf[..]).map(move |len| {
-                buf.truncate(len as _);
-                buf
-            })
-        }
-    };
-    ($(#[$attr:meta])* @set $f:ident($in:ty) = $ev:ident) => {
-        $(#[$attr])*
-        pub fn $f(&self, value: $in) -> io::Result<()> {
-            unsafe {
-                sys::$ev(self.0, value as _)
-                    .map(drop)
-                    .map_err(convert_error)
-            }
-        }
-    };
-    ($({ $($tt:tt)* })*) => {
-        $(
-            evdev_impl! {$($tt)*}
-        )*
-    };
-}
 
 impl EvdevHandle {
     /// Create a new handle using an existing open file object.
@@ -86,7 +26,14 @@ impl EvdevHandle {
         EvdevHandle(fd)
     }
 
-    evdev_impl! {
+    /// Read events from the input device
+    pub fn read(&self, events: &mut [sys::input_event]) -> io::Result<usize> {
+        let events = unsafe { from_raw_parts_mut(events.as_mut_ptr() as *mut u8, size_of::<sys::input_event>() * events.len()) };
+        nix::unistd::read(self.0, events)
+            .map(|len| len / size_of::<sys::input_event>()).map_err(convert_error)
+    }
+
+    ioctl_impl! {
         {
             /// `EVIOCGVERSION`
             @get driver_version = ev_get_version -> i32
@@ -97,11 +44,11 @@ impl EvdevHandle {
         }
         {
             /// `EVIOGREP`
-            @get repeat_settings = ev_get_rep -> [u32; 2]
+            @get repeat_settings = ev_get_rep -> sys::repeat_settings
         }
         {
             /// `EVIOSREP`
-            @set set_repeat_settings(&[u32; 2]) = ev_set_rep
+            @set set_repeat_settings(&sys::repeat_settings) = ev_set_rep
         }
         {
             /// `EVIOCGKEYCODE`
@@ -133,27 +80,27 @@ impl EvdevHandle {
         }
         {
             /// `EVIOCGPROP`
-            @get_buf device_properties = ev_get_prop
+            @get_buf device_properties(u8) = ev_get_prop
         }
-        {
+        /*{
             /// `EVIOCGMTSLOTS`
-            @get_buf multi_touch_slots = ev_get_mtslots
-        }
+            @get_buf multi_touch_slots(u8) = ev_get_mtslots
+        }*/
         {
             /// `EVIOCGKEY`
-            @get_buf key_state = ev_get_key
+            @get_buf key_state(u8) = ev_get_key
         }
         {
             /// `EVIOCGLED`
-            @get_buf led_state = ev_get_led
+            @get_buf led_state(u8) = ev_get_led
         }
         {
             /// `EVIOCGSND`
-            @get_buf sounds_state = ev_get_snd
+            @get_buf sounds_state(u8) = ev_get_snd
         }
         {
             /// `EVIOCGSW`
-            @get_buf switch_state = ev_get_sw
+            @get_buf switch_state(u8) = ev_get_sw
         }
         {
             /// `EVIOCSFF`

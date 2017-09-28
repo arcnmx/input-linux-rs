@@ -2,6 +2,10 @@
 #![doc(html_root_url = "http://arcnmx.github.io/input-linux-rs/")]
 
 extern crate input_linux_sys as sys;
+extern crate nix;
+
+#[macro_use]
+mod macros;
 
 mod kinds;
 pub use kinds::*;
@@ -16,6 +20,7 @@ mod keys;
 pub use keys::Key;
 
 pub mod evdev;
+pub mod uinput;
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
