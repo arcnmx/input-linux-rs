@@ -82,10 +82,6 @@ impl EvdevHandle {
             /// `EVIOCGPROP`
             @get_buf device_properties(u8) = ev_get_prop
         }
-        /*{
-            /// `EVIOCGMTSLOTS`
-            @get_buf multi_touch_slots(u8) = ev_get_mtslots
-        }*/
         {
             /// `EVIOCGKEY`
             @get_buf key_state(u8) = ev_get_key
@@ -122,6 +118,26 @@ impl EvdevHandle {
             /// `EVIOCSMASK`
             @set set_event_mask(&sys::input_mask) = ev_set_mask
         }
+    }
+
+    /// `EVIOCGMTSLOTS`
+    pub fn multi_touch_slots(&self, code: ::AbsoluteAxis, values: &mut [i32]) -> io::Result<()> {
+        let input_len = values.len() + 1;
+        let mut buf = Vec::<i32>::with_capacity(input_len);
+
+        // a perfect example of how not to use ev_get_mtslots
+        unsafe {
+            buf.set_len(input_len);
+            buf[0] = code as _;
+
+            // the first field isn't counted in the len of the fat pointer
+            let ptr = from_raw_parts_mut(buf.as_mut_ptr(), values.len()) as *mut _;
+            sys::ev_get_mtslots(self.0, ptr as *mut sys::input_mt_request_layout<[i32]>)
+                .map_err(convert_error)?;
+        }
+
+        values.copy_from_slice(&buf[1..]);
+        Ok(())
     }
 
     /// `EVIOCGBIT`
