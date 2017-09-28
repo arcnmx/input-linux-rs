@@ -122,7 +122,7 @@ impl EvdevHandle {
 
     /// `EVIOCGMTSLOTS`
     ///
-    /// Warning: the current implementation can leak uninitialized memory into `values`
+    /// Warning: the current implementation can leak uninitialized heap memory into `values`
     pub fn multi_touch_slots(&self, code: ::AbsoluteAxis, values: &mut [i32]) -> io::Result<()> {
         let input_len = values.len() + 1;
         let mut buf = Vec::<i32>::with_capacity(input_len);
