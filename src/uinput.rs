@@ -6,7 +6,7 @@ use std::slice::{from_raw_parts, from_raw_parts_mut};
 use std::ffi::CStr;
 use sys;
 use nix;
-use ::{InputId, kinds};
+use ::{InputId, AbsoluteInfoSetup, kinds};
 use macros::convert_error;
 
 pub use sys::UINPUT_VERSION;
@@ -43,7 +43,7 @@ impl UInputHandle {
     }
 
     /// Create a new uinput device using the legacy `UI_DEV_CREATE` interface
-    pub fn create_legacy(&self, id: &InputId, name: &CStr, ff_effects_max: u32, abs: &[sys::uinput_abs_setup]) -> io::Result<()> {
+    pub fn create_legacy(&self, id: &InputId, name: &CStr, ff_effects_max: u32, abs: &[AbsoluteInfoSetup]) -> io::Result<()> {
         self.dev_create()?;
 
         // race condition here?
@@ -55,13 +55,12 @@ impl UInputHandle {
         copy_name(&mut setup.name, name)?;
 
         for abs in abs {
-            let code = if abs.code >= sys::ABS_CNT as _ {
-                return Err(io::Error::new(io::ErrorKind::InvalidInput, "invalid abs code"))
-            } else {
-                abs.code as usize
-            };
+            let code = abs.axis as usize;
+            if code >= sys::ABS_CNT as _ {
+                return Err(io::Error::new(io::ErrorKind::InvalidInput, "invalid abs axis code"))
+            }
 
-            let abs = &abs.absinfo;
+            let abs = &abs.info;
             setup.absmax[code] = abs.maximum;
             setup.absmin[code] = abs.minimum;
             setup.absfuzz[code] = abs.fuzz;
@@ -74,7 +73,7 @@ impl UInputHandle {
     }
 
     /// Create a new uinput device, and fall back on the legacy interface if necessary
-    pub fn create(&self, id: &InputId, name: &CStr, ff_effects_max: u32, abs: &[sys::uinput_abs_setup]) -> io::Result<()> {
+    pub fn create(&self, id: &InputId, name: &CStr, ff_effects_max: u32, abs: &[AbsoluteInfoSetup]) -> io::Result<()> {
         let mut setup: sys::uinput_setup = unsafe { uninitialized() };
         setup.id = (*id).into();
         setup.ff_effects_max = ff_effects_max;
@@ -88,7 +87,7 @@ impl UInputHandle {
         }?;
 
         for abs in abs {
-            self.abs_setup(abs)?;
+            self.abs_setup(abs.into())?;
         }
 
         Ok(())

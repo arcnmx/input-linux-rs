@@ -4,7 +4,7 @@ use std::slice::from_raw_parts_mut;
 use std::os::unix::io::{RawFd, AsRawFd};
 use nix;
 use sys;
-use ::{InputId, EventKind, AbsoluteAxis};
+use ::{InputId, EventKind, AbsoluteAxis, AbsoluteInfo};
 use macros::convert_error;
 
 pub use sys::EV_VERSION;
@@ -174,18 +174,19 @@ impl EvdevHandle {
     }
 
     /// `EVIOCGABS`
-    pub fn abs_info(&self, abs: AbsoluteAxis) -> io::Result<sys::input_absinfo> {
+    pub fn abs_info(&self, abs: AbsoluteAxis) -> io::Result<AbsoluteInfo> {
         unsafe {
             let mut info = uninitialized();
             sys::ev_get_abs(self.0, abs as _, &mut info)
-                .map(|_| info)
+                .map(|_| info.into())
                 .map_err(convert_error)
         }
     }
 
     /// `EVIOCSABS`
-    pub fn set_abs_info(&self, abs: AbsoluteAxis, info: &sys::input_absinfo) -> io::Result<()> {
+    pub fn set_abs_info(&self, abs: AbsoluteAxis, info: &AbsoluteInfo) -> io::Result<()> {
         unsafe {
+            let info: &sys::input_absinfo = info.into();
             sys::ev_set_abs(self.0, abs as _, info)
                 .map(drop)
                 .map_err(convert_error)

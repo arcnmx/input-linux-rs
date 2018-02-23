@@ -62,3 +62,73 @@ impl From<InputId> for sys::input_id {
         <&sys::input_id>::from(&id).clone()
     }
 }
+
+#[repr(C)]
+#[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+pub struct AbsoluteInfoSetup {
+    pub axis: AbsoluteAxis,
+    pub info: AbsoluteInfo,
+}
+
+impl<'a> From<&'a AbsoluteInfoSetup> for &'a sys::uinput_abs_setup {
+    fn from(info: &'a AbsoluteInfoSetup) -> Self {
+        let raw = info as *const _ as *const _;
+        unsafe { &*raw }
+    }
+}
+
+impl From<AbsoluteInfoSetup> for sys::uinput_abs_setup {
+    fn from(info: AbsoluteInfoSetup) -> Self {
+        use std::mem;
+        unsafe {
+            mem::transmute(info)
+        }
+    }
+}
+
+#[repr(C)]
+#[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+pub struct AbsoluteInfo {
+    /// latest reported value for the axis
+    pub value: i32,
+    /// specifies minimum value for the axis
+    pub minimum: i32,
+    /// specifies maximum value for the axis
+    pub maximum: i32,
+    /// specifies fuzz value that is used to filter noise from the event stream
+    pub fuzz: i32,
+    /// values that are within this value will be discarded by joydev interface and reported as 0 instead
+    pub flat: i32,
+    /// specifies resolution for the values reported for the axis
+    ///
+    /// Resolution for main axes (ABS_X, ABS_Y, ABS_Z) is reported in units per
+    /// millimeter (units/mm), resolution for rotational axes (ABS_RX, ABS_RY,
+    /// ABS_RZ) is reported in units per radian.
+    pub resolution: i32,
+}
+
+impl<'a> From<&'a sys::input_absinfo> for &'a AbsoluteInfo {
+    fn from(info: &'a sys::input_absinfo) -> Self {
+        let raw = info as *const _ as *const _;
+        unsafe { &*raw }
+    }
+}
+
+impl<'a> From<&'a AbsoluteInfo> for &'a sys::input_absinfo {
+    fn from(info: &'a AbsoluteInfo) -> Self {
+        let raw = info as *const _ as *const _;
+        unsafe { &*raw }
+    }
+}
+
+impl From<sys::input_absinfo> for AbsoluteInfo {
+    fn from(info: sys::input_absinfo) -> Self {
+        <&AbsoluteInfo>::from(&info).clone()
+    }
+}
+
+impl From<AbsoluteInfo> for sys::input_absinfo {
+    fn from(info: AbsoluteInfo) -> Self {
+        <&sys::input_absinfo>::from(&info).clone()
+    }
+}
