@@ -55,7 +55,7 @@ impl EvdevHandle {
             @get keycode_legacy = ev_get_keycode -> [u32; 2]
         }
         {
-            /// `EVIOCGKEYCODE`_V2
+            /// `EVIOCGKEYCODE_V2`
             @get keycode = ev_get_keycode_v2 -> sys::input_keymap_entry
         }
         {
@@ -63,7 +63,7 @@ impl EvdevHandle {
             @set set_keycode_legacy(&[u32; 2]) = ev_set_keycode
         }
         {
-            /// `EVIOCSKEYCODE`_V2
+            /// `EVIOCSKEYCODE_V2`
             @set set_keycode(&sys::input_keymap_entry) = ev_set_keycode_v2
         }
         {
