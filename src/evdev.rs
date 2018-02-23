@@ -4,7 +4,7 @@ use std::slice::from_raw_parts_mut;
 use std::os::unix::io::{RawFd, AsRawFd};
 use nix;
 use sys;
-use ::{InputId};
+use ::{InputId, EventKind};
 use macros::convert_error;
 
 pub use sys::EV_VERSION;
@@ -110,14 +110,6 @@ impl EvdevHandle {
             /// `EVIOCGEFFECTS`
             @get effects_count = ev_get_effects -> i32
         }
-        {
-            /// `EVIOCGMASK`
-            @get event_mask = ev_get_mask -> sys::input_mask
-        }
-        {
-            /// `EVIOCSMASK`
-            @set set_event_mask(&sys::input_mask) = ev_set_mask
-        }
     }
 
     /// `EVIOCGMTSLOTS`
@@ -140,6 +132,36 @@ impl EvdevHandle {
 
         values.copy_from_slice(&buf[1..]);
         Ok(())
+    }
+
+    /// `EVIOCGMASK`
+    pub fn event_mask(&self, kind: EventKind, buffer: &mut [u8]) -> io::Result<()> {
+        unsafe {
+            let mut mask = sys::input_mask {
+                type_: kind as _,
+                codes_size: buffer.len() as _,
+                codes_ptr: buffer.as_mut_ptr() as usize as _,
+            };
+
+            sys::ev_get_mask(self.0, &mut mask)
+                .map(drop)
+                .map_err(convert_error)
+        }
+    }
+
+    /// `EVIOCSMASK`
+    pub fn set_event_mask(&self, kind: EventKind, buffer: &[u8]) -> io::Result<()> {
+        unsafe {
+            let mask = sys::input_mask {
+                type_: kind as _,
+                codes_size: buffer.len() as _,
+                codes_ptr: buffer.as_ptr() as usize as _,
+            };
+
+            sys::ev_set_mask(self.0, &mask)
+                .map(drop)
+                .map_err(convert_error)
+        }
     }
 
     /// `EVIOCGBIT`
