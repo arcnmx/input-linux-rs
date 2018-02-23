@@ -1,7 +1,7 @@
 //#![deny(missing_docs)]
 #![doc(html_root_url = "http://arcnmx.github.io/input-linux-rs/")]
 
-extern crate input_linux_sys as sys;
+pub extern crate input_linux_sys as sys;
 extern crate nix;
 
 #[macro_use]
