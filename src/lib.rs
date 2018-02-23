@@ -20,7 +20,10 @@ mod keys;
 pub use keys::Key;
 
 pub mod evdev;
+pub use evdev::EvdevHandle;
+
 pub mod uinput;
+pub use uinput::UInputHandle;
 
 #[cfg(feature = "tokio")]
 mod tokio;
