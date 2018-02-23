@@ -4,7 +4,7 @@ use std::slice::from_raw_parts_mut;
 use std::os::unix::io::{RawFd, AsRawFd};
 use nix;
 use sys;
-use ::{InputId, EventKind};
+use ::{InputId, EventKind, AbsoluteAxis};
 use macros::convert_error;
 
 pub use sys::EV_VERSION;
@@ -115,7 +115,7 @@ impl EvdevHandle {
     /// `EVIOCGMTSLOTS`
     ///
     /// Warning: the current implementation can leak uninitialized heap memory into `values`
-    pub fn multi_touch_slots(&self, code: ::AbsoluteAxis, values: &mut [i32]) -> io::Result<()> {
+    pub fn multi_touch_slots(&self, code: AbsoluteAxis, values: &mut [i32]) -> io::Result<()> {
         let input_len = values.len() + 1;
         let mut buf = Vec::<i32>::with_capacity(input_len);
 
@@ -165,16 +165,16 @@ impl EvdevHandle {
     }
 
     /// `EVIOCGBIT`
-    pub fn event_bits(&self, ev: usize, buffer: &mut [u8]) -> io::Result<()> {
+    pub fn event_bits(&self, kind: EventKind, buffer: &mut [u8]) -> io::Result<()> {
         unsafe {
-            sys::ev_get_bit(self.0, ev as _, buffer)
+            sys::ev_get_bit(self.0, kind as _, buffer)
                 .map(drop)
                 .map_err(convert_error)
         }
     }
 
     /// `EVIOCGABS`
-    pub fn abs_info(&self, abs: usize) -> io::Result<sys::input_absinfo> {
+    pub fn abs_info(&self, abs: AbsoluteAxis) -> io::Result<sys::input_absinfo> {
         unsafe {
             let mut info = uninitialized();
             sys::ev_get_abs(self.0, abs as _, &mut info)
@@ -184,7 +184,7 @@ impl EvdevHandle {
     }
 
     /// `EVIOCSABS`
-    pub fn set_abs_info(&self, abs: usize, info: &sys::input_absinfo) -> io::Result<()> {
+    pub fn set_abs_info(&self, abs: AbsoluteAxis, info: &sys::input_absinfo) -> io::Result<()> {
         unsafe {
             sys::ev_set_abs(self.0, abs as _, info)
                 .map(drop)
