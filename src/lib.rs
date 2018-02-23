@@ -22,6 +22,12 @@ pub use keys::Key;
 pub mod evdev;
 pub mod uinput;
 
+#[cfg(feature = "tokio")]
+mod tokio;
+
+#[cfg(feature = "tokio")]
+pub use tokio::EventDecoder;
+
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
 pub struct InputId {
