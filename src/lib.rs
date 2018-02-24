@@ -34,7 +34,7 @@ pub use bitmask::Bitmask;
 mod tokio;
 
 #[cfg(feature = "tokio")]
-pub use tokio::EventDecoder;
+pub use tokio::EventCodec;
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]

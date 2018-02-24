@@ -1,7 +1,15 @@
 use std::mem::transmute;
+use std::io;
 use sys;
 
-pub type RangeError = ();
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct RangeError;
+
+impl From<RangeError> for io::Error {
+    fn from(_: RangeError) -> Self {
+        io::Error::new(io::ErrorKind::InvalidData, "event code out of range")
+    }
+}
 
 #[repr(u16)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
