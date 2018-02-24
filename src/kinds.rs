@@ -38,7 +38,6 @@ pub enum InputProperty {
     Unknown1D,
     Unknown1E,
     Unknown1F,
-    Count,
 }
 
 #[repr(u16)]
@@ -79,8 +78,6 @@ pub enum EventKind {
     Unknown1E,
     Unknown1F,
 
-    Count,
-
     UInput = sys::EV_UINPUT as _,
 }
 
@@ -90,7 +87,6 @@ pub enum UInputKind {
     Unknown0 = 0,
     ForceFeedbackUpload = sys::UI_FF_UPLOAD as _,
     ForceFeedbackErase = sys::UI_FF_ERASE as _,
-    Count,
 }
 
 #[repr(u16)]
@@ -112,8 +108,6 @@ pub enum SynchronizeKind {
     UnknownD,
     UnknownE,
     UnknownF,
-
-    Count,
 }
 
 // XXX: sure would be nice if Rust knew these weren't overlapping and allowed #[repr(i32)]
@@ -144,8 +138,6 @@ pub enum RelativeAxis {
     UnknownD,
     UnknownE,
     UnknownF,
-
-    Count,
 }
 
 #[repr(u16)]
@@ -234,8 +226,6 @@ pub enum AbsoluteAxis {
     MultitouchToolY = sys::ABS_MT_TOOL_Y as _,
     Unknown3E,
     Unknown3F,
-
-    Count,
 }
 
 #[repr(u16)]
@@ -274,8 +264,6 @@ pub enum SwitchKind {
     MuteDevice = sys::SW_MUTE_DEVICE as _,
     /// set = pen inserted
     PenInserted = sys::SW_PEN_INSERTED as _,
-
-    Count,
 }
 
 #[repr(u16)]
@@ -295,8 +283,6 @@ pub enum MiscKind {
     Timestamp = sys::MSC_TIMESTAMP as _,
     Unknown6,
     Unknown7,
-
-    Count,
 }
 
 #[repr(u16)]
@@ -318,8 +304,6 @@ pub enum LedKind {
     UnknownD,
     UnknownE,
     UnknownF,
-
-    Count,
 }
 
 #[repr(u16)]
@@ -327,8 +311,6 @@ pub enum LedKind {
 pub enum AutorepeatKind {
     Delay = sys::REP_DELAY as _,
     Period = sys::REP_PERIOD as _,
-
-    Count,
 }
 
 #[repr(u16)]
@@ -342,27 +324,9 @@ pub enum SoundKind {
     Unknown5,
     Unknown6,
     Unknown7,
-
-    Count,
 }
 
-impl InputProperty {
-    pub fn from_code(code: u16) -> Result<Self, RangeError> {
-        match code {
-            0...0x1f => Ok(unsafe { transmute(code) }),
-            _ => return Err(Default::default()),
-        }
-    }
-}
-
-#[cfg(feature = "unstable")]
-impl TryFrom<u16> for InputProperty {
-    type Error = RangeError;
-
-    fn try_from(code: u16) -> Result<Self, Self::Error> {
-        Self::from_code(code)
-    }
-}
+impl_iterable! { InputProperty(0, sys::INPUT_PROP_CNT) }
 
 impl EventKind {
     pub fn from_type(code: u16) -> Result<Self, RangeError> {
@@ -384,41 +348,11 @@ impl TryFrom<u16> for EventKind {
     }
 }
 
-impl UInputKind {
-    pub fn from_code(code: u16) -> Result<Self, RangeError> {
-        match code {
-            0...0x02 => Ok(unsafe { transmute(code) }),
-            _ => return Err(Default::default()),
-        }
-    }
-}
+impl_iterable! { @nofromcode EventKind(0, sys::EV_CNT) }
 
-#[cfg(feature = "unstable")]
-impl TryFrom<u16> for UInputKind {
-    type Error = RangeError;
+impl_iterable! { UInputKind(0, sys::UI_FF_ERASE + 1) }
 
-    fn try_from(code: u16) -> Result<Self, Self::Error> {
-        Self::from_code(code)
-    }
-}
-
-impl SynchronizeKind {
-    pub fn from_code(code: u16) -> Result<Self, RangeError> {
-        match code {
-            0...0x0f => Ok(unsafe { transmute(code) }),
-            _ => return Err(Default::default()),
-        }
-    }
-}
-
-#[cfg(feature = "unstable")]
-impl TryFrom<u16> for SynchronizeKind {
-    type Error = RangeError;
-
-    fn try_from(code: u16) -> Result<Self, Self::Error> {
-        Self::from_code(code)
-    }
-}
+impl_iterable! { SynchronizeKind(0, sys::SYN_CNT) }
 
 impl From<i32> for KeyState {
     fn from(key: i32) -> Self {
@@ -442,128 +376,16 @@ impl From<KeyState> for i32 {
     }
 }
 
-impl RelativeAxis {
-    pub fn from_code(code: u16) -> Result<Self, RangeError> {
-        match code {
-            0...0x0f => Ok(unsafe { transmute(code) }),
-            _ => return Err(Default::default()),
-        }
-    }
-}
+impl_iterable! { RelativeAxis(0, sys::REL_CNT) }
 
-#[cfg(feature = "unstable")]
-impl TryFrom<u16> for RelativeAxis {
-    type Error = RangeError;
+impl_iterable! { AbsoluteAxis(0, sys::ABS_CNT) }
 
-    fn try_from(code: u16) -> Result<Self, Self::Error> {
-        Self::from_code(code)
-    }
-}
+impl_iterable! { SwitchKind(0, sys::SW_CNT) }
 
-impl AbsoluteAxis {
-    pub fn from_code(code: u16) -> Result<Self, RangeError> {
-        match code {
-            0...0x3f => Ok(unsafe { transmute(code) }),
-            _ => return Err(Default::default()),
-        }
-    }
-}
+impl_iterable! { MiscKind(0, sys::MSC_CNT) }
 
-#[cfg(feature = "unstable")]
-impl TryFrom<u16> for AbsoluteAxis {
-    type Error = RangeError;
+impl_iterable! { LedKind(0, sys::LED_CNT) }
 
-    fn try_from(code: u16) -> Result<Self, Self::Error> {
-        Self::from_code(code)
-    }
-}
+impl_iterable! { AutorepeatKind(0, sys::REP_CNT) }
 
-impl SwitchKind {
-    pub fn from_code(code: u16) -> Result<Self, RangeError> {
-        match code {
-            0...0x0f => Ok(unsafe { transmute(code) }),
-            _ => return Err(Default::default()),
-        }
-    }
-}
-
-#[cfg(feature = "unstable")]
-impl TryFrom<u16> for SwitchKind {
-    type Error = RangeError;
-
-    fn try_from(code: u16) -> Result<Self, Self::Error> {
-        Self::from_code(code)
-    }
-}
-
-impl MiscKind {
-    pub fn from_code(code: u16) -> Result<Self, RangeError> {
-        match code {
-            0...0x07 => Ok(unsafe { transmute(code) }),
-            _ => return Err(Default::default()),
-        }
-    }
-}
-
-#[cfg(feature = "unstable")]
-impl TryFrom<u16> for Misc {
-    type Error = RangeError;
-
-    fn try_from(code: u16) -> Result<Self, Self::Error> {
-        Self::from_code(code)
-    }
-}
-
-impl LedKind {
-    pub fn from_code(code: u16) -> Result<Self, RangeError> {
-        match code {
-            0...0x0f => Ok(unsafe { transmute(code) }),
-            _ => return Err(Default::default()),
-        }
-    }
-}
-
-#[cfg(feature = "unstable")]
-impl TryFrom<u16> for LedKind {
-    type Error = RangeError;
-
-    fn try_from(code: u16) -> Result<Self, Self::Error> {
-        Self::from_code(code)
-    }
-}
-
-impl AutorepeatKind {
-    pub fn from_code(code: u16) -> Result<Self, RangeError> {
-        match code {
-            0...0x01 => Ok(unsafe { transmute(code) }),
-            _ => return Err(Default::default()),
-        }
-    }
-}
-
-#[cfg(feature = "unstable")]
-impl TryFrom<u16> for AutorepeatKind {
-    type Error = RangeError;
-
-    fn try_from(code: u16) -> Result<Self, Self::Error> {
-        Self::from_code(code)
-    }
-}
-
-impl SoundKind {
-    pub fn from_code(code: u16) -> Result<Self, RangeError> {
-        match code {
-            0...0x07 => Ok(unsafe { transmute(code) }),
-            _ => return Err(Default::default()),
-        }
-    }
-}
-
-#[cfg(feature = "unstable")]
-impl TryFrom<u16> for SoundKind {
-    type Error = RangeError;
-
-    fn try_from(code: u16) -> Result<Self, Self::Error> {
-        Self::from_code(code)
-    }
-}
+impl_iterable! { SoundKind(0, sys::SND_CNT) }

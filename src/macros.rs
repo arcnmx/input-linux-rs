@@ -10,6 +10,65 @@ pub fn convert_error(e: sys::Error) -> io::Error {
     }
 }
 
+macro_rules! impl_iterable {
+    (@impliter $name: ident($start:expr, $count:expr)) => {
+        impl ::enum_iterator::IterableEnum for $name {
+            fn iter_next(v: usize) -> Option<(usize, Self)> {
+                if v < Self::COUNT {
+                    unsafe {
+                        Some((v + 1, ::std::mem::transmute(v as u16)))
+                    }
+                } else {
+                    None
+                }
+            }
+        }
+
+        impl $name {
+            pub const COUNT: usize = $count as usize;
+
+            pub fn iter() -> ::enum_iterator::EnumIterator<Self> {
+                ::enum_iterator::EnumIterator::new($start)
+            }
+        }
+
+        impl From<$name> for u16 {
+            fn from(v: $name) -> Self {
+                v as _
+            }
+        }
+    };
+    (@implcode $name: ident($start:expr, $count:expr)) => {
+        impl $name {
+            pub fn from_code(code: u16) -> Result<Self, ::kinds::RangeError> {
+                use std::mem;
+
+                if code < Self::COUNT as u16 {
+                    Ok(unsafe { mem::transmute(code) })
+                } else {
+                    Err(Default::default())
+                }
+            }
+        }
+
+        #[cfg(feature = "unstable")]
+        impl TryFrom<u16> for $name {
+            type Error = kinds::RangeError;
+
+            fn try_from(code: u16) -> Result<Self, Self::Error> {
+                Self::from_code(code)
+            }
+        }
+    };
+    ($name: ident($start:expr, $count:expr)) => {
+        impl_iterable! { @impliter $name($start, $count) }
+        impl_iterable! { @implcode $name($start, $count) }
+    };
+    (@nofromcode $name: ident($start:expr, $count:expr)) => {
+        impl_iterable! { @impliter $name($start, $count) }
+    };
+}
+
 macro_rules! ioctl_impl {
     ($(#[$attr:meta])* @get $f:ident = $ev:ident -> $ret:ty) => {
         $(#[$attr])*

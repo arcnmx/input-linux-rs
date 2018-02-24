@@ -995,26 +995,6 @@ pub enum Key {
     Unknown2FD,
     Unknown2FE,
     Unknown2FF,
-
-    Count,
 }
 
-impl Key {
-    pub fn from_code(code: u16) -> Result<Self, ::RangeError> {
-        use std::mem;
-
-        match code {
-            0...0x2ff => Ok(unsafe { mem::transmute(code) }),
-            _ => return Err(Default::default()),
-        }
-    }
-}
-
-#[cfg(feature = "unstable")]
-impl TryFrom<u16> for Key {
-    type Error = ::RangeError;
-
-    fn try_from(code: u16) -> Result<Self, Self::Error> {
-        Self::from_code(code)
-    }
-}
+impl_iterable! { Key(0, sys::KEY_CNT) }

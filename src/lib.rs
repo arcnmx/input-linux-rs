@@ -25,6 +25,8 @@ pub use evdev::EvdevHandle;
 pub mod uinput;
 pub use uinput::UInputHandle;
 
+mod enum_iterator;
+
 #[cfg(feature = "tokio")]
 mod tokio;
 
