@@ -6,6 +6,7 @@ use nix;
 use sys;
 use ::{InputId, EventKind, AbsoluteAxis, AbsoluteInfo};
 use macros::convert_error;
+use bitmask::Bitmask;
 
 pub use sys::EV_VERSION;
 
@@ -80,7 +81,7 @@ impl EvdevHandle {
         }
         {
             /// `EVIOCGPROP`
-            @get_buf device_properties(u8) = ev_get_prop
+            @get_buf device_properties_raw(u8) = ev_get_prop
         }
         {
             /// `EVIOCGKEY`
@@ -110,6 +111,12 @@ impl EvdevHandle {
             /// `EVIOCGEFFECTS`
             @get effects_count = ev_get_effects -> i32
         }
+    }
+
+    /// `EVIOCGPROP`
+    pub fn device_properties(&self) -> io::Result<Bitmask<::InputProperty>> {
+        let mut bitmask = Bitmask::default();
+        self.device_properties_raw(&mut bitmask).map(|_| bitmask)
     }
 
     /// `EVIOCGMTSLOTS`
