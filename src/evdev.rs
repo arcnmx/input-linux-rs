@@ -165,10 +165,10 @@ impl EvdevHandle {
     }
 
     /// `EVIOCGBIT`
-    pub fn event_bits(&self, kind: EventKind, buffer: &mut [u8]) -> io::Result<()> {
+    pub fn event_bits(&self, kind: EventKind, buffer: &mut [u8]) -> io::Result<usize> {
         unsafe {
             sys::ev_get_bit(self.0, kind as _, buffer)
-                .map(drop)
+                .map(|i| i as _)
                 .map_err(convert_error)
         }
     }
