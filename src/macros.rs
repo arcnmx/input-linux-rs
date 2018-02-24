@@ -31,13 +31,17 @@ macro_rules! impl_iterable {
                     None
                 }
             }
+
+            fn iter() -> ::enum_iterator::EnumIterator<Self> {
+                ::enum_iterator::EnumIterator::new($start)
+            }
         }
 
         impl $name {
             pub const COUNT: usize = $count as usize;
 
             pub fn iter() -> ::enum_iterator::EnumIterator<Self> {
-                ::enum_iterator::EnumIterator::new($start)
+                ::enum_iterator::IterableEnum::iter()
             }
 
             pub fn bitmask() -> ::bitmask::Bitmask<Self> {

@@ -2,6 +2,8 @@ use std::marker::PhantomData;
 
 pub trait IterableEnum: Sized {
     fn iter_next(v: usize) -> Option<(usize, Self)>;
+
+    fn iter() -> EnumIterator<Self>;
 }
 
 #[derive(Copy, Clone, Debug)]
