@@ -96,6 +96,12 @@ impl<T: BitmaskTrait> Bitmask<T> {
         let (offset, shift) = Self::index(index);
         self.slice_mut()[offset] ^= 1u8 << shift;
     }
+
+    pub fn or<I: IntoIterator<Item=T::Index>>(&mut self, indices: I) {
+        for index in indices {
+            self.set(&index);
+        }
+    }
 }
 
 impl<'a, T: BitmaskTrait> IntoIterator for &'a Bitmask<T> {
