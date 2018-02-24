@@ -19,7 +19,7 @@ macro_rules! impl_iterable {
             fn array_default() -> Self::Array { unsafe { ::std::mem::zeroed() } }
             fn array_slice(array: &Self::Array) -> &[u8] { array }
             fn array_slice_mut(array: &mut Self::Array) -> &mut [u8] { array }
-            fn index(index: &Self::Index) -> usize { *index as usize }
+            fn index(index: Self::Index) -> usize { index as usize }
         }
 
         impl ::enum_iterator::IterableEnum for $name {

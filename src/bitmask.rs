@@ -4,13 +4,13 @@ use enum_iterator::{IterableEnum, EnumIterator};
 
 pub trait BitmaskTrait {
     type Array: Sized;
-    type Index: IterableEnum;
+    type Index: Copy + IterableEnum;
 
     fn array_default() -> Self::Array;
     fn array_slice(array: &Self::Array) -> &[u8];
     fn array_slice_mut(array: &mut Self::Array) -> &mut [u8];
-    fn index(index: &Self::Index) -> usize;
-    fn index_valid(_array: &Self::Array, _index: &Self::Index) -> bool { true }
+    fn index(index: Self::Index) -> usize;
+    fn index_valid(_array: &Self::Array, _index: Self::Index) -> bool { true }
 }
 
 impl BitmaskTrait for Vec<u8> {
@@ -20,8 +20,8 @@ impl BitmaskTrait for Vec<u8> {
     fn array_default() -> Self::Array { vec![0u8; 0x10] }
     fn array_slice(array: &Self::Array) -> &[u8] { array }
     fn array_slice_mut(array: &mut Self::Array) -> &mut [u8] { array }
-    fn index(index: &Self::Index) -> usize { *index as _ }
-    fn index_valid(array: &Self::Array, index: &Self::Index) -> bool { array.len() > *index as usize }
+    fn index(index: Self::Index) -> usize { index as _ }
+    fn index_valid(array: &Self::Array, index: Self::Index) -> bool { array.len() > index as usize }
 }
 
 pub type BitmaskVec = Bitmask<Vec<u8>>;
@@ -66,40 +66,40 @@ impl<T: BitmaskTrait> Bitmask<T> {
         T::array_slice_mut(&mut self.mask)
     }
 
-    pub fn index(index: &T::Index) -> (usize, usize) {
+    pub fn index(index: T::Index) -> (usize, usize) {
         let index = T::index(index);
         (index / 8, index % 8)
     }
 
-    pub fn index_valid(&self, index: &T::Index) -> bool {
+    pub fn index_valid(&self, index: T::Index) -> bool {
         T::index_valid(&self.mask, index)
     }
 
-    pub fn get(&self, index: &T::Index) -> bool {
+    pub fn get(&self, index: T::Index) -> bool {
         let (offset, shift) = Self::index(index);
         (self.slice()[offset] & (1u8 << shift)) != 0
     }
 
-    pub fn set(&mut self, index: &T::Index) {
+    pub fn set(&mut self, index: T::Index) {
         let (offset, shift) = Self::index(index);
         let v = &mut self.slice_mut()[offset];
         *v |= 1u8 << shift;
     }
 
-    pub fn clear(&mut self, index: &T::Index) {
+    pub fn clear(&mut self, index: T::Index) {
         let (offset, shift) = Self::index(index);
         let v = &mut self.slice_mut()[offset];
         *v &= !(1u8 << shift);
     }
 
-    pub fn flip(&mut self, index: &T::Index) {
+    pub fn flip(&mut self, index: T::Index) {
         let (offset, shift) = Self::index(index);
         self.slice_mut()[offset] ^= 1u8 << shift;
     }
 
     pub fn or<I: IntoIterator<Item=T::Index>>(&mut self, indices: I) {
         for index in indices {
-            self.set(&index);
+            self.set(index);
         }
     }
 }
@@ -126,7 +126,7 @@ impl<'a, T: BitmaskTrait> Iterator for BitmaskIterator<'a, T> {
 
     fn next(&mut self) -> Option<Self::Item> {
         let mask = &self.mask;
-        self.iter.by_ref().take_while(|i| mask.index_valid(i)).filter(|i| mask.get(i)).next()
+        self.iter.by_ref().take_while(|i| mask.index_valid(*i)).filter(|i| mask.get(*i)).next()
     }
 }
 
