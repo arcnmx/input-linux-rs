@@ -12,6 +12,15 @@ pub fn convert_error(e: sys::Error) -> io::Error {
 
 macro_rules! impl_iterable {
     (@impliter $name: ident($start:expr, $count:expr)) => {
+        impl ::bitmask::BitmaskTrait for $name {
+            type Array = [u8; (Self::COUNT + 7) / 8];
+            type Index = $name;
+
+            fn array_slice(array: &Self::Array) -> &[u8] { array }
+            fn array_slice_mut(array: &mut Self::Array) -> &mut [u8] { array }
+            fn index(index: &Self::Index) -> usize { *index as usize }
+        }
+
         impl ::enum_iterator::IterableEnum for $name {
             fn iter_next(v: usize) -> Option<(usize, Self)> {
                 if v < Self::COUNT {
@@ -29,6 +38,10 @@ macro_rules! impl_iterable {
 
             pub fn iter() -> ::enum_iterator::EnumIterator<Self> {
                 ::enum_iterator::EnumIterator::new($start)
+            }
+
+            pub fn bitmask() -> ::bitmask::Bitmask<Self> {
+                Default::default()
             }
         }
 

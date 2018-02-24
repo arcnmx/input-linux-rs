@@ -25,7 +25,10 @@ pub use evdev::EvdevHandle;
 pub mod uinput;
 pub use uinput::UInputHandle;
 
-mod enum_iterator;
+pub mod enum_iterator;
+
+pub mod bitmask;
+pub use bitmask::Bitmask;
 
 #[cfg(feature = "tokio")]
 mod tokio;
