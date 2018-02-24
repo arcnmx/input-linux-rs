@@ -134,8 +134,53 @@ impl EvdevHandle {
         Ok(())
     }
 
+    impl_bitmasks! { EventKind, EventKind::Synchronize,
+        event_mask_events, set_event_mask_events,
+        event_bits
+    }
+
+    impl_bitmasks! { ::Key, EventKind::Key,
+        key_mask, set_key_mask,
+        key_bits
+    }
+
+    impl_bitmasks! { ::RelativeAxis, EventKind::Relative,
+        relative_mask, set_relative_mask,
+        relative_bits
+    }
+
+    impl_bitmasks! { ::AbsoluteAxis, EventKind::Absolute,
+        absolute_mask, set_absolute_mask,
+        absolute_bits
+    }
+
+    impl_bitmasks! { ::MiscKind, EventKind::Misc,
+        misc_mask, set_misc_mask,
+        misc_bits
+    }
+
+    impl_bitmasks! { ::SwitchKind, EventKind::Switch,
+        switch_mask, set_switch_mask,
+        switch_bits
+    }
+
+    impl_bitmasks! { ::LedKind, EventKind::Led,
+        led_mask, set_led_mask,
+        led_bits
+    }
+
+    impl_bitmasks! { ::SoundKind, EventKind::Sound,
+        sound_mask, set_sound_mask,
+        sound_bits
+    }
+
+    impl_bitmasks! { ::AutorepeatKind, EventKind::Autorepeat,
+        autorepeat_mask, set_autorepeat_mask,
+        autorepeat_bits
+    }
+
     /// `EVIOCGMASK`
-    pub fn event_mask(&self, kind: EventKind, buffer: &mut [u8]) -> io::Result<()> {
+    pub fn event_mask_raw(&self, kind: EventKind, buffer: &mut [u8]) -> io::Result<()> {
         unsafe {
             let mut mask = sys::input_mask {
                 type_: kind as _,
@@ -150,7 +195,7 @@ impl EvdevHandle {
     }
 
     /// `EVIOCSMASK`
-    pub fn set_event_mask(&self, kind: EventKind, buffer: &[u8]) -> io::Result<()> {
+    pub fn set_event_mask_raw(&self, kind: EventKind, buffer: &[u8]) -> io::Result<()> {
         unsafe {
             let mask = sys::input_mask {
                 type_: kind as _,
@@ -165,7 +210,7 @@ impl EvdevHandle {
     }
 
     /// `EVIOCGBIT`
-    pub fn event_bits(&self, kind: EventKind, buffer: &mut [u8]) -> io::Result<usize> {
+    pub fn event_bits_raw(&self, kind: EventKind, buffer: &mut [u8]) -> io::Result<usize> {
         unsafe {
             sys::ev_get_bit(self.0, kind as _, buffer)
                 .map(|i| i as _)
@@ -174,7 +219,7 @@ impl EvdevHandle {
     }
 
     /// `EVIOCGABS`
-    pub fn abs_info(&self, abs: AbsoluteAxis) -> io::Result<AbsoluteInfo> {
+    pub fn absolute_info(&self, abs: AbsoluteAxis) -> io::Result<AbsoluteInfo> {
         unsafe {
             let mut info = uninitialized();
             sys::ev_get_abs(self.0, abs as _, &mut info)
@@ -184,7 +229,7 @@ impl EvdevHandle {
     }
 
     /// `EVIOCSABS`
-    pub fn set_abs_info(&self, abs: AbsoluteAxis, info: &AbsoluteInfo) -> io::Result<()> {
+    pub fn set_absolute_info(&self, abs: AbsoluteAxis, info: &AbsoluteInfo) -> io::Result<()> {
         unsafe {
             let info: &sys::input_absinfo = info.into();
             sys::ev_set_abs(self.0, abs as _, info)

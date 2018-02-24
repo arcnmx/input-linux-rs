@@ -337,6 +337,33 @@ impl EventKind {
             _ => return Err(Default::default()),
         }
     }
+
+    /// Returns the maximum known number of codes for the current event
+    pub fn count(&self) -> Result<usize, ()> {
+        match *self {
+            EventKind::Synchronize => Ok(SynchronizeKind::COUNT),
+            EventKind::Key => Ok(::Key::COUNT),
+            EventKind::Relative => Ok(RelativeAxis::COUNT),
+            EventKind::Absolute => Ok(AbsoluteAxis::COUNT),
+            EventKind::Misc => Ok(MiscKind::COUNT),
+            EventKind::Switch => Ok(SwitchKind::COUNT),
+            EventKind::Led => Ok(LedKind::COUNT),
+            EventKind::Sound => Ok(SoundKind::COUNT),
+            EventKind::Autorepeat => Ok(AutorepeatKind::COUNT),
+            EventKind::UInput => Ok(UInputKind::COUNT),
+            _ => Err(()),
+        }
+    }
+
+    /// Like `count()` but with an exception for `::Synchronize` representing
+    /// `EventKind`, matching the behaviour of `EVIOCGBIT` and `EVIOCGMASK`.
+    /// If you're using a bitmask you probably want this.
+    pub fn count_bits(&self) -> Result<usize, ()> {
+        match *self {
+            EventKind::Synchronize => Ok(EventKind::COUNT),
+            _ => self.count(),
+        }
+    }
 }
 
 #[cfg(feature = "unstable")]

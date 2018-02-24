@@ -6,6 +6,20 @@ pub trait IterableEnum: Sized {
     fn iter() -> EnumIterator<Self>;
 }
 
+impl IterableEnum for u16 {
+    fn iter_next(v: usize) -> Option<(usize, Self)> {
+        if v < 0xffff {
+            Some((v + 1, v as u16))
+        } else {
+            None
+        }
+    }
+
+    fn iter() -> EnumIterator<Self> {
+        EnumIterator::new(0)
+    }
+}
+
 #[derive(Copy, Clone, Debug)]
 pub struct EnumIterator<T> {
     count: usize,

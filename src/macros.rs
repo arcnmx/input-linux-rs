@@ -16,6 +16,7 @@ macro_rules! impl_iterable {
             type Array = [u8; (Self::COUNT + 7) / 8];
             type Index = $name;
 
+            fn array_default() -> Self::Array { unsafe { ::std::mem::zeroed() } }
             fn array_slice(array: &Self::Array) -> &[u8] { array }
             fn array_slice_mut(array: &mut Self::Array) -> &mut [u8] { array }
             fn index(index: &Self::Index) -> usize { *index as usize }
@@ -157,5 +158,26 @@ macro_rules! ioctl_impl {
         $(
             ioctl_impl! {$($tt)*}
         )*
+    };
+}
+
+macro_rules! impl_bitmasks {
+    { $kind:path, $event: expr, $name_mask:ident, $name_mask_set:ident, $name_bits:ident } => {
+        /// `EVIOCGMASK`
+        pub fn $name_mask(&self) -> io::Result<::bitmask::Bitmask<$kind>> {
+            let mut bitmask = ::bitmask::Bitmask::default();
+            self.event_mask_raw($event, &mut bitmask).map(|_| bitmask)
+        }
+
+        /// `EVIOCSMASK`
+        pub fn $name_mask_set(&self, bitmask: &::bitmask::Bitmask<$kind>) -> io::Result<()> {
+            self.set_event_mask_raw($event, bitmask)
+        }
+
+        /// `EVIOCGBIT`
+        pub fn $name_bits(&self) -> io::Result<::bitmask::Bitmask<$kind>> {
+            let mut bitmask = ::bitmask::Bitmask::default();
+            self.event_bits_raw($event, &mut bitmask).map(|_| bitmask)
+        }
     };
 }
