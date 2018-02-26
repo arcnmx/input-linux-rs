@@ -40,6 +40,12 @@ impl EventTime {
     }
 }
 
+impl Default for EventTime {
+    fn default() -> Self {
+        Self::new(0, 0)
+    }
+}
+
 impl fmt::Debug for EventTime {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         f.debug_struct("EventTime")
