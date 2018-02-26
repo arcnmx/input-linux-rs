@@ -7,6 +7,7 @@ use ::{
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
 pub struct SynchronizeEvent {
     pub time: EventTime,
     event: EventKind,
@@ -16,6 +17,7 @@ pub struct SynchronizeEvent {
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
 pub struct KeyEvent {
     pub time: EventTime,
     event: EventKind,
@@ -25,6 +27,7 @@ pub struct KeyEvent {
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
 pub struct RelativeEvent {
     pub time: EventTime,
     event: EventKind,
@@ -34,6 +37,7 @@ pub struct RelativeEvent {
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
 pub struct AbsoluteEvent {
     pub time: EventTime,
     event: EventKind,
@@ -43,6 +47,7 @@ pub struct AbsoluteEvent {
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
 pub struct SwitchEvent {
     pub time: EventTime,
     event: EventKind,
@@ -52,6 +57,7 @@ pub struct SwitchEvent {
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
 pub struct MiscEvent {
     pub time: EventTime,
     event: EventKind,
@@ -61,6 +67,7 @@ pub struct MiscEvent {
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
 pub struct LedEvent {
     pub time: EventTime,
     event: EventKind,
@@ -70,6 +77,7 @@ pub struct LedEvent {
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
 pub struct AutorepeatEvent {
     pub time: EventTime,
     event: EventKind,
@@ -79,6 +87,7 @@ pub struct AutorepeatEvent {
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
 pub struct SoundEvent {
     pub time: EventTime,
     event: EventKind,
@@ -88,6 +97,7 @@ pub struct SoundEvent {
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
 pub struct UInputEvent {
     pub time: EventTime,
     event: EventKind,
@@ -97,6 +107,7 @@ pub struct UInputEvent {
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
 pub struct InputEvent {
     pub time: EventTime,
     pub kind: EventKind,
@@ -288,6 +299,7 @@ impl InputEvent {
 macro_rules! input_event_enum {
     ($($variant:ident($ty:ident),)*) => {
         #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+        #[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
         pub enum Event {
         $(
             $variant($ty),

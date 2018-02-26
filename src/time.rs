@@ -3,9 +3,22 @@ use std::hash::{Hash, Hasher};
 use std::ops::{Deref, DerefMut};
 use sys::timeval;
 
-#[derive(Copy, Clone)]
 #[repr(C)]
-pub struct EventTime(timeval);
+#[derive(Copy, Clone)]
+#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+pub struct EventTime(
+#[cfg_attr(feature = "with-serde", serde(with = "TimevalDef"))]
+timeval
+);
+
+#[cfg(feature = "with-serde")]
+#[derive(Serialize, Deserialize)]
+#[serde(remote = "timeval")]
+#[allow(dead_code)]
+struct TimevalDef {
+    tv_sec: i64,
+    tv_usec: i64,
+}
 
 impl EventTime {
     pub fn new(secs: i64, usecs: i64) -> Self {

@@ -3,6 +3,11 @@
 
 pub extern crate input_linux_sys as sys;
 extern crate nix;
+#[cfg(feature = "with-serde")]
+extern crate serde;
+#[cfg(feature = "with-serde")]
+#[macro_use]
+extern crate serde_derive;
 
 #[macro_use]
 mod macros;
@@ -38,6 +43,7 @@ pub use tokio::EventCodec;
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
 pub struct InputId {
     pub bustype: u16,
     pub vendor: u16,
@@ -73,6 +79,7 @@ impl From<InputId> for sys::input_id {
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
 pub struct AbsoluteInfoSetup {
     pub axis: AbsoluteAxis,
     pub info: AbsoluteInfo,
@@ -96,6 +103,7 @@ impl From<AbsoluteInfoSetup> for sys::uinput_abs_setup {
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
 pub struct AbsoluteInfo {
     /// latest reported value for the axis
     pub value: i32,

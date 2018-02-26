@@ -10,6 +10,7 @@ use sys;
 /// SC - System Control
 #[repr(u16)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
 pub enum Key {
     KeyReserved = sys::KEY_RESERVED as _,
     KeyEsc = sys::KEY_ESC as _,

@@ -13,6 +13,7 @@ impl From<RangeError> for io::Error {
 
 #[repr(u16)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
 pub enum InputProperty {
     Pointer = sys::INPUT_PROP_POINTER as _,
     Direct = sys::INPUT_PROP_DIRECT as _,
@@ -50,6 +51,7 @@ pub enum InputProperty {
 
 #[repr(u16)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
 pub enum EventKind {
     Synchronize = sys::EV_SYN as _,
     Key = sys::EV_KEY as _,
@@ -91,6 +93,7 @@ pub enum EventKind {
 
 #[repr(u16)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
 pub enum UInputKind {
     Unknown0 = 0,
     ForceFeedbackUpload = sys::UI_FF_UPLOAD as _,
@@ -99,6 +102,7 @@ pub enum UInputKind {
 
 #[repr(u16)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
 pub enum SynchronizeKind {
     Report = sys::SYN_REPORT as _,
     Config = sys::SYN_CONFIG as _,
@@ -120,6 +124,7 @@ pub enum SynchronizeKind {
 
 // XXX: sure would be nice if Rust knew these weren't overlapping and allowed #[repr(i32)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
 pub enum KeyState {
     Released, // 0
     Pressed, // 1
@@ -129,6 +134,7 @@ pub enum KeyState {
 
 #[repr(u16)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
 pub enum RelativeAxis {
     X = sys::REL_X as _,
     Y = sys::REL_Y as _,
@@ -150,6 +156,7 @@ pub enum RelativeAxis {
 
 #[repr(u16)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
 pub enum AbsoluteAxis {
     X = sys::ABS_X as _,
     Y = sys::ABS_Y as _,
@@ -238,6 +245,7 @@ pub enum AbsoluteAxis {
 
 #[repr(u16)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
 pub enum SwitchKind {
     /// set = lid shut
     Lid = sys::SW_LID as _,
@@ -276,6 +284,7 @@ pub enum SwitchKind {
 
 #[repr(u16)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
 pub enum MiscKind {
     /// Serial number, only exported for tablets ("Transducer Serial Number")
     Serial = sys::MSC_SERIAL as _,
@@ -295,6 +304,7 @@ pub enum MiscKind {
 
 #[repr(u16)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
 pub enum LedKind {
     NumLock = sys::LED_NUML as _,
     CapsLock = sys::LED_CAPSL as _,
@@ -316,6 +326,7 @@ pub enum LedKind {
 
 #[repr(u16)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
 pub enum AutorepeatKind {
     Delay = sys::REP_DELAY as _,
     Period = sys::REP_PERIOD as _,
@@ -323,6 +334,7 @@ pub enum AutorepeatKind {
 
 #[repr(u16)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
 pub enum SoundKind {
     Click = sys::SND_CLICK as _,
     Bell = sys::SND_BELL as _,
