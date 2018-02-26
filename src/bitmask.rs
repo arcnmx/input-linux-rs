@@ -50,6 +50,10 @@ impl<T: BitmaskTrait> Bitmask<T> {
         self.mask
     }
 
+    pub fn iter(&self) -> BitmaskIterator<T> {
+        self.into_iter()
+    }
+
     pub fn data(&self) -> &T::Array {
         &self.mask
     }
