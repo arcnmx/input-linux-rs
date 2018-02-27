@@ -92,14 +92,14 @@ impl UInputHandle {
         self.dev_create()
     }
 
-    /// Write an input event to the device
-    pub fn write(&self, events: &[sys::input_event]) -> io::Result<()> {
+    /// Write input events to the device
+    pub fn write(&self, events: &[sys::input_event]) -> io::Result<usize> {
         let events = unsafe { from_raw_parts(events.as_ptr() as *const u8, size_of::<sys::input_event>() * events.len()) };
         nix::unistd::write(self.0, events)
-            .map(drop).map_err(convert_error)
+            .map(|c| c / size_of::<sys::input_event>()).map_err(convert_error)
     }
 
-    /// Read an event from uinput (see `EV_UINPUT`)
+    /// Read events from uinput (see `EV_UINPUT`)
     pub fn read(&self, events: &mut [sys::input_event]) -> io::Result<usize> {
         let events = unsafe { from_raw_parts_mut(events.as_mut_ptr() as *mut u8, size_of::<sys::input_event>() * events.len()) };
         nix::unistd::read(self.0, events)
