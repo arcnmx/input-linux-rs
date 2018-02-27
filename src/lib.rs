@@ -35,10 +35,10 @@ pub mod enum_iterator;
 pub mod bitmask;
 pub use bitmask::Bitmask;
 
-#[cfg(feature = "tokio")]
+#[cfg(feature = "with-tokio")]
 mod tokio;
 
-#[cfg(feature = "tokio")]
+#[cfg(feature = "with-tokio")]
 pub use tokio::EventCodec;
 
 #[repr(C)]
