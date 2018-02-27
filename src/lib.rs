@@ -102,7 +102,7 @@ impl From<AbsoluteInfoSetup> for sys::uinput_abs_setup {
 }
 
 #[repr(C)]
-#[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+#[derive(Copy, Clone, Default, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
 #[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
 pub struct AbsoluteInfo {
     /// latest reported value for the axis
