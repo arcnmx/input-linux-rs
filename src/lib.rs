@@ -42,7 +42,7 @@ mod tokio;
 pub use tokio::EventCodec;
 
 #[repr(C)]
-#[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+#[derive(Copy, Clone, Default, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
 #[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
 pub struct InputId {
     pub bustype: u16,
