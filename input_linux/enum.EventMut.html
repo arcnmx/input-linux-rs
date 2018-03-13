@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `EventMut` enum in crate `input_linux`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, EventMut">
+
+    <title>input_linux::EventMut - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc enum">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Enum EventMut</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#variants">Variants</a><div class="sidebar-links"><a href="#variant.Synchronize">Synchronize</a><a href="#variant.Key">Key</a><a href="#variant.Relative">Relative</a><a href="#variant.Absolute">Absolute</a><a href="#variant.Switch">Switch</a><a href="#variant.Misc">Misc</a><a href="#variant.Led">Led</a><a href="#variant.Autorepeat">Autorepeat</a><a href="#variant.Sound">Sound</a><a href="#variant.UInput">UInput</a><a href="#variant.Unknown">Unknown</a></div><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new">new</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-PartialEq">PartialEq</a><a href="#impl-Eq">Eq</a><a href="#impl-Hash">Hash</a><a href="#impl-Debug">Debug</a><a href="#impl-From%3C%26%27a%20mut%20SynchronizeEvent%3E">From&lt;&amp;&#39;a mut SynchronizeEvent&gt;</a><a href="#impl-From%3C%26%27a%20mut%20KeyEvent%3E">From&lt;&amp;&#39;a mut KeyEvent&gt;</a><a href="#impl-From%3C%26%27a%20mut%20RelativeEvent%3E">From&lt;&amp;&#39;a mut RelativeEvent&gt;</a><a href="#impl-From%3C%26%27a%20mut%20AbsoluteEvent%3E">From&lt;&amp;&#39;a mut AbsoluteEvent&gt;</a><a href="#impl-From%3C%26%27a%20mut%20SwitchEvent%3E">From&lt;&amp;&#39;a mut SwitchEvent&gt;</a><a href="#impl-From%3C%26%27a%20mut%20MiscEvent%3E">From&lt;&amp;&#39;a mut MiscEvent&gt;</a><a href="#impl-From%3C%26%27a%20mut%20LedEvent%3E">From&lt;&amp;&#39;a mut LedEvent&gt;</a><a href="#impl-From%3C%26%27a%20mut%20AutorepeatEvent%3E">From&lt;&amp;&#39;a mut AutorepeatEvent&gt;</a><a href="#impl-From%3C%26%27a%20mut%20SoundEvent%3E">From&lt;&amp;&#39;a mut SoundEvent&gt;</a><a href="#impl-From%3C%26%27a%20mut%20UInputEvent%3E">From&lt;&amp;&#39;a mut UInputEvent&gt;</a><a href="#impl-From%3C%26%27a%20mut%20Event%3E">From&lt;&amp;&#39;a mut Event&gt;</a><a href="#impl-From%3C%26%27a%20EventMut%3C%27a%3E%3E">From&lt;&amp;&#39;a EventMut&lt;&#39;a&gt;&gt;</a><a href="#impl-AsRef%3CInputEvent%3E">AsRef&lt;InputEvent&gt;</a></div></div><p class='location'><a href='index.html'>input_linux</a></p><script>window.sidebarCurrent = {name: 'EventMut', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Enum <a href='index.html'>input_linux</a>::<wbr><a class="enum" href=''>EventMut</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../src/input_linux/events.rs.html#319-324' title='goto source code'>[src]</a></span></h1>
+<pre class='rust enum'>pub enum EventMut&lt;'a&gt; {
+    Synchronize(&amp;'a mut <a class="struct" href="../input_linux/struct.SynchronizeEvent.html" title="struct input_linux::SynchronizeEvent">SynchronizeEvent</a>),
+    Key(&amp;'a mut <a class="struct" href="../input_linux/struct.KeyEvent.html" title="struct input_linux::KeyEvent">KeyEvent</a>),
+    Relative(&amp;'a mut <a class="struct" href="../input_linux/struct.RelativeEvent.html" title="struct input_linux::RelativeEvent">RelativeEvent</a>),
+    Absolute(&amp;'a mut <a class="struct" href="../input_linux/struct.AbsoluteEvent.html" title="struct input_linux::AbsoluteEvent">AbsoluteEvent</a>),
+    Switch(&amp;'a mut <a class="struct" href="../input_linux/struct.SwitchEvent.html" title="struct input_linux::SwitchEvent">SwitchEvent</a>),
+    Misc(&amp;'a mut <a class="struct" href="../input_linux/struct.MiscEvent.html" title="struct input_linux::MiscEvent">MiscEvent</a>),
+    Led(&amp;'a mut <a class="struct" href="../input_linux/struct.LedEvent.html" title="struct input_linux::LedEvent">LedEvent</a>),
+    Autorepeat(&amp;'a mut <a class="struct" href="../input_linux/struct.AutorepeatEvent.html" title="struct input_linux::AutorepeatEvent">AutorepeatEvent</a>),
+    Sound(&amp;'a mut <a class="struct" href="../input_linux/struct.SoundEvent.html" title="struct input_linux::SoundEvent">SoundEvent</a>),
+    UInput(&amp;'a mut <a class="struct" href="../input_linux/struct.UInputEvent.html" title="struct input_linux::UInputEvent">UInputEvent</a>),
+    Unknown(&amp;'a mut <a class="struct" href="../input_linux/struct.InputEvent.html" title="struct input_linux::InputEvent">InputEvent</a>),
+}</pre><h2 id='variants' class='variants small-section-header'>
+                   Variants<a href='#variants' class='anchor'></a></h2>
+<span id="variant.Synchronize" class="variant small-section-header"><a href="#variant.Synchronize" class="anchor field"></a><span id='Synchronize.v' class='invisible'><code>Synchronize(&amp;'a mut <a class="struct" href="../input_linux/struct.SynchronizeEvent.html" title="struct input_linux::SynchronizeEvent">SynchronizeEvent</a>)</code></span></span><span id="variant.Key" class="variant small-section-header"><a href="#variant.Key" class="anchor field"></a><span id='Key.v' class='invisible'><code>Key(&amp;'a mut <a class="struct" href="../input_linux/struct.KeyEvent.html" title="struct input_linux::KeyEvent">KeyEvent</a>)</code></span></span><span id="variant.Relative" class="variant small-section-header"><a href="#variant.Relative" class="anchor field"></a><span id='Relative.v' class='invisible'><code>Relative(&amp;'a mut <a class="struct" href="../input_linux/struct.RelativeEvent.html" title="struct input_linux::RelativeEvent">RelativeEvent</a>)</code></span></span><span id="variant.Absolute" class="variant small-section-header"><a href="#variant.Absolute" class="anchor field"></a><span id='Absolute.v' class='invisible'><code>Absolute(&amp;'a mut <a class="struct" href="../input_linux/struct.AbsoluteEvent.html" title="struct input_linux::AbsoluteEvent">AbsoluteEvent</a>)</code></span></span><span id="variant.Switch" class="variant small-section-header"><a href="#variant.Switch" class="anchor field"></a><span id='Switch.v' class='invisible'><code>Switch(&amp;'a mut <a class="struct" href="../input_linux/struct.SwitchEvent.html" title="struct input_linux::SwitchEvent">SwitchEvent</a>)</code></span></span><span id="variant.Misc" class="variant small-section-header"><a href="#variant.Misc" class="anchor field"></a><span id='Misc.v' class='invisible'><code>Misc(&amp;'a mut <a class="struct" href="../input_linux/struct.MiscEvent.html" title="struct input_linux::MiscEvent">MiscEvent</a>)</code></span></span><span id="variant.Led" class="variant small-section-header"><a href="#variant.Led" class="anchor field"></a><span id='Led.v' class='invisible'><code>Led(&amp;'a mut <a class="struct" href="../input_linux/struct.LedEvent.html" title="struct input_linux::LedEvent">LedEvent</a>)</code></span></span><span id="variant.Autorepeat" class="variant small-section-header"><a href="#variant.Autorepeat" class="anchor field"></a><span id='Autorepeat.v' class='invisible'><code>Autorepeat(&amp;'a mut <a class="struct" href="../input_linux/struct.AutorepeatEvent.html" title="struct input_linux::AutorepeatEvent">AutorepeatEvent</a>)</code></span></span><span id="variant.Sound" class="variant small-section-header"><a href="#variant.Sound" class="anchor field"></a><span id='Sound.v' class='invisible'><code>Sound(&amp;'a mut <a class="struct" href="../input_linux/struct.SoundEvent.html" title="struct input_linux::SoundEvent">SoundEvent</a>)</code></span></span><span id="variant.UInput" class="variant small-section-header"><a href="#variant.UInput" class="anchor field"></a><span id='UInput.v' class='invisible'><code>UInput(&amp;'a mut <a class="struct" href="../input_linux/struct.UInputEvent.html" title="struct input_linux::UInputEvent">UInputEvent</a>)</code></span></span><span id="variant.Unknown" class="variant small-section-header"><a href="#variant.Unknown" class="anchor field"></a><span id='Unknown.v' class='invisible'><code>Unknown(&amp;'a mut <a class="struct" href="../input_linux/struct.InputEvent.html" title="struct input_linux::InputEvent">InputEvent</a>)</code></span></span>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
+                    </h2>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class="enum" href="../input_linux/enum.EventMut.html" title="enum input_linux::EventMut">EventMut</a>&lt;'a&gt;</code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/events.rs.html#348-357' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>pub fn <a href='#method.new' class='fnname'>new</a>(event: &amp;'a mut <a class="struct" href="../input_linux/struct.InputEvent.html" title="struct input_linux::InputEvent">InputEvent</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;Self, <a class="struct" href="../input_linux/struct.RangeError.html" title="struct input_linux::RangeError">RangeError</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/events.rs.html#349-356' title='goto source code'>[src]</a></span></h4>
+</div>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
+            </h2>
+        <h3 id='impl-PartialEq' class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> for <a class="enum" href="../input_linux/enum.EventMut.html" title="enum input_linux::EventMut">EventMut</a>&lt;'a&gt;</code><a href='#impl-PartialEq' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/events.rs.html#318' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.eq' class="method"><span id='eq.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, __arg_0: &amp;<a class="enum" href="../input_linux/enum.EventMut.html" title="enum input_linux::EventMut">EventMut</a>&lt;'a&gt;) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/events.rs.html#318' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>This method tests for <code>self</code> and <code>other</code> values to be equal, and is used by <code>==</code>. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq">Read more</a></p>
+</div><h4 id='method.ne' class="method"><span id='ne.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, __arg_0: &amp;<a class="enum" href="../input_linux/enum.EventMut.html" title="enum input_linux::EventMut">EventMut</a>&lt;'a&gt;) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/events.rs.html#318' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>This method tests for <code>!=</code>.</p>
+</div></div><h3 id='impl-Eq' class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html" title="trait core::cmp::Eq">Eq</a> for <a class="enum" href="../input_linux/enum.EventMut.html" title="enum input_linux::EventMut">EventMut</a>&lt;'a&gt;</code><a href='#impl-Eq' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/events.rs.html#318' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 id='impl-Hash' class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html" title="trait core::hash::Hash">Hash</a> for <a class="enum" href="../input_linux/enum.EventMut.html" title="enum input_linux::EventMut">EventMut</a>&lt;'a&gt;</code><a href='#impl-Hash' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/events.rs.html#318' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.hash' class="method"><span id='hash.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash' class='fnname'>hash</a>&lt;__H:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>&gt;(&amp;self, __arg_0: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>__H)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/events.rs.html#318' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Feeds this value into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash">Read more</a></p>
+</div><h4 id='method.hash_slice' class="method"><span id='hash_slice.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[Self]</a>, state: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>H) <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;H: <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/hash/mod.rs.html#202-208' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Feeds a slice of this type into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice">Read more</a></p>
+</div></div><h3 id='impl-Debug' class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="enum" href="../input_linux/enum.EventMut.html" title="enum input_linux::EventMut">EventMut</a>&lt;'a&gt;</code><a href='#impl-Debug' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/events.rs.html#318' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/events.rs.html#318' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Formats the value using the given formatter. <a href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt">Read more</a></p>
+</div></div><h3 id='impl-From%3C%26%27a%20mut%20SynchronizeEvent%3E' class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.From.html" title="trait core::convert::From">From</a>&lt;&amp;'a mut <a class="struct" href="../input_linux/struct.SynchronizeEvent.html" title="struct input_linux::SynchronizeEvent">SynchronizeEvent</a>&gt; for <a class="enum" href="../input_linux/enum.EventMut.html" title="enum input_linux::EventMut">EventMut</a>&lt;'a&gt;</code><a href='#impl-From%3C%26%27a%20mut%20SynchronizeEvent%3E' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/events.rs.html#376-380' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.from' class="method"><span id='from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/convert/trait.From.html#tymethod.from' class='fnname'>from</a>(event: &amp;'a mut <a class="struct" href="../input_linux/struct.SynchronizeEvent.html" title="struct input_linux::SynchronizeEvent">SynchronizeEvent</a>) -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/events.rs.html#377-379' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Performs the conversion.</p>
+</div></div><h3 id='impl-From%3C%26%27a%20mut%20KeyEvent%3E' class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.From.html" title="trait core::convert::From">From</a>&lt;&amp;'a mut <a class="struct" href="../input_linux/struct.KeyEvent.html" title="struct input_linux::KeyEvent">KeyEvent</a>&gt; for <a class="enum" href="../input_linux/enum.EventMut.html" title="enum input_linux::EventMut">EventMut</a>&lt;'a&gt;</code><a href='#impl-From%3C%26%27a%20mut%20KeyEvent%3E' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/events.rs.html#376-380' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.from-1' class="method"><span id='from.v-1' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/convert/trait.From.html#tymethod.from' class='fnname'>from</a>(event: &amp;'a mut <a class="struct" href="../input_linux/struct.KeyEvent.html" title="struct input_linux::KeyEvent">KeyEvent</a>) -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/events.rs.html#377-379' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Performs the conversion.</p>
+</div></div><h3 id='impl-From%3C%26%27a%20mut%20RelativeEvent%3E' class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.From.html" title="trait core::convert::From">From</a>&lt;&amp;'a mut <a class="struct" href="../input_linux/struct.RelativeEvent.html" title="struct input_linux::RelativeEvent">RelativeEvent</a>&gt; for <a class="enum" href="../input_linux/enum.EventMut.html" title="enum input_linux::EventMut">EventMut</a>&lt;'a&gt;</code><a href='#impl-From%3C%26%27a%20mut%20RelativeEvent%3E' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/events.rs.html#376-380' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.from-2' class="method"><span id='from.v-2' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/convert/trait.From.html#tymethod.from' class='fnname'>from</a>(event: &amp;'a mut <a class="struct" href="../input_linux/struct.RelativeEvent.html" title="struct input_linux::RelativeEvent">RelativeEvent</a>) -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/events.rs.html#377-379' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Performs the conversion.</p>
+</div></div><h3 id='impl-From%3C%26%27a%20mut%20AbsoluteEvent%3E' class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.From.html" title="trait core::convert::From">From</a>&lt;&amp;'a mut <a class="struct" href="../input_linux/struct.AbsoluteEvent.html" title="struct input_linux::AbsoluteEvent">AbsoluteEvent</a>&gt; for <a class="enum" href="../input_linux/enum.EventMut.html" title="enum input_linux::EventMut">EventMut</a>&lt;'a&gt;</code><a href='#impl-From%3C%26%27a%20mut%20AbsoluteEvent%3E' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/events.rs.html#376-380' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.from-3' class="method"><span id='from.v-3' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/convert/trait.From.html#tymethod.from' class='fnname'>from</a>(event: &amp;'a mut <a class="struct" href="../input_linux/struct.AbsoluteEvent.html" title="struct input_linux::AbsoluteEvent">AbsoluteEvent</a>) -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/events.rs.html#377-379' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Performs the conversion.</p>
+</div></div><h3 id='impl-From%3C%26%27a%20mut%20SwitchEvent%3E' class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.From.html" title="trait core::convert::From">From</a>&lt;&amp;'a mut <a class="struct" href="../input_linux/struct.SwitchEvent.html" title="struct input_linux::SwitchEvent">SwitchEvent</a>&gt; for <a class="enum" href="../input_linux/enum.EventMut.html" title="enum input_linux::EventMut">EventMut</a>&lt;'a&gt;</code><a href='#impl-From%3C%26%27a%20mut%20SwitchEvent%3E' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/events.rs.html#376-380' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.from-4' class="method"><span id='from.v-4' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/convert/trait.From.html#tymethod.from' class='fnname'>from</a>(event: &amp;'a mut <a class="struct" href="../input_linux/struct.SwitchEvent.html" title="struct input_linux::SwitchEvent">SwitchEvent</a>) -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/events.rs.html#377-379' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Performs the conversion.</p>
+</div></div><h3 id='impl-From%3C%26%27a%20mut%20MiscEvent%3E' class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.From.html" title="trait core::convert::From">From</a>&lt;&amp;'a mut <a class="struct" href="../input_linux/struct.MiscEvent.html" title="struct input_linux::MiscEvent">MiscEvent</a>&gt; for <a class="enum" href="../input_linux/enum.EventMut.html" title="enum input_linux::EventMut">EventMut</a>&lt;'a&gt;</code><a href='#impl-From%3C%26%27a%20mut%20MiscEvent%3E' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/events.rs.html#376-380' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.from-5' class="method"><span id='from.v-5' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/convert/trait.From.html#tymethod.from' class='fnname'>from</a>(event: &amp;'a mut <a class="struct" href="../input_linux/struct.MiscEvent.html" title="struct input_linux::MiscEvent">MiscEvent</a>) -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/events.rs.html#377-379' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Performs the conversion.</p>
+</div></div><h3 id='impl-From%3C%26%27a%20mut%20LedEvent%3E' class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.From.html" title="trait core::convert::From">From</a>&lt;&amp;'a mut <a class="struct" href="../input_linux/struct.LedEvent.html" title="struct input_linux::LedEvent">LedEvent</a>&gt; for <a class="enum" href="../input_linux/enum.EventMut.html" title="enum input_linux::EventMut">EventMut</a>&lt;'a&gt;</code><a href='#impl-From%3C%26%27a%20mut%20LedEvent%3E' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/events.rs.html#376-380' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.from-6' class="method"><span id='from.v-6' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/convert/trait.From.html#tymethod.from' class='fnname'>from</a>(event: &amp;'a mut <a class="struct" href="../input_linux/struct.LedEvent.html" title="struct input_linux::LedEvent">LedEvent</a>) -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/events.rs.html#377-379' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Performs the conversion.</p>
+</div></div><h3 id='impl-From%3C%26%27a%20mut%20AutorepeatEvent%3E' class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.From.html" title="trait core::convert::From">From</a>&lt;&amp;'a mut <a class="struct" href="../input_linux/struct.AutorepeatEvent.html" title="struct input_linux::AutorepeatEvent">AutorepeatEvent</a>&gt; for <a class="enum" href="../input_linux/enum.EventMut.html" title="enum input_linux::EventMut">EventMut</a>&lt;'a&gt;</code><a href='#impl-From%3C%26%27a%20mut%20AutorepeatEvent%3E' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/events.rs.html#376-380' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.from-7' class="method"><span id='from.v-7' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/convert/trait.From.html#tymethod.from' class='fnname'>from</a>(event: &amp;'a mut <a class="struct" href="../input_linux/struct.AutorepeatEvent.html" title="struct input_linux::AutorepeatEvent">AutorepeatEvent</a>) -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/events.rs.html#377-379' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Performs the conversion.</p>
+</div></div><h3 id='impl-From%3C%26%27a%20mut%20SoundEvent%3E' class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.From.html" title="trait core::convert::From">From</a>&lt;&amp;'a mut <a class="struct" href="../input_linux/struct.SoundEvent.html" title="struct input_linux::SoundEvent">SoundEvent</a>&gt; for <a class="enum" href="../input_linux/enum.EventMut.html" title="enum input_linux::EventMut">EventMut</a>&lt;'a&gt;</code><a href='#impl-From%3C%26%27a%20mut%20SoundEvent%3E' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/events.rs.html#376-380' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.from-8' class="method"><span id='from.v-8' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/convert/trait.From.html#tymethod.from' class='fnname'>from</a>(event: &amp;'a mut <a class="struct" href="../input_linux/struct.SoundEvent.html" title="struct input_linux::SoundEvent">SoundEvent</a>) -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/events.rs.html#377-379' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Performs the conversion.</p>
+</div></div><h3 id='impl-From%3C%26%27a%20mut%20UInputEvent%3E' class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.From.html" title="trait core::convert::From">From</a>&lt;&amp;'a mut <a class="struct" href="../input_linux/struct.UInputEvent.html" title="struct input_linux::UInputEvent">UInputEvent</a>&gt; for <a class="enum" href="../input_linux/enum.EventMut.html" title="enum input_linux::EventMut">EventMut</a>&lt;'a&gt;</code><a href='#impl-From%3C%26%27a%20mut%20UInputEvent%3E' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/events.rs.html#376-380' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.from-9' class="method"><span id='from.v-9' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/convert/trait.From.html#tymethod.from' class='fnname'>from</a>(event: &amp;'a mut <a class="struct" href="../input_linux/struct.UInputEvent.html" title="struct input_linux::UInputEvent">UInputEvent</a>) -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/events.rs.html#377-379' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Performs the conversion.</p>
+</div></div><h3 id='impl-From%3C%26%27a%20mut%20Event%3E' class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.From.html" title="trait core::convert::From">From</a>&lt;&amp;'a mut <a class="enum" href="../input_linux/enum.Event.html" title="enum input_linux::Event">Event</a>&gt; for <a class="enum" href="../input_linux/enum.EventMut.html" title="enum input_linux::EventMut">EventMut</a>&lt;'a&gt;</code><a href='#impl-From%3C%26%27a%20mut%20Event%3E' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/events.rs.html#405-414' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.from-10' class="method"><span id='from.v-10' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/convert/trait.From.html#tymethod.from' class='fnname'>from</a>(event: &amp;'a mut <a class="enum" href="../input_linux/enum.Event.html" title="enum input_linux::Event">Event</a>) -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/events.rs.html#406-413' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Performs the conversion.</p>
+</div></div><h3 id='impl-From%3C%26%27a%20EventMut%3C%27a%3E%3E' class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.From.html" title="trait core::convert::From">From</a>&lt;&amp;'a <a class="enum" href="../input_linux/enum.EventMut.html" title="enum input_linux::EventMut">EventMut</a>&lt;'a&gt;&gt; for &amp;'a <a class="struct" href="../input_linux/struct.InputEvent.html" title="struct input_linux::InputEvent">InputEvent</a></code><a href='#impl-From%3C%26%27a%20EventMut%3C%27a%3E%3E' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/events.rs.html#427-436' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.from-11' class="method"><span id='from.v-11' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/convert/trait.From.html#tymethod.from' class='fnname'>from</a>(event: &amp;'a <a class="enum" href="../input_linux/enum.EventMut.html" title="enum input_linux::EventMut">EventMut</a>&lt;'a&gt;) -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/events.rs.html#428-435' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Performs the conversion.</p>
+</div></div><h3 id='impl-AsRef%3CInputEvent%3E' class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="../input_linux/struct.InputEvent.html" title="struct input_linux::InputEvent">InputEvent</a>&gt; for <a class="enum" href="../input_linux/enum.EventMut.html" title="enum input_linux::EventMut">EventMut</a>&lt;'a&gt;</code><a href='#impl-AsRef%3CInputEvent%3E' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/events.rs.html#455-459' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.as_ref' class="method"><span id='as_ref.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html#tymethod.as_ref' class='fnname'>as_ref</a>(&amp;self) -&gt; &amp;<a class="struct" href="../input_linux/struct.InputEvent.html" title="struct input_linux::InputEvent">InputEvent</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/events.rs.html#456-458' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Performs the conversion.</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>↑</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>↓</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt style="width:31px;">+ / -</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "input_linux";
+    </script>
+    <script src="../main.js"></script>
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

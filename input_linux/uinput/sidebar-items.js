@@ -1,0 +1,1 @@
+initSidebarItems({"constant":[["UINPUT_MAX_NAME_SIZE",""],["UINPUT_VERSION",""]],"struct":[["UInputHandle","A handle to a uinput allowing the use of ioctls"]]});

@@ -1,0 +1,1 @@
+initSidebarItems({"constant":[["EV_VERSION","Protocol version."]],"struct":[["EvdevHandle","A handle to an input device allowing the use of ioctls"]]});

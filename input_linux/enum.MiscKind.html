@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `MiscKind` enum in crate `input_linux`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, MiscKind">
+
+    <title>input_linux::MiscKind - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc enum">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Enum MiscKind</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#variants">Variants</a><div class="sidebar-links"><a href="#variant.Serial">Serial</a><a href="#variant.PulseLed">PulseLed</a><a href="#variant.Gesture">Gesture</a><a href="#variant.Raw">Raw</a><a href="#variant.Scancode">Scancode</a><a href="#variant.Timestamp">Timestamp</a><a href="#variant.Unknown6">Unknown6</a><a href="#variant.Unknown7">Unknown7</a></div><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.iter">iter</a><a href="#method.bitmask">bitmask</a><a href="#method.from_code">from_code</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Copy">Copy</a><a href="#impl-Clone">Clone</a><a href="#impl-PartialOrd">PartialOrd</a><a href="#impl-Ord">Ord</a><a href="#impl-PartialEq">PartialEq</a><a href="#impl-Eq">Eq</a><a href="#impl-Hash">Hash</a><a href="#impl-Debug">Debug</a><a href="#impl-BitmaskTrait">BitmaskTrait</a><a href="#impl-IterableEnum">IterableEnum</a><a href="#impl-From%3CMiscKind%3E">From&lt;MiscKind&gt;</a></div></div><p class='location'><a href='index.html'>input_linux</a></p><script>window.sidebarCurrent = {name: 'MiscKind', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Enum <a href='index.html'>input_linux</a>::<wbr><a class="enum" href=''>MiscKind</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../src/input_linux/kinds.rs.html#288-303' title='goto source code'>[src]</a></span></h1>
+<pre class='rust enum'><div class="docblock attributes">#[repr(u16)]
+</div>pub enum MiscKind {
+    Serial,
+    PulseLed,
+    Gesture,
+    Raw,
+    Scancode,
+    Timestamp,
+    Unknown6,
+    Unknown7,
+}</pre><h2 id='variants' class='variants small-section-header'>
+                   Variants<a href='#variants' class='anchor'></a></h2>
+<span id="variant.Serial" class="variant small-section-header"><a href="#variant.Serial" class="anchor field"></a><span id='Serial.v' class='invisible'><code>Serial</code></span></span><div class='docblock'><p>Serial number, only exported for tablets (&quot;Transducer Serial Number&quot;)</p>
+</div><span id="variant.PulseLed" class="variant small-section-header"><a href="#variant.PulseLed" class="anchor field"></a><span id='PulseLed.v' class='invisible'><code>PulseLed</code></span></span><div class='docblock'><p>Only used by the PowerMate driver, right now.</p>
+</div><span id="variant.Gesture" class="variant small-section-header"><a href="#variant.Gesture" class="anchor field"></a><span id='Gesture.v' class='invisible'><code>Gesture</code></span></span><div class='docblock'><p>Completely unused</p>
+</div><span id="variant.Raw" class="variant small-section-header"><a href="#variant.Raw" class="anchor field"></a><span id='Raw.v' class='invisible'><code>Raw</code></span></span><div class='docblock'><p>&quot;Raw&quot; event, rarely used.</p>
+</div><span id="variant.Scancode" class="variant small-section-header"><a href="#variant.Scancode" class="anchor field"></a><span id='Scancode.v' class='invisible'><code>Scancode</code></span></span><div class='docblock'><p>Key scancode</p>
+</div><span id="variant.Timestamp" class="variant small-section-header"><a href="#variant.Timestamp" class="anchor field"></a><span id='Timestamp.v' class='invisible'><code>Timestamp</code></span></span><div class='docblock'><p>Completely unused</p>
+</div><span id="variant.Unknown6" class="variant small-section-header"><a href="#variant.Unknown6" class="anchor field"></a><span id='Unknown6.v' class='invisible'><code>Unknown6</code></span></span><span id="variant.Unknown7" class="variant small-section-header"><a href="#variant.Unknown7" class="anchor field"></a><span id='Unknown7.v' class='invisible'><code>Unknown7</code></span></span>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
+                    </h2>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="enum" href="../input_linux/enum.MiscKind.html" title="enum input_linux::MiscKind">MiscKind</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/macros.rs.html#41-51' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='associatedconstant.COUNT' class="associatedconstant"><span id='COUNT.v' class='invisible'><code>pub const <a href='#associatedconstant.COUNT' class="constant"><b>COUNT</b></a>: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a></code></span></h4>
+<div class='docblock'><pre class="rust ">
+<span class="ident">COUNT</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="ident">sys</span>::<span class="ident">MSC_CNT</span> <span class="kw">as</span> <span class="ident">usize</span></pre>
+</div><h4 id='method.iter' class="method"><div class="important-traits"><div class='tooltip'>ⓘ<span class='tooltiptext'>Important traits for <a class="struct" href="../input_linux/enum_iterator/struct.EnumIterator.html" title="struct input_linux::enum_iterator::EnumIterator">EnumIterator</a>&lt;T&gt;</span></div><div class="content hidden"><h3 class="important">Important traits for <a class="struct" href="../input_linux/enum_iterator/struct.EnumIterator.html" title="struct input_linux::enum_iterator::EnumIterator">EnumIterator</a>&lt;T&gt;</h3><code class="content"><span class="where fmt-newline">impl&lt;T:&nbsp;<a class="trait" href="../input_linux/enum_iterator/trait.IterableEnum.html" title="trait input_linux::enum_iterator::IterableEnum">IterableEnum</a>&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/iter/iterator/trait.Iterator.html" title="trait core::iter::iterator::Iterator">Iterator</a> for <a class="struct" href="../input_linux/enum_iterator/struct.EnumIterator.html" title="struct input_linux::enum_iterator::EnumIterator">EnumIterator</a>&lt;T&gt;</span><span class="where fmt-newline">    type <a href='https://doc.rust-lang.org/nightly/core/iter/iterator/trait.Iterator.html#associatedtype.Item' class="type">Item</a> = T;</span></code></div></div><span id='iter.v' class='invisible'><code>pub fn <a href='#method.iter' class='fnname'>iter</a>() -&gt; <a class="struct" href="../input_linux/enum_iterator/struct.EnumIterator.html" title="struct input_linux::enum_iterator::EnumIterator">EnumIterator</a>&lt;Self&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/macros.rs.html#44-46' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.bitmask' class="method"><span id='bitmask.v' class='invisible'><code>pub fn <a href='#method.bitmask' class='fnname'>bitmask</a>() -&gt; <a class="struct" href="../input_linux/bitmask/struct.Bitmask.html" title="struct input_linux::bitmask::Bitmask">Bitmask</a>&lt;Self&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/macros.rs.html#48-50' title='goto source code'>[src]</a></span></h4>
+</div><h3 id='impl-1' class='impl'><span class='in-band'><code>impl <a class="enum" href="../input_linux/enum.MiscKind.html" title="enum input_linux::MiscKind">MiscKind</a></code><a href='#impl-1' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/macros.rs.html#60-70' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.from_code' class="method"><span id='from_code.v' class='invisible'><code>pub fn <a href='#method.from_code' class='fnname'>from_code</a>(code: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;Self, <a class="struct" href="../input_linux/struct.RangeError.html" title="struct input_linux::RangeError">RangeError</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/macros.rs.html#61-69' title='goto source code'>[src]</a></span></h4>
+</div>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
+            </h2>
+        <h3 id='impl-Copy' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html" title="trait core::marker::Copy">Copy</a> for <a class="enum" href="../input_linux/enum.MiscKind.html" title="enum input_linux::MiscKind">MiscKind</a></code><a href='#impl-Copy' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/kinds.rs.html#286' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 id='impl-Clone' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="enum" href="../input_linux/enum.MiscKind.html" title="enum input_linux::MiscKind">MiscKind</a></code><a href='#impl-Clone' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/kinds.rs.html#286' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="enum" href="../input_linux/enum.MiscKind.html" title="enum input_linux::MiscKind">MiscKind</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/kinds.rs.html#286' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
+</div><h4 id='method.clone_from' class="method"><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>Self)</code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/clone.rs.html#112-114' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
+</div></div><h3 id='impl-PartialOrd' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialOrd.html" title="trait core::cmp::PartialOrd">PartialOrd</a> for <a class="enum" href="../input_linux/enum.MiscKind.html" title="enum input_linux::MiscKind">MiscKind</a></code><a href='#impl-PartialOrd' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/kinds.rs.html#286' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.partial_cmp' class="method"><span id='partial_cmp.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialOrd.html#tymethod.partial_cmp' class='fnname'>partial_cmp</a>(&amp;self, __arg_0: &amp;<a class="enum" href="../input_linux/enum.MiscKind.html" title="enum input_linux::MiscKind">MiscKind</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/cmp/enum.Ordering.html" title="enum core::cmp::Ordering">Ordering</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/kinds.rs.html#286' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>This method returns an ordering between <code>self</code> and <code>other</code> values if one exists. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialOrd.html#tymethod.partial_cmp">Read more</a></p>
+</div><h4 id='method.lt' class="method"><span id='lt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialOrd.html#method.lt' class='fnname'>lt</a>(&amp;self, other: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>Rhs) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/cmp.rs.html#644-649' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>This method tests less than (for <code>self</code> and <code>other</code>) and is used by the <code>&lt;</code> operator. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialOrd.html#method.lt">Read more</a></p>
+</div><h4 id='method.le' class="method"><span id='le.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialOrd.html#method.le' class='fnname'>le</a>(&amp;self, other: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>Rhs) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/cmp.rs.html#666-671' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>This method tests less than or equal to (for <code>self</code> and <code>other</code>) and is used by the <code>&lt;=</code> operator. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialOrd.html#method.le">Read more</a></p>
+</div><h4 id='method.gt' class="method"><span id='gt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialOrd.html#method.gt' class='fnname'>gt</a>(&amp;self, other: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>Rhs) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/cmp.rs.html#687-692' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>This method tests greater than (for <code>self</code> and <code>other</code>) and is used by the <code>&gt;</code> operator. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialOrd.html#method.gt">Read more</a></p>
+</div><h4 id='method.ge' class="method"><span id='ge.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialOrd.html#method.ge' class='fnname'>ge</a>(&amp;self, other: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>Rhs) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/cmp.rs.html#709-714' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>This method tests greater than or equal to (for <code>self</code> and <code>other</code>) and is used by the <code>&gt;=</code> operator. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialOrd.html#method.ge">Read more</a></p>
+</div></div><h3 id='impl-Ord' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html" title="trait core::cmp::Ord">Ord</a> for <a class="enum" href="../input_linux/enum.MiscKind.html" title="enum input_linux::MiscKind">MiscKind</a></code><a href='#impl-Ord' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/kinds.rs.html#286' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.cmp' class="method"><span id='cmp.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html#tymethod.cmp' class='fnname'>cmp</a>(&amp;self, __arg_0: &amp;<a class="enum" href="../input_linux/enum.MiscKind.html" title="enum input_linux::MiscKind">MiscKind</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/cmp/enum.Ordering.html" title="enum core::cmp::Ordering">Ordering</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/kinds.rs.html#286' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>This method returns an <code>Ordering</code> between <code>self</code> and <code>other</code>. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html#tymethod.cmp">Read more</a></p>
+</div><h4 id='method.max' class="method"><span id='max.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html#method.max' class='fnname'>max</a>(self, other: Self) -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.21.0'>1.21.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/cmp.rs.html#460-463' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Compares and returns the maximum of two values. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html#method.max">Read more</a></p>
+</div><h4 id='method.min' class="method"><span id='min.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html#method.min' class='fnname'>min</a>(self, other: Self) -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.21.0'>1.21.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/cmp.rs.html#476-479' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Compares and returns the minimum of two values. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html#method.min">Read more</a></p>
+</div></div><h3 id='impl-PartialEq' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> for <a class="enum" href="../input_linux/enum.MiscKind.html" title="enum input_linux::MiscKind">MiscKind</a></code><a href='#impl-PartialEq' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/kinds.rs.html#286' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.eq' class="method"><span id='eq.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, __arg_0: &amp;<a class="enum" href="../input_linux/enum.MiscKind.html" title="enum input_linux::MiscKind">MiscKind</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/kinds.rs.html#286' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>This method tests for <code>self</code> and <code>other</code> values to be equal, and is used by <code>==</code>. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq">Read more</a></p>
+</div><h4 id='method.ne' class="method"><span id='ne.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>Rhs) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/cmp.rs.html#121' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>This method tests for <code>!=</code>.</p>
+</div></div><h3 id='impl-Eq' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html" title="trait core::cmp::Eq">Eq</a> for <a class="enum" href="../input_linux/enum.MiscKind.html" title="enum input_linux::MiscKind">MiscKind</a></code><a href='#impl-Eq' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/kinds.rs.html#286' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 id='impl-Hash' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html" title="trait core::hash::Hash">Hash</a> for <a class="enum" href="../input_linux/enum.MiscKind.html" title="enum input_linux::MiscKind">MiscKind</a></code><a href='#impl-Hash' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/kinds.rs.html#286' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.hash' class="method"><span id='hash.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash' class='fnname'>hash</a>&lt;__H:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>&gt;(&amp;self, __arg_0: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>__H)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/kinds.rs.html#286' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Feeds this value into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#tymethod.hash">Read more</a></p>
+</div><h4 id='method.hash_slice' class="method"><span id='hash_slice.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice' class='fnname'>hash_slice</a>&lt;H&gt;(data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[Self]</a>, state: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>H) <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;H: <a class="trait" href="https://doc.rust-lang.org/nightly/core/hash/trait.Hasher.html" title="trait core::hash::Hasher">Hasher</a>,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.3.0'>1.3.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/hash/mod.rs.html#202-208' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Feeds a slice of this type into the given [<code>Hasher</code>]. <a href="https://doc.rust-lang.org/nightly/core/hash/trait.Hash.html#method.hash_slice">Read more</a></p>
+</div></div><h3 id='impl-Debug' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="enum" href="../input_linux/enum.MiscKind.html" title="enum input_linux::MiscKind">MiscKind</a></code><a href='#impl-Debug' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/kinds.rs.html#286' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/kinds.rs.html#286' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Formats the value using the given formatter. <a href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt">Read more</a></p>
+</div></div><h3 id='impl-BitmaskTrait' class='impl'><span class='in-band'><code>impl <a class="trait" href="../input_linux/bitmask/trait.BitmaskTrait.html" title="trait input_linux::bitmask::BitmaskTrait">BitmaskTrait</a> for <a class="enum" href="../input_linux/enum.MiscKind.html" title="enum input_linux::MiscKind">MiscKind</a></code><a href='#impl-BitmaskTrait' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/macros.rs.html#15-23' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='associatedtype.Array' class="type"><span id='Array.t' class='invisible'><code>type <a href='../input_linux/bitmask/trait.BitmaskTrait.html#associatedtype.Array' class="type">Array</a> = <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">; 1]</a></code></span></h4>
+<h4 id='associatedtype.Index' class="type"><span id='Index.t' class='invisible'><code>type <a href='../input_linux/bitmask/trait.BitmaskTrait.html#associatedtype.Index' class="type">Index</a> = <a class="enum" href="../input_linux/enum.MiscKind.html" title="enum input_linux::MiscKind">MiscKind</a></code></span></h4>
+<h4 id='method.array_default' class="method"><span id='array_default.v' class='invisible'><code>fn <a href='../input_linux/bitmask/trait.BitmaskTrait.html#tymethod.array_default' class='fnname'>array_default</a>() -&gt; Self::<a class="type" href="../input_linux/bitmask/trait.BitmaskTrait.html#associatedtype.Array" title="type input_linux::bitmask::BitmaskTrait::Array">Array</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/macros.rs.html#19' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.array_slice' class="method"><span id='array_slice.v' class='invisible'><code>fn <a href='../input_linux/bitmask/trait.BitmaskTrait.html#tymethod.array_slice' class='fnname'>array_slice</a>(array: &amp;Self::<a class="type" href="../input_linux/bitmask/trait.BitmaskTrait.html#associatedtype.Array" title="type input_linux::bitmask::BitmaskTrait::Array">Array</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/macros.rs.html#20' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.array_slice_mut' class="method"><span id='array_slice_mut.v' class='invisible'><code>fn <a href='../input_linux/bitmask/trait.BitmaskTrait.html#tymethod.array_slice_mut' class='fnname'>array_slice_mut</a>(array: &amp;mut Self::<a class="type" href="../input_linux/bitmask/trait.BitmaskTrait.html#associatedtype.Array" title="type input_linux::bitmask::BitmaskTrait::Array">Array</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;mut [</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/macros.rs.html#21' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.index' class="method"><span id='index.v' class='invisible'><code>fn <a href='../input_linux/bitmask/trait.BitmaskTrait.html#tymethod.index' class='fnname'>index</a>(index: Self::<a class="type" href="../input_linux/bitmask/trait.BitmaskTrait.html#associatedtype.Index" title="type input_linux::bitmask::BitmaskTrait::Index">Index</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/macros.rs.html#22' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.index_valid' class="method"><span id='index_valid.v' class='invisible'><code>fn <a href='../input_linux/bitmask/trait.BitmaskTrait.html#method.index_valid' class='fnname'>index_valid</a>(_array: &amp;Self::<a class="type" href="../input_linux/bitmask/trait.BitmaskTrait.html#associatedtype.Array" title="type input_linux::bitmask::BitmaskTrait::Array">Array</a>, _index: Self::<a class="type" href="../input_linux/bitmask/trait.BitmaskTrait.html#associatedtype.Index" title="type input_linux::bitmask::BitmaskTrait::Index">Index</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/bitmask.rs.html#13' title='goto source code'>[src]</a></span></h4>
+</div><h3 id='impl-IterableEnum' class='impl'><span class='in-band'><code>impl <a class="trait" href="../input_linux/enum_iterator/trait.IterableEnum.html" title="trait input_linux::enum_iterator::IterableEnum">IterableEnum</a> for <a class="enum" href="../input_linux/enum.MiscKind.html" title="enum input_linux::MiscKind">MiscKind</a></code><a href='#impl-IterableEnum' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/macros.rs.html#25-39' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.iter_next' class="method"><span id='iter_next.v' class='invisible'><code>fn <a href='../input_linux/enum_iterator/trait.IterableEnum.html#tymethod.iter_next' class='fnname'>iter_next</a>(v: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>, Self<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/macros.rs.html#26-34' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.iter-1' class="method"><div class="important-traits"><div class='tooltip'>ⓘ<span class='tooltiptext'>Important traits for <a class="struct" href="../input_linux/enum_iterator/struct.EnumIterator.html" title="struct input_linux::enum_iterator::EnumIterator">EnumIterator</a>&lt;T&gt;</span></div><div class="content hidden"><h3 class="important">Important traits for <a class="struct" href="../input_linux/enum_iterator/struct.EnumIterator.html" title="struct input_linux::enum_iterator::EnumIterator">EnumIterator</a>&lt;T&gt;</h3><code class="content"><span class="where fmt-newline">impl&lt;T:&nbsp;<a class="trait" href="../input_linux/enum_iterator/trait.IterableEnum.html" title="trait input_linux::enum_iterator::IterableEnum">IterableEnum</a>&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/iter/iterator/trait.Iterator.html" title="trait core::iter::iterator::Iterator">Iterator</a> for <a class="struct" href="../input_linux/enum_iterator/struct.EnumIterator.html" title="struct input_linux::enum_iterator::EnumIterator">EnumIterator</a>&lt;T&gt;</span><span class="where fmt-newline">    type <a href='https://doc.rust-lang.org/nightly/core/iter/iterator/trait.Iterator.html#associatedtype.Item' class="type">Item</a> = T;</span></code></div></div><span id='iter.v-1' class='invisible'><code>fn <a href='../input_linux/enum_iterator/trait.IterableEnum.html#tymethod.iter' class='fnname'>iter</a>() -&gt; <a class="struct" href="../input_linux/enum_iterator/struct.EnumIterator.html" title="struct input_linux::enum_iterator::EnumIterator">EnumIterator</a>&lt;Self&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/macros.rs.html#36-38' title='goto source code'>[src]</a></span></h4>
+</div><h3 id='impl-From%3CMiscKind%3E' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.From.html" title="trait core::convert::From">From</a>&lt;<a class="enum" href="../input_linux/enum.MiscKind.html" title="enum input_linux::MiscKind">MiscKind</a>&gt; for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a></code><a href='#impl-From%3CMiscKind%3E' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/macros.rs.html#53-57' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.from' class="method"><span id='from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/convert/trait.From.html#tymethod.from' class='fnname'>from</a>(v: <a class="enum" href="../input_linux/enum.MiscKind.html" title="enum input_linux::MiscKind">MiscKind</a>) -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/input_linux/macros.rs.html#54-56' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Performs the conversion.</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>↑</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>↓</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt style="width:31px;">+ / -</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "input_linux";
+    </script>
+    <script src="../main.js"></script>
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

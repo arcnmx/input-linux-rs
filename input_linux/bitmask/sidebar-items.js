@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Bitmask",""],["BitmaskIterator",""]],"trait":[["BitmaskTrait",""]],"type":[["BitmaskVec",""]]});

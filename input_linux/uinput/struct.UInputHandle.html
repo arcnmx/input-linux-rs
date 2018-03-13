@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `UInputHandle` struct in crate `input_linux`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, UInputHandle">
+
+    <title>input_linux::uinput::UInputHandle - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc struct">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
+        
+        <p class='location'>Struct UInputHandle</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new">new</a><a href="#method.from_fd">from_fd</a><a href="#method.create_legacy">create_legacy</a><a href="#method.create">create</a><a href="#method.write">write</a><a href="#method.read">read</a><a href="#method.sys_path">sys_path</a><a href="#method.evdev_name">evdev_name</a><a href="#method.evdev_path">evdev_path</a><a href="#method.dev_create">dev_create</a><a href="#method.dev_destroy">dev_destroy</a><a href="#method.dev_setup">dev_setup</a><a href="#method.abs_setup">abs_setup</a><a href="#method.set_evbit">set_evbit</a><a href="#method.set_keybit">set_keybit</a><a href="#method.set_relbit">set_relbit</a><a href="#method.set_absbit">set_absbit</a><a href="#method.set_mscbit">set_mscbit</a><a href="#method.set_ledbit">set_ledbit</a><a href="#method.set_sndbit">set_sndbit</a><a href="#method.set_ffbit">set_ffbit</a><a href="#method.set_phys">set_phys</a><a href="#method.set_swbit">set_swbit</a><a href="#method.set_propbit">set_propbit</a><a href="#method.ff_upload_begin">ff_upload_begin</a><a href="#method.ff_upload_end">ff_upload_end</a><a href="#method.ff_erase_begin">ff_erase_begin</a><a href="#method.ff_erase_end">ff_erase_end</a><a href="#method.sys_name_buf">sys_name_buf</a><a href="#method.sys_name">sys_name</a><a href="#method.version">version</a></div></div><p class='location'><a href='../index.html'>input_linux</a>::<wbr><a href='index.html'>uinput</a></p><script>window.sidebarCurrent = {name: 'UInputHandle', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>input_linux</a>::<wbr><a href='index.html'>uinput</a>::<wbr><a class="struct" href=''>UInputHandle</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/input_linux/uinput.rs.html#21' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct UInputHandle(_);</pre><div class='docblock'><p>A handle to a uinput allowing the use of ioctls</p>
+
+<p>Ownership of the file descriptor is not transferred, and it must stay open
+for this object&#39;s lifetime. It will not be closed automatically.</p>
+</div>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
+                    </h2>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../../input_linux/uinput/struct.UInputHandle.html" title="struct input_linux::uinput::UInputHandle">UInputHandle</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/input_linux/uinput.rs.html#36-224' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>pub fn <a href='#method.new' class='fnname'>new</a>&lt;F:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/std/sys/unix/ext/io/trait.AsRawFd.html" title="trait std::sys::unix::ext::io::AsRawFd">AsRawFd</a>&gt;(fd: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>F) -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/input_linux/uinput.rs.html#38-40' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Create a new handle using an existing open file object.</p>
+</div><h4 id='method.from_fd' class="method"><span id='from_fd.v' class='invisible'><code>pub fn <a href='#method.from_fd' class='fnname'>from_fd</a>(fd: <a class="type" href="https://doc.rust-lang.org/nightly/std/sys/unix/ext/io/type.RawFd.html" title="type std::sys::unix::ext::io::RawFd">RawFd</a>) -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/input_linux/uinput.rs.html#43-45' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Create a new handle from a raw file descriptor.</p>
+</div><h4 id='method.create_legacy' class="method"><span id='create_legacy.v' class='invisible'><code>pub fn <a href='#method.create_legacy' class='fnname'>create_legacy</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;id: &amp;<a class="struct" href="../../input_linux/struct.InputId.html" title="struct input_linux::InputId">InputId</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;name: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;ff_effects_max: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;abs: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="struct" href="../../input_linux/struct.AbsoluteInfoSetup.html" title="struct input_linux::AbsoluteInfoSetup">AbsoluteInfoSetup</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a><br>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/input_linux/uinput.rs.html#48-72' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Create a new uinput device using the legacy <code>UI_DEV_CREATE</code> interface</p>
+</div><h4 id='method.create' class="method"><span id='create.v' class='invisible'><code>pub fn <a href='#method.create' class='fnname'>create</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;id: &amp;<a class="struct" href="../../input_linux/struct.InputId.html" title="struct input_linux::InputId">InputId</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;name: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;ff_effects_max: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;abs: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="struct" href="../../input_linux/struct.AbsoluteInfoSetup.html" title="struct input_linux::AbsoluteInfoSetup">AbsoluteInfoSetup</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a><br>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/input_linux/uinput.rs.html#75-93' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Create a new uinput device, and fall back on the legacy interface if necessary</p>
+</div><h4 id='method.write' class="method"><span id='write.v' class='invisible'><code>pub fn <a href='#method.write' class='fnname'>write</a>(&amp;self, events: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="struct" href="https://doc.rust-lang.org/libc/x86_64-unknown-linux-gnu/libc/unix/notbsd/linux/struct.input_event.html" title="struct libc::unix::notbsd::linux::input_event">input_event</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/input_linux/uinput.rs.html#96-100' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Write input events to the device</p>
+</div><h4 id='method.read' class="method"><span id='read.v' class='invisible'><code>pub fn <a href='#method.read' class='fnname'>read</a>(&amp;self, events: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;mut [</a><a class="struct" href="https://doc.rust-lang.org/libc/x86_64-unknown-linux-gnu/libc/unix/notbsd/linux/struct.input_event.html" title="struct libc::unix::notbsd::linux::input_event">input_event</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/input_linux/uinput.rs.html#103-107' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Read events from uinput (see <code>EV_UINPUT</code>)</p>
+</div><h4 id='method.sys_path' class="method"><span id='sys_path.v' class='invisible'><code>pub fn <a href='#method.sys_path' class='fnname'>sys_path</a>(&amp;self) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/input_linux/uinput.rs.html#109-113' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.evdev_name' class="method"><span id='evdev_name.v' class='invisible'><code>pub fn <a href='#method.evdev_name' class='fnname'>evdev_name</a>(&amp;self) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/ffi/os_str/struct.OsString.html" title="struct std::ffi::os_str::OsString">OsString</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/input_linux/uinput.rs.html#115-132' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.evdev_path' class="method"><span id='evdev_path.v' class='invisible'><code>pub fn <a href='#method.evdev_path' class='fnname'>evdev_path</a>(&amp;self) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/input_linux/uinput.rs.html#134-136' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.dev_create' class="method"><span id='dev_create.v' class='invisible'><code>pub fn <a href='#method.dev_create' class='fnname'>dev_create</a>(&amp;self) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/input_linux/macros.rs.html#104-110' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p><code>UI_DEV_CREATE</code></p>
+</div><h4 id='method.dev_destroy' class="method"><span id='dev_destroy.v' class='invisible'><code>pub fn <a href='#method.dev_destroy' class='fnname'>dev_destroy</a>(&amp;self) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/input_linux/macros.rs.html#104-110' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p><code>UI_DEV_DESTROY</code></p>
+</div><h4 id='method.dev_setup' class="method"><span id='dev_setup.v' class='invisible'><code>pub fn <a href='#method.dev_setup' class='fnname'>dev_setup</a>(&amp;self, value: &amp;uinput_setup) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/input_linux/macros.rs.html#149-155' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p><code>UI_DEV_SETUP</code></p>
+</div><h4 id='method.abs_setup' class="method"><span id='abs_setup.v' class='invisible'><code>pub fn <a href='#method.abs_setup' class='fnname'>abs_setup</a>(&amp;self, value: &amp;uinput_abs_setup) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/input_linux/macros.rs.html#149-155' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p><code>UI_ABS_SETUP</code></p>
+</div><h4 id='method.set_evbit' class="method"><span id='set_evbit.v' class='invisible'><code>pub fn <a href='#method.set_evbit' class='fnname'>set_evbit</a>(&amp;self, value: <a class="enum" href="../../input_linux/enum.EventKind.html" title="enum input_linux::EventKind">EventKind</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/input_linux/macros.rs.html#149-155' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p><code>UI_SET_EVBIT</code></p>
+</div><h4 id='method.set_keybit' class="method"><span id='set_keybit.v' class='invisible'><code>pub fn <a href='#method.set_keybit' class='fnname'>set_keybit</a>(&amp;self, value: <a class="enum" href="../../input_linux/enum.Key.html" title="enum input_linux::Key">Key</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/input_linux/macros.rs.html#149-155' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p><code>UI_SET_KEYBIT</code></p>
+</div><h4 id='method.set_relbit' class="method"><span id='set_relbit.v' class='invisible'><code>pub fn <a href='#method.set_relbit' class='fnname'>set_relbit</a>(&amp;self, value: <a class="enum" href="../../input_linux/enum.RelativeAxis.html" title="enum input_linux::RelativeAxis">RelativeAxis</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/input_linux/macros.rs.html#149-155' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p><code>UI_SET_RELBIT</code></p>
+</div><h4 id='method.set_absbit' class="method"><span id='set_absbit.v' class='invisible'><code>pub fn <a href='#method.set_absbit' class='fnname'>set_absbit</a>(&amp;self, value: <a class="enum" href="../../input_linux/enum.AbsoluteAxis.html" title="enum input_linux::AbsoluteAxis">AbsoluteAxis</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/input_linux/macros.rs.html#149-155' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p><code>UI_SET_ABSBIT</code></p>
+</div><h4 id='method.set_mscbit' class="method"><span id='set_mscbit.v' class='invisible'><code>pub fn <a href='#method.set_mscbit' class='fnname'>set_mscbit</a>(&amp;self, value: <a class="enum" href="../../input_linux/enum.MiscKind.html" title="enum input_linux::MiscKind">MiscKind</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/input_linux/macros.rs.html#149-155' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p><code>UI_SET_MSCBIT</code></p>
+</div><h4 id='method.set_ledbit' class="method"><span id='set_ledbit.v' class='invisible'><code>pub fn <a href='#method.set_ledbit' class='fnname'>set_ledbit</a>(&amp;self, value: <a class="enum" href="../../input_linux/enum.LedKind.html" title="enum input_linux::LedKind">LedKind</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/input_linux/macros.rs.html#149-155' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p><code>UI_SET_LEDBIT</code></p>
+</div><h4 id='method.set_sndbit' class="method"><span id='set_sndbit.v' class='invisible'><code>pub fn <a href='#method.set_sndbit' class='fnname'>set_sndbit</a>(&amp;self, value: <a class="enum" href="../../input_linux/enum.SoundKind.html" title="enum input_linux::SoundKind">SoundKind</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/input_linux/macros.rs.html#149-155' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p><code>UI_SET_SNDBIT</code></p>
+</div><h4 id='method.set_ffbit' class="method"><span id='set_ffbit.v' class='invisible'><code>pub fn <a href='#method.set_ffbit' class='fnname'>set_ffbit</a>(&amp;self, value: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/input_linux/macros.rs.html#149-155' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p><code>UI_SET_FFBIT</code></p>
+</div><h4 id='method.set_phys' class="method"><span id='set_phys.v' class='invisible'><code>pub fn <a href='#method.set_phys' class='fnname'>set_phys</a>(&amp;self, value: &amp;<a class="struct" href="https://doc.rust-lang.org/nightly/std/ffi/c_str/struct.CStr.html" title="struct std::ffi::c_str::CStr">CStr</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/input_linux/macros.rs.html#139-145' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p><code>UI_SET_PHYS</code></p>
+</div><h4 id='method.set_swbit' class="method"><span id='set_swbit.v' class='invisible'><code>pub fn <a href='#method.set_swbit' class='fnname'>set_swbit</a>(&amp;self, value: <a class="enum" href="../../input_linux/enum.SwitchKind.html" title="enum input_linux::SwitchKind">SwitchKind</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/input_linux/macros.rs.html#149-155' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p><code>UI_SET_SWBIT</code></p>
+</div><h4 id='method.set_propbit' class="method"><span id='set_propbit.v' class='invisible'><code>pub fn <a href='#method.set_propbit' class='fnname'>set_propbit</a>(&amp;self, value: <a class="enum" href="../../input_linux/enum.InputProperty.html" title="enum input_linux::InputProperty">InputProperty</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/input_linux/macros.rs.html#149-155' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p><code>UI_SET_PROPBIT</code></p>
+</div><h4 id='method.ff_upload_begin' class="method"><span id='ff_upload_begin.v' class='invisible'><code>pub fn <a href='#method.ff_upload_begin' class='fnname'>ff_upload_begin</a>(&amp;self, value: &amp;mut uinput_ff_upload) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/input_linux/macros.rs.html#149-155' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p><code>UI_BEGIN_FF_UPLOAD</code></p>
+</div><h4 id='method.ff_upload_end' class="method"><span id='ff_upload_end.v' class='invisible'><code>pub fn <a href='#method.ff_upload_end' class='fnname'>ff_upload_end</a>(&amp;self, value: &amp;uinput_ff_upload) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/input_linux/macros.rs.html#149-155' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p><code>UI_END_FF_UPLOAD</code></p>
+</div><h4 id='method.ff_erase_begin' class="method"><span id='ff_erase_begin.v' class='invisible'><code>pub fn <a href='#method.ff_erase_begin' class='fnname'>ff_erase_begin</a>(&amp;self, value: &amp;mut uinput_ff_erase) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/input_linux/macros.rs.html#149-155' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p><code>UI_BEGIN_FF_ERASE</code></p>
+</div><h4 id='method.ff_erase_end' class="method"><span id='ff_erase_end.v' class='invisible'><code>pub fn <a href='#method.ff_erase_end' class='fnname'>ff_erase_end</a>(&amp;self, value: &amp;uinput_ff_erase) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/input_linux/macros.rs.html#149-155' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p><code>UI_END_FF_ERASE</code></p>
+</div><h4 id='method.sys_name_buf' class="method"><span id='sys_name_buf.v' class='invisible'><code>pub fn <a href='#method.sys_name_buf' class='fnname'>sys_name_buf</a>(&amp;self, buffer: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;mut [</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/input_linux/macros.rs.html#114-120' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p><code>UI_GET_SYSNAME</code></p>
+</div><h4 id='method.sys_name' class="method"><span id='sys_name.v' class='invisible'><code>pub fn <a href='#method.sys_name' class='fnname'>sys_name</a>(&amp;self) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/input_linux/macros.rs.html#129-135' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p><code>UI_GET_SYSNAME</code></p>
+</div><h4 id='method.version' class="method"><span id='version.v' class='invisible'><code>pub fn <a href='#method.version' class='fnname'>version</a>(&amp;self) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/input_linux/macros.rs.html#93-100' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p><code>UI_GET_VERSION</code></p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>↑</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>↓</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt style="width:31px;">+ / -</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "input_linux";
+    </script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>
