@@ -34,7 +34,7 @@ deploy:
   on:
     tags: true
     all_branches: true
-    condition: "$TRAVIS_RUST_VERSION = stable"
+    condition: "$TRAVIS_RUST_VERSION = stable && $CARGO_FEATURES = with-serde"
 before_deploy:
 - cargo doc
 - cargo package
