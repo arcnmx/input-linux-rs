@@ -999,3 +999,14 @@ pub enum Key {
 }
 
 impl_iterable! { Key(0, sys::KEY_CNT) }
+
+impl Key {
+    pub fn is_button(&self) -> bool {
+        let key = *self as u16;
+        ((key >= Key::Button0 as _) && (key < Key::KeyOk as _)) || key >= Key::ButtonTriggerHappy1 as _
+    }
+
+    pub fn is_key(&self) -> bool {
+        !self.is_button()
+    }
+}
