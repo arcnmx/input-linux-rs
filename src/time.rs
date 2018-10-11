@@ -2,6 +2,7 @@ use std::{fmt, cmp};
 use std::hash::{Hash, Hasher};
 use std::ops::{Deref, DerefMut};
 use sys::timeval;
+use nix::libc::{time_t,suseconds_t};
 
 #[repr(C)]
 #[derive(Copy, Clone)]
@@ -23,8 +24,8 @@ struct TimevalDef {
 impl EventTime {
     pub fn new(secs: i64, usecs: i64) -> Self {
         EventTime(timeval {
-            tv_sec: secs,
-            tv_usec: usecs,
+            tv_sec: secs as time_t,
+            tv_usec: usecs as suseconds_t,
         })
     }
 
@@ -33,19 +34,19 @@ impl EventTime {
     }
 
     pub fn seconds(&self) -> i64 {
-        (self.0).tv_sec
+        (self.0).tv_sec as i64
     }
 
     pub fn set_seconds(&mut self, value: i64) {
-        (self.0).tv_sec = value
+        (self.0).tv_sec = value as time_t
     }
 
     pub fn microseconds(&self) -> i64 {
-        (self.0).tv_usec
+        (self.0).tv_usec as i64
     }
 
     pub fn set_microseconds(&mut self, value: i64) {
-        (self.0).tv_usec = value
+        (self.0).tv_usec = value as suseconds_t
     }
 
     pub fn into_inner(self) -> timeval {
