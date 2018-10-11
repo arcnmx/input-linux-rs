@@ -34,6 +34,13 @@ impl EvdevHandle {
             .map(|len| len / size_of::<sys::input_event>()).map_err(convert_error)
     }
 
+    /// Write events to the input device
+    pub fn write(&self, events: &[sys::input_event]) -> io::Result<usize> {
+        let events = unsafe { from_raw_parts_mut(events.as_ptr() as *mut u8, size_of::<sys::input_event>() * events.len()) };
+        nix::unistd::write(self.0, events)
+            .map(|len| len / size_of::<sys::input_event>()).map_err(convert_error)
+    }
+
     ioctl_impl! {
         {
             /// `EVIOCGVERSION`
