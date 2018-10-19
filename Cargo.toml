@@ -1,6 +1,6 @@
 [package]
 name = "input-linux"
-version = "0.0.1"
+version = "0.1.0"
 authors = ["arcnmx"]
 
 description = "evdev and uinput"

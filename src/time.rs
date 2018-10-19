@@ -2,7 +2,7 @@ use std::{fmt, cmp};
 use std::hash::{Hash, Hasher};
 use std::ops::{Deref, DerefMut};
 use sys::timeval;
-use nix::libc::{time_t,suseconds_t};
+use nix::libc::{time_t, suseconds_t};
 
 #[repr(C)]
 #[derive(Copy, Clone)]
