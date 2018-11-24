@@ -1,5 +1,5 @@
 use std::{io, fs, ptr};
-use std::os::unix::io::{RawFd, AsRawFd};
+use std::os::unix::io::{RawFd, AsRawFd, IntoRawFd, FromRawFd};
 use std::os::unix::ffi::OsStrExt;
 use std::os::raw::c_char;
 use std::mem::{uninitialized, size_of};
@@ -15,10 +15,7 @@ pub use sys::UINPUT_VERSION;
 pub use sys::UINPUT_MAX_NAME_SIZE;
 
 /// A handle to a uinput allowing the use of ioctls
-///
-/// Ownership of the file descriptor is not transferred, and it must stay open
-/// for this object's lifetime. It will not be closed automatically.
-pub struct UInputHandle(RawFd);
+pub struct UInputHandle<F>(F);
 
 fn copy_name(dest: &mut [c_char; UINPUT_MAX_NAME_SIZE as usize], name: &[u8]) -> io::Result<()> {
     if name.len() >= UINPUT_MAX_NAME_SIZE as usize {
@@ -33,15 +30,51 @@ fn copy_name(dest: &mut [c_char; UINPUT_MAX_NAME_SIZE as usize], name: &[u8]) ->
     }
 }
 
-impl UInputHandle {
+impl<F> UInputHandle<F> {
     /// Create a new handle using an existing open file object.
-    pub fn new<F: AsRawFd>(fd: &F) -> Self {
-        UInputHandle(fd.as_raw_fd())
+    pub fn new(fd: F) -> Self {
+        UInputHandle(fd)
     }
 
+    /// Extracts the contained handle.
+    pub fn into_inner(self) -> F {
+        self.0
+    }
+
+    /// A reference to the contained handle.
+    pub fn as_inner(&self) -> &F {
+        &self.0
+    }
+
+    /// A mutable reference to the contained handle.
+    pub fn as_inner_mut(&mut self) -> &mut F {
+        &mut self.0
+    }
+}
+
+impl<F: IntoRawFd> IntoRawFd for UInputHandle<F> {
+    fn into_raw_fd(self) -> RawFd {
+        self.0.into_raw_fd()
+    }
+}
+
+impl<F: FromRawFd> FromRawFd for UInputHandle<F> {
+    unsafe fn from_raw_fd(fd: RawFd) -> Self {
+        UInputHandle(FromRawFd::from_raw_fd(fd))
+    }
+}
+
+impl UInputHandle<fs::File> {
     /// Create a new handle from a raw file descriptor.
-    pub fn from_fd(fd: RawFd) -> Self {
-        UInputHandle(fd)
+    pub unsafe fn from_fd(fd: RawFd) -> Self {
+        FromRawFd::from_raw_fd(fd)
+    }
+}
+
+impl<F: AsRawFd> UInputHandle<F> {
+    #[inline]
+    fn fd(&self) -> RawFd {
+        self.0.as_raw_fd()
     }
 
     /// Create a new uinput device using the legacy `UI_DEV_CREATE` interface
@@ -66,7 +99,7 @@ impl UInputHandle {
         }
 
         let setup = unsafe { from_raw_parts(&setup as *const _ as *const u8, size_of::<sys::uinput_user_dev>()) };
-        nix::unistd::write(self.0, setup).map_err(convert_error)?;
+        nix::unistd::write(self.fd(), setup).map_err(convert_error)?;
 
         self.dev_create()
     }
@@ -95,14 +128,14 @@ impl UInputHandle {
     /// Write input events to the device
     pub fn write(&self, events: &[sys::input_event]) -> io::Result<usize> {
         let events = unsafe { from_raw_parts(events.as_ptr() as *const u8, size_of::<sys::input_event>() * events.len()) };
-        nix::unistd::write(self.0, events)
+        nix::unistd::write(self.fd(), events)
             .map(|c| c / size_of::<sys::input_event>()).map_err(convert_error)
     }
 
     /// Read events from uinput (see `EV_UINPUT`)
     pub fn read(&self, events: &mut [sys::input_event]) -> io::Result<usize> {
         let events = unsafe { from_raw_parts_mut(events.as_mut_ptr() as *mut u8, size_of::<sys::input_event>() * events.len()) };
-        nix::unistd::read(self.0, events)
+        nix::unistd::read(self.fd(), events)
             .map(|len| len / size_of::<sys::input_event>()).map_err(convert_error)
     }
 

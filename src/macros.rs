@@ -93,7 +93,7 @@ macro_rules! ioctl_impl {
         pub fn $f(&self) -> io::Result<$ret> {
             unsafe {
                 let mut v = ::std::mem::uninitialized();
-                sys::$ev(self.0, &mut v)
+                sys::$ev(self.fd(), &mut v)
                     .map(|_| v.into())
                     .map_err(::macros::convert_error)
             }
@@ -103,7 +103,7 @@ macro_rules! ioctl_impl {
         $(#[$attr])*
         pub fn $f(&self) -> io::Result<()> {
             unsafe {
-                sys::$ev(self.0)
+                sys::$ev(self.fd())
                     .map(drop)
                     .map_err(::macros::convert_error)
             }
@@ -113,7 +113,7 @@ macro_rules! ioctl_impl {
         $(#[$attr])*
         pub fn $f(&self, buffer: &mut [$ty]) -> io::Result<usize> {
             unsafe {
-                sys::$ev(self.0, &mut *(buffer as *mut [$ty] as *mut [_]))
+                sys::$ev(self.fd(), &mut *(buffer as *mut [$ty] as *mut [_]))
                     .map(|len| len as _)
                     .map_err(::macros::convert_error)
             }
@@ -138,7 +138,7 @@ macro_rules! ioctl_impl {
         $(#[$attr])*
         pub fn $f(&self, value: &::std::ffi::CStr) -> io::Result<()> {
             unsafe {
-                sys::$ev(self.0, value.as_ptr())
+                sys::$ev(self.fd(), value.as_ptr())
                     .map(drop)
                     .map_err(::macros::convert_error)
             }
@@ -148,7 +148,7 @@ macro_rules! ioctl_impl {
         $(#[$attr])*
         pub fn $f(&self, value: $in) -> io::Result<()> {
             unsafe {
-                sys::$ev(self.0, value as _)
+                sys::$ev(self.fd(), value as _)
                     .map(drop)
                     .map_err(::macros::convert_error)
             }

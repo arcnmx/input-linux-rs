@@ -1,7 +1,7 @@
-use std::io;
+use std::{io, fs};
 use std::mem::{uninitialized, size_of};
 use std::slice::from_raw_parts_mut;
-use std::os::unix::io::{RawFd, AsRawFd};
+use std::os::unix::io::{RawFd, AsRawFd, IntoRawFd, FromRawFd};
 use nix;
 use sys;
 use ::{InputId, EventKind, AbsoluteAxis, AbsoluteInfo};
@@ -11,33 +11,72 @@ use bitmask::Bitmask;
 pub use sys::EV_VERSION;
 
 /// A handle to an input device allowing the use of ioctls
-///
-/// Ownership of the file descriptor is not transferred, and it must stay open
-/// for this object's lifetime. It will not be closed automatically.
-pub struct EvdevHandle(RawFd);
+pub struct EvdevHandle<F>(F);
 
-impl EvdevHandle {
+impl<F> EvdevHandle<F> {
     /// Create a new handle using an existing open file object.
-    pub fn new<F: AsRawFd>(fd: &F) -> Self {
-        EvdevHandle(fd.as_raw_fd())
+    pub fn new(fd: F) -> Self {
+        EvdevHandle(fd)
     }
 
+    /// Extracts the contained handle.
+    pub fn into_inner(self) -> F {
+        self.0
+    }
+
+    /// A reference to the contained handle.
+    pub fn as_inner(&self) -> &F {
+        &self.0
+    }
+
+    /// A mutable reference to the contained handle.
+    pub fn as_inner_mut(&mut self) -> &mut F {
+        &mut self.0
+    }
+}
+
+impl<F: AsRawFd> AsRawFd for EvdevHandle<F> {
+    fn as_raw_fd(&self) -> RawFd {
+        self.fd()
+    }
+}
+
+impl<F: IntoRawFd> IntoRawFd for EvdevHandle<F> {
+    fn into_raw_fd(self) -> RawFd {
+        self.0.into_raw_fd()
+    }
+}
+
+impl<F: FromRawFd> FromRawFd for EvdevHandle<F> {
+    unsafe fn from_raw_fd(fd: RawFd) -> Self {
+        EvdevHandle(FromRawFd::from_raw_fd(fd))
+    }
+}
+
+impl EvdevHandle<fs::File> {
     /// Create a new handle from a raw file descriptor.
-    pub fn from_fd(fd: RawFd) -> Self {
-        EvdevHandle(fd)
+    pub unsafe fn from_fd(fd: RawFd) -> Self {
+        FromRawFd::from_raw_fd(fd)
+    }
+}
+
+impl<F: AsRawFd> EvdevHandle<F> {
+    #[inline]
+    fn fd(&self) -> RawFd {
+        self.0.as_raw_fd()
     }
 
     /// Read events from the input device
     pub fn read(&self, events: &mut [sys::input_event]) -> io::Result<usize> {
         let events = unsafe { from_raw_parts_mut(events.as_mut_ptr() as *mut u8, size_of::<sys::input_event>() * events.len()) };
-        nix::unistd::read(self.0, events)
+        nix::unistd::read(self.fd(), events)
             .map(|len| len / size_of::<sys::input_event>()).map_err(convert_error)
     }
 
     /// Write events to the input device
     pub fn write(&self, events: &[sys::input_event]) -> io::Result<usize> {
         let events = unsafe { from_raw_parts_mut(events.as_ptr() as *mut u8, size_of::<sys::input_event>() * events.len()) };
-        nix::unistd::write(self.0, events)
+        nix::unistd::write(self.fd(), events)
             .map(|len| len / size_of::<sys::input_event>()).map_err(convert_error)
     }
 
@@ -140,7 +179,7 @@ impl EvdevHandle {
 
             // the first field isn't counted in the len of the fat pointer
             let ptr = from_raw_parts_mut(buf.as_mut_ptr(), values.len()) as *mut _;
-            sys::ev_get_mtslots(self.0, ptr as *mut sys::input_mt_request_layout<[i32]>)
+            sys::ev_get_mtslots(self.fd(), ptr as *mut sys::input_mt_request_layout<[i32]>)
                 .map_err(convert_error)?;
         }
 
@@ -202,7 +241,7 @@ impl EvdevHandle {
                 codes_ptr: buffer.as_mut_ptr() as usize as _,
             };
 
-            sys::ev_get_mask(self.0, &mut mask)
+            sys::ev_get_mask(self.fd(), &mut mask)
                 .map(drop)
                 .map_err(convert_error)
         }
@@ -217,7 +256,7 @@ impl EvdevHandle {
                 codes_ptr: buffer.as_ptr() as usize as _,
             };
 
-            sys::ev_set_mask(self.0, &mask)
+            sys::ev_set_mask(self.fd(), &mask)
                 .map(drop)
                 .map_err(convert_error)
         }
@@ -226,7 +265,7 @@ impl EvdevHandle {
     /// `EVIOCGBIT`
     pub fn event_bits_raw(&self, kind: EventKind, buffer: &mut [u8]) -> io::Result<usize> {
         unsafe {
-            sys::ev_get_bit(self.0, kind as _, buffer)
+            sys::ev_get_bit(self.fd(), kind as _, buffer)
                 .map(|i| i as _)
                 .map_err(convert_error)
         }
@@ -236,7 +275,7 @@ impl EvdevHandle {
     pub fn absolute_info(&self, abs: AbsoluteAxis) -> io::Result<AbsoluteInfo> {
         unsafe {
             let mut info = uninitialized();
-            sys::ev_get_abs(self.0, abs as _, &mut info)
+            sys::ev_get_abs(self.fd(), abs as _, &mut info)
                 .map(|_| info.into())
                 .map_err(convert_error)
         }
@@ -246,7 +285,7 @@ impl EvdevHandle {
     pub fn set_absolute_info(&self, abs: AbsoluteAxis, info: &AbsoluteInfo) -> io::Result<()> {
         unsafe {
             let info: &sys::input_absinfo = info.into();
-            sys::ev_set_abs(self.0, abs as _, info)
+            sys::ev_set_abs(self.fd(), abs as _, info)
                 .map(drop)
                 .map_err(convert_error)
         }
@@ -255,7 +294,7 @@ impl EvdevHandle {
     /// `EVIOCGRAB`
     pub fn grab(&self, grab: bool) -> io::Result<()> {
         unsafe {
-            sys::ev_grab(self.0, if grab { 1 } else { 0 })
+            sys::ev_grab(self.fd(), if grab { 1 } else { 0 })
                 .map(drop)
                 .map_err(convert_error)
         }
@@ -264,7 +303,7 @@ impl EvdevHandle {
     /// `EVIOCREVOKE`
     pub fn revoke(&self) -> io::Result<()> {
         unsafe {
-            sys::ev_revoke(self.0, 0)
+            sys::ev_revoke(self.fd(), 0)
                 .map(drop)
                 .map_err(convert_error)
         }
@@ -273,7 +312,7 @@ impl EvdevHandle {
     /// `EVIOCSCLOCKID`
     pub fn set_clock_id(&self, value: i32) -> io::Result<()> {
         unsafe {
-            sys::ev_set_clockid(self.0, &value)
+            sys::ev_set_clockid(self.fd(), &value)
                 .map(drop)
                 .map_err(convert_error)
         }
