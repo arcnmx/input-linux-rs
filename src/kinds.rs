@@ -1,13 +1,25 @@
 use std::mem::transmute;
-use std::io;
+use std::{io, fmt, error};
 use sys;
 
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct RangeError;
 
 impl From<RangeError> for io::Error {
-    fn from(_: RangeError) -> Self {
-        io::Error::new(io::ErrorKind::InvalidData, "event code out of range")
+    fn from(e: RangeError) -> Self {
+        io::Error::new(io::ErrorKind::InvalidData, error::Error::description(&e))
+    }
+}
+
+impl error::Error for RangeError {
+    fn description(&self) -> &str {
+        "event code out of range"
+    }
+}
+
+impl fmt::Display for RangeError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", error::Error::description(self))
     }
 }
 
