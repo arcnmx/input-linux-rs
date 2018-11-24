@@ -1,9 +1,9 @@
 use std::io;
 use sys;
 
-pub const STRING_BUFFER_LENGTH: usize = 0x200;
+pub(crate) const STRING_BUFFER_LENGTH: usize = 0x200;
 
-pub fn convert_error(e: sys::Error) -> io::Error {
+pub(crate) fn convert_error(e: sys::Error) -> io::Error {
     match e {
         sys::Error::Sys(errno) => errno.into(),
         _ => sys::Errno::EINVAL.into(),
@@ -39,12 +39,15 @@ macro_rules! impl_iterable {
         }
 
         impl $name {
+            /// The maximum valid value.
             pub const COUNT: usize = $count as usize;
 
+            /// An iterator over all values of the enum.
             pub fn iter() -> ::enum_iterator::EnumIterator<Self> {
                 ::enum_iterator::IterableEnum::iter()
             }
 
+            /// A bitmask that can contain all values of the enum.
             pub fn bitmask() -> ::bitmask::Bitmask<Self> {
                 Default::default()
             }
@@ -58,6 +61,7 @@ macro_rules! impl_iterable {
     };
     (@implcode $name: ident($start:expr, $count:expr)) => {
         impl $name {
+            /// Instantiates the enum from a raw code value.
             pub fn from_code(code: u16) -> Result<Self, ::kinds::RangeError> {
                 use std::mem;
 

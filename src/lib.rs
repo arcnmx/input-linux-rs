@@ -1,5 +1,9 @@
-//#![deny(missing_docs)]
+#![deny(missing_docs)]
 #![doc(html_root_url = "http://arcnmx.github.io/input-linux-rs/")]
+
+//! Userspace bindings to the Linux evdev and uinput subsystems.
+//!
+//! Start by looking at the `EvdevHandle` and `UInputHandle` types.
 
 pub extern crate input_linux_sys as sys;
 extern crate nix;
@@ -44,10 +48,15 @@ pub use tokio::EventCodec;
 #[repr(C)]
 #[derive(Copy, Clone, Default, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
 #[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+/// Identifies an input device.
 pub struct InputId {
+    /// Identifies the bus where the input device is found, see `sys::BUS_*`
     pub bustype: u16,
+    /// The vendor ID of the input device.
     pub vendor: u16,
+    /// The product ID of the input device.
     pub product: u16,
+    /// The version of the input device.
     pub version: u16,
 }
 
@@ -80,8 +89,11 @@ impl From<InputId> for sys::input_id {
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
 #[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+/// A descriptor used to create a virtual uinput absolute axis.
 pub struct AbsoluteInfoSetup {
+    /// The axis to attach the `AbsoluteInfo` constraints to.
     pub axis: AbsoluteAxis,
+    /// Describes the capabilities of the absolute axis.
     pub info: AbsoluteInfo,
 }
 
@@ -104,6 +116,7 @@ impl From<AbsoluteInfoSetup> for sys::uinput_abs_setup {
 #[repr(C)]
 #[derive(Copy, Clone, Default, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
 #[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+/// Describes the capabilities and constraints of an input device's absolute axis.
 pub struct AbsoluteInfo {
     /// latest reported value for the axis
     pub value: i32,

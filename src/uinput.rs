@@ -1,3 +1,6 @@
+//! An interface to the Linux uinput kernel module that can be used to create
+//! virtual input devices.
+
 use std::{io, fs, ptr};
 use std::os::unix::io::{RawFd, AsRawFd, IntoRawFd, FromRawFd};
 use std::os::unix::ffi::OsStrExt;
@@ -139,12 +142,16 @@ impl<F: AsRawFd> UInputHandle<F> {
             .map(|len| len / size_of::<sys::input_event>()).map_err(convert_error)
     }
 
+    /// Returns the sysfs directory for the input device.
+    ///
+    /// Note that this path may not exist if sysfs is not mounted in the standard `/sys` location.
     pub fn sys_path(&self) -> io::Result<PathBuf> {
         let sys = self.sys_name()?;
         let sys = CStr::from_bytes_with_nul(&sys).map(|c| c.to_bytes()).unwrap_or(&sys);
         Ok(Path::new("/sys/devices/virtual/input/").join(OsStr::from_bytes(sys)))
     }
 
+    /// The device name of the input device.
     pub fn evdev_name(&self) -> io::Result<OsString> {
         let sys = self.sys_path()?;
         fs::read_dir(&sys)?.filter_map(|e| match e {
@@ -164,6 +171,9 @@ impl<F: AsRawFd> UInputHandle<F> {
         }).next().unwrap_or_else(|| Err(io::Error::new(io::ErrorKind::NotFound, "event input device not found")))
     }
 
+    /// The device node path of the input device.
+    ///
+    /// Note that this path may not exist if `/dev/input/*` isn't mounted properly.
     pub fn evdev_path(&self) -> io::Result<PathBuf> {
         self.evdev_name().map(|ev| Path::new("/dev/input/").join(ev))
     }

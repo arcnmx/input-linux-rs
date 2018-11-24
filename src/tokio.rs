@@ -1,3 +1,5 @@
+#![allow(missing_docs)]
+
 extern crate tokio_io;
 extern crate bytes;
 

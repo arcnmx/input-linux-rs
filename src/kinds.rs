@@ -2,6 +2,7 @@ use std::mem::transmute;
 use std::{io, fmt, error};
 use sys;
 
+/// Indicates that a value or event type code was out of range.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct RangeError;
 
@@ -23,9 +24,11 @@ impl fmt::Display for RangeError {
     }
 }
 
+/// Device properties and quirks.
 #[repr(u16)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
 #[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[allow(missing_docs)]
 pub enum InputProperty {
     Pointer = sys::INPUT_PROP_POINTER as _,
     Direct = sys::INPUT_PROP_DIRECT as _,
@@ -61,9 +64,11 @@ pub enum InputProperty {
     Unknown1F,
 }
 
+/// Event types
 #[repr(u16)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
 #[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[allow(missing_docs)]
 pub enum EventKind {
     Synchronize = sys::EV_SYN as _,
     Key = sys::EV_KEY as _,
@@ -103,18 +108,22 @@ pub enum EventKind {
     UInput = sys::EV_UINPUT as _,
 }
 
+/// UInput feedback events.
 #[repr(u16)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
 #[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[allow(missing_docs)]
 pub enum UInputKind {
     Unknown0 = 0,
     ForceFeedbackUpload = sys::UI_FF_UPLOAD as _,
     ForceFeedbackErase = sys::UI_FF_ERASE as _,
 }
 
+/// Synchronization events.
 #[repr(u16)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
 #[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[allow(missing_docs)]
 pub enum SynchronizeKind {
     Report = sys::SYN_REPORT as _,
     Config = sys::SYN_CONFIG as _,
@@ -134,9 +143,11 @@ pub enum SynchronizeKind {
     UnknownF,
 }
 
+/// Key event value states.
 // XXX: sure would be nice if Rust knew these weren't overlapping and allowed #[repr(i32)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
 #[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[allow(missing_docs)]
 pub enum KeyState {
     Released, // 0
     Pressed, // 1
@@ -144,9 +155,11 @@ pub enum KeyState {
     Unknown(i32),
 }
 
+/// Relative axes.
 #[repr(u16)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
 #[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[allow(missing_docs)]
 pub enum RelativeAxis {
     X = sys::REL_X as _,
     Y = sys::REL_Y as _,
@@ -166,9 +179,11 @@ pub enum RelativeAxis {
     UnknownF,
 }
 
+/// Absolute axes.
 #[repr(u16)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
 #[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[allow(missing_docs)]
 pub enum AbsoluteAxis {
     X = sys::ABS_X as _,
     Y = sys::ABS_Y as _,
@@ -255,9 +270,11 @@ pub enum AbsoluteAxis {
     Unknown3F,
 }
 
+/// Switch events.
 #[repr(u16)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
 #[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[allow(missing_docs)]
 pub enum SwitchKind {
     /// set = lid shut
     Lid = sys::SW_LID as _,
@@ -294,9 +311,11 @@ pub enum SwitchKind {
     PenInserted = sys::SW_PEN_INSERTED as _,
 }
 
+/// Miscellaneous events.
 #[repr(u16)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
 #[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[allow(missing_docs)]
 pub enum MiscKind {
     /// Serial number, only exported for tablets ("Transducer Serial Number")
     Serial = sys::MSC_SERIAL as _,
@@ -314,9 +333,11 @@ pub enum MiscKind {
     Unknown7,
 }
 
+/// LEDs.
 #[repr(u16)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
 #[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[allow(missing_docs)]
 pub enum LedKind {
     NumLock = sys::LED_NUML as _,
     CapsLock = sys::LED_CAPSL as _,
@@ -336,17 +357,21 @@ pub enum LedKind {
     UnknownF,
 }
 
+/// Autorepeat values.
 #[repr(u16)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
 #[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[allow(missing_docs)]
 pub enum AutorepeatKind {
     Delay = sys::REP_DELAY as _,
     Period = sys::REP_PERIOD as _,
 }
 
+/// Sounds
 #[repr(u16)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
 #[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[allow(missing_docs)]
 pub enum SoundKind {
     Click = sys::SND_CLICK as _,
     Bell = sys::SND_BELL as _,
@@ -361,6 +386,7 @@ pub enum SoundKind {
 impl_iterable! { InputProperty(0, sys::INPUT_PROP_CNT) }
 
 impl EventKind {
+    /// Instantiate from a type code.
     pub fn from_type(code: u16) -> Result<Self, RangeError> {
         const EV_UINPUT: u16 = sys::EV_UINPUT as _;
 

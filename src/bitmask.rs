@@ -1,15 +1,28 @@
+//! Bitmasks are a set of bits that can be indexed and queried by the values of
+//! various enum types.
+
 use std::fmt;
 use std::ops::{Deref, DerefMut};
 use enum_iterator::{IterableEnum, EnumIterator};
 
+/// A generic trait that can be used to index by a given type into a set of bits.
 pub trait BitmaskTrait {
+    /// The underlying array storage data type.
     type Array: Sized;
+    /// The type that the bitmask can be indexed by.
     type Index: Copy + IterableEnum;
 
+    /// The default empty state of the bitmask.
     fn array_default() -> Self::Array;
+    /// A representation of the bitmask as a slice of bytes.
     fn array_slice(array: &Self::Array) -> &[u8];
+    /// A mutable representation of the bitmask as a slice of bytes.
     fn array_slice_mut(array: &mut Self::Array) -> &mut [u8];
+    /// Computes a normalized index value.
     fn index(index: Self::Index) -> usize;
+    /// Validates whether a given index is valid and in range for the bitmask.
+    ///
+    /// Dynamically allocated bitmasks may not be large enough to contain all indices.
     fn index_valid(_array: &Self::Array, _index: Self::Index) -> bool { true }
 }
 
@@ -24,15 +37,19 @@ impl BitmaskTrait for Vec<u8> {
     fn index_valid(array: &Self::Array, index: Self::Index) -> bool { array.len() > index as usize }
 }
 
+/// A dynamically allocated bitmask.
 pub type BitmaskVec = Bitmask<Vec<u8>>;
 
 impl Bitmask<Vec<u8>> {
+    /// Reallocate the bitmask to fit all valid code values for the given event
+    /// type.
     pub fn resize(&mut self, kind: ::EventKind) {
         self.data_mut().resize((kind.count_bits().unwrap_or(0x80) + 7) / 8, 0);
     }
 }
 
 #[derive(Copy, Clone)]
+/// A set of bits that can be indexed by specific enum values.
 pub struct Bitmask<T: BitmaskTrait> {
     mask: T::Array,
 }
@@ -46,61 +63,70 @@ impl<T: BitmaskTrait> Default for Bitmask<T> {
 }
 
 impl<T: BitmaskTrait> Bitmask<T> {
+    /// Extracts the underlying bitmask data.
     pub fn into_inner(self) -> T::Array {
         self.mask
     }
 
+    /// Iterates over all set bits.
     pub fn iter(&self) -> BitmaskIterator<T> {
         self.into_iter()
     }
 
+    /// Borrows the underlying bitmask data.
     pub fn data(&self) -> &T::Array {
         &self.mask
     }
 
+    /// Mutably borrows the underlying bitmask data.
     pub fn data_mut(&mut self) -> &mut T::Array {
         &mut self.mask
     }
 
-    pub fn slice(&self) -> &[u8] {
+    fn slice(&self) -> &[u8] {
         T::array_slice(&self.mask)
     }
 
-    pub fn slice_mut(&mut self) -> &mut [u8] {
+    fn slice_mut(&mut self) -> &mut [u8] {
         T::array_slice_mut(&mut self.mask)
     }
 
-    pub fn index(index: T::Index) -> (usize, usize) {
+    fn index(index: T::Index) -> (usize, usize) {
         let index = T::index(index);
         (index / 8, index % 8)
     }
 
-    pub fn index_valid(&self, index: T::Index) -> bool {
+    fn index_valid(&self, index: T::Index) -> bool {
         T::index_valid(&self.mask, index)
     }
 
+    /// Gets the status of an index in the bitmask.
     pub fn get(&self, index: T::Index) -> bool {
         let (offset, shift) = Self::index(index);
         (self.slice()[offset] & (1u8 << shift)) != 0
     }
 
+    /// Sets the status of an index in the bitmask.
     pub fn set(&mut self, index: T::Index) {
         let (offset, shift) = Self::index(index);
         let v = &mut self.slice_mut()[offset];
         *v |= 1u8 << shift;
     }
 
+    /// Clears the status of an index in the bitmask.
     pub fn clear(&mut self, index: T::Index) {
         let (offset, shift) = Self::index(index);
         let v = &mut self.slice_mut()[offset];
         *v &= !(1u8 << shift);
     }
 
+    /// Inverts the status of an index in the bitmask.
     pub fn flip(&mut self, index: T::Index) {
         let (offset, shift) = Self::index(index);
         self.slice_mut()[offset] ^= 1u8 << shift;
     }
 
+    /// Merges the provided indices into the bitmask.
     pub fn or<I: IntoIterator<Item=T::Index>>(&mut self, indices: I) {
         for index in indices {
             self.set(index);
@@ -120,6 +146,7 @@ impl<'a, T: BitmaskTrait> IntoIterator for &'a Bitmask<T> {
     }
 }
 
+/// An iterator over the set bits of a bitmask.
 pub struct BitmaskIterator<'a, T: BitmaskTrait + 'a> {
     mask: &'a Bitmask<T>,
     iter: EnumIterator<T::Index>,

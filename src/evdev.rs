@@ -1,3 +1,5 @@
+//! An interface to the Linux kernel's event devices (`/dev/input/*`).
+
 use std::{io, fs};
 use std::mem::{uninitialized, size_of};
 use std::slice::from_raw_parts_mut;

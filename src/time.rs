@@ -4,6 +4,7 @@ use std::ops::{Deref, DerefMut};
 use sys::timeval;
 use nix::libc::{time_t, suseconds_t};
 
+/// An event timestamp.
 #[repr(C)]
 #[derive(Copy, Clone)]
 #[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
@@ -22,6 +23,7 @@ struct TimevalDef {
 }
 
 impl EventTime {
+    /// Create a new timestamp.
     pub fn new(secs: i64, usecs: i64) -> Self {
         EventTime(timeval {
             tv_sec: secs as time_t,
@@ -29,26 +31,35 @@ impl EventTime {
         })
     }
 
+    /// Create a timestamp given a libc `timeval`.
     pub fn from_timeval(time: timeval) -> Self {
         EventTime(time)
     }
 
+    /// The timestamp represented as seconds since an epoch.
     pub fn seconds(&self) -> i64 {
         (self.0).tv_sec as i64
     }
 
+    /// Set the seconds component of the timestamp.
     pub fn set_seconds(&mut self, value: i64) {
         (self.0).tv_sec = value as time_t
     }
 
+    /// The microseconds component of the seconds.
+    ///
+    /// This is meant to be modulo one second, though any value is technically
+    /// valid.
     pub fn microseconds(&self) -> i64 {
         (self.0).tv_usec as i64
     }
 
+    /// Set the microseconds component of the timestamp.
     pub fn set_microseconds(&mut self, value: i64) {
         (self.0).tv_usec = value as suseconds_t
     }
 
+    /// The inner `libc` type.
     pub fn into_inner(self) -> timeval {
         self.0
     }

@@ -8,114 +8,166 @@ use ::{
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
 #[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+/// Synchronization events are used by evdev to group events or convey other
+/// out-of-band information.
 pub struct SynchronizeEvent {
+    /// The timestamp associated with the event.
     pub time: EventTime,
     event: EventKind,
+    /// The type of synchronization event.
     pub kind: SynchronizeKind,
+    /// An associated value with the event.
     pub value: i32,
 }
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
 #[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+/// An event that indicates the state of a key has changed.
 pub struct KeyEvent {
+    /// The timestamp associated with the event.
     pub time: EventTime,
     event: EventKind,
+    /// The key that triggered the event.
     pub key: Key,
+    /// The value of the event. Use `key_state()` instead.
     pub value: i32,
 }
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
 #[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+/// Events that occur when the state of a relative axis is changed.
 pub struct RelativeEvent {
+    /// The timestamp associated with the event.
     pub time: EventTime,
     event: EventKind,
+    /// The axis associated with the event.
     pub axis: RelativeAxis,
+    /// The relative distance of the axis event.
     pub value: i32,
 }
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
 #[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+/// Events that occur when the state of an absolute axis is changed.
 pub struct AbsoluteEvent {
+    /// The timestamp associated with the event.
     pub time: EventTime,
     event: EventKind,
+    /// The axis associated with the event.
     pub axis: AbsoluteAxis,
+    /// The absolute value of the axis.
     pub value: i32,
 }
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
 #[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+/// Special switch events.
 pub struct SwitchEvent {
+    /// The timestamp associated with the event.
     pub time: EventTime,
     event: EventKind,
+    /// The switch that triggered the event.
     pub switch: SwitchKind,
+    /// The state of the switch.
     pub value: i32,
 }
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
 #[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+/// Miscellaneous events.
 pub struct MiscEvent {
+    /// The timestamp associated with the event.
     pub time: EventTime,
     event: EventKind,
+    /// The kind of miscellaneous event.
     pub kind: MiscKind,
+    /// The state/value of the event.
     pub value: i32,
 }
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
 #[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+/// An event that indicates whether the specified LED should turn on/off.
 pub struct LedEvent {
+    /// The timestamp associated with the event.
     pub time: EventTime,
     event: EventKind,
+    /// The led associated with the event.
     pub led: LedKind,
+    /// The state of the led.
     pub value: i32,
 }
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
 #[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+/// An event that configures the autorepeat behaviour of the input device.
 pub struct AutorepeatEvent {
+    /// The timestamp associated with the event.
     pub time: EventTime,
     event: EventKind,
+    /// The kind of autorepeat event.
     pub kind: AutorepeatKind,
+    /// The value of the event.
     pub value: i32,
 }
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
 #[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+/// An event that indicates the device should play a specified sound.
 pub struct SoundEvent {
+    /// The timestamp associated with the event.
     pub time: EventTime,
     event: EventKind,
+    /// The sound to play.
     pub sound: SoundKind,
+    /// The value or state associated with the sound.
     pub value: i32,
 }
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
 #[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+/// A special event type used to send force-feedback events to uinput.
 pub struct UInputEvent {
+    /// The timestamp associated with the event.
     pub time: EventTime,
     event: EventKind,
+    /// The code of the event.
     pub code: UInputKind,
+    /// The unique request ID.
     pub value: i32,
 }
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
 #[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+/// A generic event.
 pub struct InputEvent {
+    /// The timestamp associated with the event.
     pub time: EventTime,
+    /// The type of event that occurred.
     pub kind: EventKind,
+    /// The code of the event.
+    ///
+    /// The meaning of this code depends on the `kind` of event. Using the typed
+    /// events via `Event` and `EventRef` is recommended.
     pub code: u16,
+    /// The value of the event.
+    ///
+    /// The interpretation of this value depends on the `kind` of event.
     pub value: i32,
 }
 
 impl KeyEvent {
+    /// The key state of the event.
     pub fn key_state(&self) -> KeyState {
         KeyState::from(self.value)
     }
@@ -174,6 +226,7 @@ macro_rules! event_impl {
         }
 
         impl<'a> $name {
+            /// Creates a new event from the given code and value.
             pub fn new(time: EventTime, $code: $codekind, value: i32) -> Self {
                 $name {
                     time: time,
@@ -183,21 +236,25 @@ macro_rules! event_impl {
                 }
             }
 
+            /// Reinterpret a generic event without checking for validity.
             pub unsafe fn from_event<E: AsRef<input_event>>(event: &E) -> &Self {
                 let raw = event.as_ref() as *const _ as *const _;
                 &*raw
             }
 
+            /// Reinterpret a mutable generic event without checking for validity.
             pub unsafe fn from_event_mut(event: &mut InputEvent) -> &mut Self {
                 let raw = event as *mut _ as *mut _;
                 &mut *raw
             }
 
+            /// A generic input event reference.
             pub fn as_event(&self) -> &InputEvent {
                 let raw = self as *const _ as *const _;
                 unsafe { &*raw }
             }
 
+            /// A mutable generic input event reference.
             pub unsafe fn as_event_mut(&mut self) -> &mut InputEvent {
                 let raw = self as *mut _ as *mut _;
                 &mut *raw
@@ -225,13 +282,20 @@ macro_rules! event_impl {
     };
 }
 
+/// A generic linux input event.
 pub trait GenericEvent: AsRef<InputEvent> + AsRef<input_event> {
+    /// The event kind.
     fn event_kind(&self) -> EventKind;
+    /// The timestamp associated with the event.
     fn time(&self) -> &EventTime;
+    /// The type code value of the event.
     fn code(&self) -> u16;
+    /// The value associated with the event.
     fn value(&self) -> i32;
 
+    /// Interprets a generic event reference into a concrete event type.
     fn from_ref(event: &InputEvent) -> Result<&Self, RangeError>;
+    /// Interprets a mutable generic event reference into a concrete event type.
     fn from_mut(event: &mut InputEvent) -> Result<&mut Self, RangeError>;
 }
 
@@ -271,6 +335,7 @@ impl AsRef<InputEvent> for InputEvent {
 }
 
 impl InputEvent {
+    /// Reinterprets a raw `input_event`.
     pub fn from_raw(event: &input_event) -> Result<&Self, RangeError> {
         EventKind::from_type(event.type_).map(|_| {
             let raw = event as *const _ as *const _;
@@ -278,6 +343,7 @@ impl InputEvent {
         })
     }
 
+    /// Reinterprets a raw `input_event` into a mutable reference.
     pub fn from_raw_mut(event: &mut input_event) -> Result<&mut Self, RangeError> {
         EventKind::from_type(event.type_).map(|_| {
             let raw = event as *mut _ as *mut _;
@@ -285,11 +351,13 @@ impl InputEvent {
         })
     }
 
+    /// Reinterprets the event as a raw `input_event`.
     pub fn as_raw(&self) -> &input_event {
         let raw = self as *const _ as *const _;
         unsafe { &*raw }
     }
 
+    /// Reinterprets the event as a mutable raw `input_event`.
     pub unsafe fn as_raw_mut(&mut self) -> &mut input_event {
         let raw = self as *mut _ as *mut _;
         &mut *raw
@@ -298,32 +366,42 @@ impl InputEvent {
 
 macro_rules! input_event_enum {
     ($($variant:ident($ty:ident),)*) => {
+        /// An owned and typed input event.
         #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
         #[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
         pub enum Event {
         $(
+            #[allow(missing_docs)]
             $variant($ty),
         )*
+            /// Unknown event type.
             Unknown(InputEvent),
         }
 
+        /// A reference to an input event.
         #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
         pub enum EventRef<'a> {
         $(
+            #[allow(missing_docs)]
             $variant(&'a $ty),
         )*
+            /// Unknown event type.
             Unknown(&'a InputEvent),
         }
 
+        /// A mutable reference to an input event.
         #[derive(PartialEq, Eq, Hash, Debug)]
         pub enum EventMut<'a> {
         $(
+            #[allow(missing_docs)]
             $variant(&'a mut $ty),
         )*
+            /// Unknown event type.
             Unknown(&'a mut InputEvent),
         }
 
         impl Event {
+            /// Converts a generic `InputEvent` to a typed event.
             pub fn new(event: InputEvent) -> Result<Self, RangeError> {
                 match event.kind {
                 $(
@@ -335,6 +413,7 @@ macro_rules! input_event_enum {
         }
 
         impl<'a> EventRef<'a> {
+            /// Wraps the generic `InputEvent` into an event.
             pub fn new(event: &'a InputEvent) -> Result<Self, RangeError> {
                 match event.kind {
                 $(
@@ -346,6 +425,7 @@ macro_rules! input_event_enum {
         }
 
         impl<'a> EventMut<'a> {
+            /// Wraps the generic `InputEvent` into a mutable event.
             pub fn new(event: &'a mut InputEvent) -> Result<Self, RangeError> {
                 match event.kind {
                 $(
