@@ -5,7 +5,7 @@ use std::{io, fs, ptr};
 use std::os::unix::io::{RawFd, AsRawFd, IntoRawFd, FromRawFd};
 use std::os::unix::ffi::OsStrExt;
 use std::os::raw::c_char;
-use std::mem::{uninitialized, size_of};
+use std::mem::{MaybeUninit, size_of};
 use std::path::{Path, PathBuf};
 use std::slice::{from_raw_parts, from_raw_parts_mut};
 use std::ffi::{OsStr, OsString, CStr};
@@ -82,7 +82,7 @@ impl<F: AsRawFd> UInputHandle<F> {
 
     /// Create a new uinput device using the legacy `UI_DEV_CREATE` interface
     pub fn create_legacy(&self, id: &InputId, name: &[u8], ff_effects_max: u32, abs: &[AbsoluteInfoSetup]) -> io::Result<()> {
-        let mut setup: sys::uinput_user_dev = unsafe { uninitialized() };
+        let mut setup: sys::uinput_user_dev = unsafe { MaybeUninit::zeroed().assume_init() };
         setup.id = (*id).into();
         setup.ff_effects_max = ff_effects_max;
 
@@ -109,7 +109,7 @@ impl<F: AsRawFd> UInputHandle<F> {
 
     /// Create a new uinput device, and fall back on the legacy interface if necessary
     pub fn create(&self, id: &InputId, name: &[u8], ff_effects_max: u32, abs: &[AbsoluteInfoSetup]) -> io::Result<()> {
-        let mut setup: sys::uinput_setup = unsafe { uninitialized() };
+        let mut setup: sys::uinput_setup = unsafe { MaybeUninit::zeroed().assume_init() };
         setup.id = (*id).into();
         setup.ff_effects_max = ff_effects_max;
 

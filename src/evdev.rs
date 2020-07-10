@@ -1,7 +1,7 @@
 //! An interface to the Linux kernel's event devices (`/dev/input/*`).
 
 use std::{io, fs};
-use std::mem::{uninitialized, size_of};
+use std::mem::{MaybeUninit, size_of};
 use std::slice::from_raw_parts_mut;
 use std::os::unix::io::{RawFd, AsRawFd, IntoRawFd, FromRawFd};
 use nix;
@@ -276,9 +276,9 @@ impl<F: AsRawFd> EvdevHandle<F> {
     /// `EVIOCGABS`
     pub fn absolute_info(&self, abs: AbsoluteAxis) -> io::Result<AbsoluteInfo> {
         unsafe {
-            let mut info = uninitialized();
-            sys::ev_get_abs(self.fd(), abs as _, &mut info)
-                .map(|_| info.into())
+            let mut info = MaybeUninit::uninit();
+            sys::ev_get_abs(self.fd(), abs as _, &mut *info.as_mut_ptr())
+                .map(|_| info.assume_init().into())
                 .map_err(convert_error)
         }
     }

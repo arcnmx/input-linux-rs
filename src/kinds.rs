@@ -8,19 +8,15 @@ pub struct RangeError;
 
 impl From<RangeError> for io::Error {
     fn from(e: RangeError) -> Self {
-        io::Error::new(io::ErrorKind::InvalidData, error::Error::description(&e))
+        io::Error::new(io::ErrorKind::InvalidData, e.to_string())
     }
 }
 
-impl error::Error for RangeError {
-    fn description(&self) -> &str {
-        "event code out of range"
-    }
-}
+impl error::Error for RangeError { }
 
 impl fmt::Display for RangeError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", error::Error::description(self))
+        write!(f, "event code out of range")
     }
 }
 
@@ -391,7 +387,7 @@ impl EventKind {
         const EV_UINPUT: u16 = sys::EV_UINPUT as _;
 
         match code {
-            0...0x1f | EV_UINPUT => Ok(unsafe { transmute(code) }),
+            0..=0x1f | EV_UINPUT => Ok(unsafe { transmute(code) }),
             _ => return Err(Default::default()),
         }
     }

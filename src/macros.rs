@@ -96,9 +96,9 @@ macro_rules! ioctl_impl {
         $(#[$attr])*
         pub fn $f(&self) -> io::Result<$ret> {
             unsafe {
-                let mut v = ::std::mem::uninitialized();
-                sys::$ev(self.fd(), &mut v)
-                    .map(|_| v.into())
+                let mut v = ::std::mem::MaybeUninit::uninit();
+                sys::$ev(self.fd(), &mut *v.as_mut_ptr())
+                    .map(|_| v.assume_init().into())
                     .map_err(::macros::convert_error)
             }
         }

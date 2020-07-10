@@ -29,9 +29,9 @@ impl Decoder for EventCodec {
         if src.len() >= mem::size_of::<Self::Item>() {
             let src = src.split_to(mem::size_of::<Self::Item>());
             let event = unsafe {
-                let mut event: input_event = mem::uninitialized();
-                ptr::copy_nonoverlapping(src.as_ptr(), &mut event as *mut _ as *mut u8, mem::size_of::<Self::Item>());
-                InputEvent::from_raw(&event).map(|e| *e).map_err(From::from)
+                let mut event = mem::MaybeUninit::<input_event>::uninit();
+                ptr::copy_nonoverlapping(src.as_ptr(), event.as_mut_ptr() as *mut u8, mem::size_of::<Self::Item>());
+                InputEvent::from_raw(&*event.as_ptr()).map(|e| *e).map_err(From::from)
             };
 
             event.map(Some)
