@@ -166,6 +166,15 @@ pub struct InputEvent {
     pub value: i32,
 }
 
+impl InputEvent {
+    /// Reinterpret this event as an array of bytes
+    pub fn as_bytes(&self) -> &[u8; {core::mem::size_of::<InputEvent>()}] {
+        unsafe {
+            core::mem::transmute(self)
+        }
+    }
+}
+
 impl KeyEvent {
     /// The key state of the event.
     pub fn key_state(&self) -> KeyState {

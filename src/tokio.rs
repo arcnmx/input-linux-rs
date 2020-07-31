@@ -3,7 +3,7 @@
 extern crate tokio_util;
 extern crate bytes;
 
-use std::{io, mem, ptr, slice};
+use std::{io, mem, ptr};
 use sys::input_event;
 use self::tokio_util::codec::{Decoder, Encoder};
 use self::bytes::{BytesMut, BufMut};
@@ -46,9 +46,7 @@ impl Encoder<InputEvent> for EventCodec {
 
     fn encode(&mut self, item: InputEvent, dst: &mut BytesMut) -> Result<(), Self::Error> {
         dst.reserve(mem::size_of::<InputEvent>());
-        unsafe {
-            dst.put_slice(slice::from_raw_parts(&item as *const _ as *const u8, mem::size_of::<InputEvent>()));
-        }
+        dst.put_slice(item.as_bytes());
         Ok(())
     }
 }
