@@ -140,15 +140,18 @@ pub enum SynchronizeKind {
 }
 
 /// Key event value states.
-// XXX: sure would be nice if Rust knew these weren't overlapping and allowed #[repr(i32)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
 #[allow(missing_docs)]
-pub enum KeyState {
-    Released, // 0
-    Pressed, // 1
-    Autorepeat, // 2
-    Unknown(i32),
+#[repr(transparent)]
+pub struct KeyState {
+    pub value: i32,
+}
+
+#[allow(missing_docs)]
+impl KeyState {
+    pub const RELEASED: Self = KeyState { value: 0 };
+    pub const PRESSED: Self = KeyState { value: 1 };
+    pub const AUTOREPEAT: Self = KeyState { value: 2 };
 }
 
 /// Relative axes.
@@ -437,22 +440,63 @@ impl_iterable! { SynchronizeKind(0, sys::SYN_CNT) }
 
 impl From<i32> for KeyState {
     fn from(key: i32) -> Self {
-        match key {
-            0 => KeyState::Released,
-            1 => KeyState::Pressed,
-            2 => KeyState::Autorepeat,
-            key => KeyState::Unknown(key),
-        }
+        unsafe { transmute(key) }
     }
 }
 
 impl From<KeyState> for i32 {
     fn from(k: KeyState) -> Self {
-        match k {
-            KeyState::Released => 0,
-            KeyState::Pressed => 1,
-            KeyState::Autorepeat => 2,
-            KeyState::Unknown(key) => key,
+        k.value
+    }
+}
+
+#[cfg(feature = "with-serde")]
+mod key_state_serde {
+    use serde::{Deserialize, Deserializer, Serialize, Serializer};
+    use super::KeyState as KeyStateSuper;
+
+    #[derive(Serialize, Deserialize)]
+    #[serde(untagged)]
+    enum KeyState {
+        Released,
+        Pressed,
+        Autorepeat,
+        Unknown(i32),
+    }
+
+    impl From<KeyState> for KeyStateSuper {
+        #[inline(always)]
+        fn from(k: KeyState) -> Self {
+            match k {
+                KeyState::Released => KeyStateSuper::RELEASED,
+                KeyState::Pressed => KeyStateSuper::PRESSED,
+                KeyState::Autorepeat => KeyStateSuper::AUTOREPEAT,
+                KeyState::Unknown(v) => v.into(),
+            }
+        }
+    }
+
+    impl From<KeyStateSuper> for KeyState {
+        #[inline(always)]
+        fn from(k: KeyStateSuper) -> Self {
+            match k {
+                KeyStateSuper::RELEASED => KeyState::Released,
+                KeyStateSuper::PRESSED => KeyState::Pressed,
+                KeyStateSuper::AUTOREPEAT => KeyState::Autorepeat,
+                KeyStateSuper { value } => KeyState::Unknown(value),
+            }
+        }
+    }
+
+    impl<'de> Deserialize<'de> for KeyStateSuper {
+        fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+            KeyState::deserialize(deserializer).map(From::from)
+        }
+    }
+
+    impl Serialize for KeyStateSuper {
+        fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+            KeyState::from(*self).serialize(serializer)
         }
     }
 }
