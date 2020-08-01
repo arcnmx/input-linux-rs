@@ -30,8 +30,8 @@ pub struct KeyEvent {
     event: EventKind,
     /// The key that triggered the event.
     pub key: Key,
-    /// The value of the event. Use `key_state()` instead.
-    pub value: i32,
+    /// The value of the event.
+    pub value: KeyState,
 }
 
 #[repr(C)]
@@ -175,21 +175,14 @@ impl InputEvent {
     }
 }
 
-impl KeyEvent {
-    /// The key state of the event.
-    pub fn key_state(&self) -> KeyState {
-        KeyState::from(self.value)
-    }
-}
-
 macro_rules! event_impl {
     (@impl_event InputEvent $($tt:tt)*) => { };
-    (@impl_event $name:ident $code:ident $kind:path, $codekind:ident) => {
+    (@impl_event $name:ident $code:ident $kind:path, $codekind:ident, $valuekind:ident) => {
         impl GenericEvent for $name {
             fn event_kind(&self) -> EventKind { $kind }
             fn time(&self) -> &EventTime { &self.time }
             fn code(&self) -> u16 { self.$code as _ }
-            fn value(&self) -> i32 { self.value }
+            fn value(&self) -> i32 { self.value.into() }
 
             fn from_ref(event: &InputEvent) -> Result<&Self, RangeError> {
                 $codekind::from_code(event.code)
@@ -236,12 +229,12 @@ macro_rules! event_impl {
 
         impl<'a> $name {
             /// Creates a new event from the given code and value.
-            pub fn new(time: EventTime, $code: $codekind, value: i32) -> Self {
+            pub fn new(time: EventTime, $code: $codekind, value: $valuekind) -> Self {
                 $name {
-                    time: time,
+                    time,
                     event: $kind,
                     $code: $code,
-                    value: value,
+                    value,
                 }
             }
 
@@ -270,9 +263,9 @@ macro_rules! event_impl {
             }
         }
     };
-    (@impl $name:ident $code:ident $kind:path, $codekind:ident) => {
+    (@impl $name:ident $code:ident $kind:path, $codekind:ident, $valuekind:ident) => {
         event_impl! {
-            @impl_event $name $code $kind, $codekind
+            @impl_event $name $code $kind, $codekind, $valuekind
         }
 
         impl AsRef<input_event> for $name {
@@ -282,10 +275,10 @@ macro_rules! event_impl {
             }
         }
     };
-    ($(struct $name:ident : $kind:path { $code:ident: $codekind:ident })*) => {
+    ($(struct $name:ident : $kind:path { $code:ident: $codekind:ident, value: $valuekind:ident })*) => {
         $(
             event_impl! {
-                @impl $name $code $kind, $codekind
+                @impl $name $code $kind, $codekind, $valuekind
             }
         )*
     };
@@ -309,17 +302,17 @@ pub trait GenericEvent: AsRef<InputEvent> + AsRef<input_event> {
 }
 
 event_impl! {
-    struct SynchronizeEvent : EventKind::Synchronize { kind: SynchronizeKind }
-    struct KeyEvent : EventKind::Key { key: Key }
-    struct RelativeEvent : EventKind::Relative { axis: RelativeAxis }
-    struct AbsoluteEvent : EventKind::Absolute { axis: AbsoluteAxis }
-    struct SwitchEvent : EventKind::Switch { switch: SwitchKind }
-    struct MiscEvent : EventKind::Misc { kind: MiscKind }
-    struct LedEvent : EventKind::Led { led: LedKind }
-    struct AutorepeatEvent : EventKind::Autorepeat { kind: AutorepeatKind }
-    struct SoundEvent : EventKind::Sound { sound: SoundKind }
-    struct UInputEvent : EventKind::UInput { code: UInputKind }
-    struct InputEvent : Unknown { code: u16 }
+    struct SynchronizeEvent : EventKind::Synchronize { kind: SynchronizeKind, value: i32 }
+    struct KeyEvent : EventKind::Key { key: Key, value: KeyState }
+    struct RelativeEvent : EventKind::Relative { axis: RelativeAxis, value: i32 }
+    struct AbsoluteEvent : EventKind::Absolute { axis: AbsoluteAxis, value: i32 }
+    struct SwitchEvent : EventKind::Switch { switch: SwitchKind, value: i32 }
+    struct MiscEvent : EventKind::Misc { kind: MiscKind, value: i32 }
+    struct LedEvent : EventKind::Led { led: LedKind, value: i32 }
+    struct AutorepeatEvent : EventKind::Autorepeat { kind: AutorepeatKind, value: i32 }
+    struct SoundEvent : EventKind::Sound { sound: SoundKind, value: i32 }
+    struct UInputEvent : EventKind::UInput { code: UInputKind, value: i32 }
+    struct InputEvent : Unknown { code: u16, value: i32 }
 }
 
 impl GenericEvent for InputEvent {
