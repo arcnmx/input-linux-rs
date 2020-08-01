@@ -229,7 +229,7 @@ macro_rules! event_impl {
 
         impl<'a> $name {
             /// Creates a new event from the given code and value.
-            pub fn new(time: EventTime, $code: $codekind, value: $valuekind) -> Self {
+            pub const fn new(time: EventTime, $code: $codekind, value: $valuekind) -> Self {
                 $name {
                     time,
                     event: $kind,
