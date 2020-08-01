@@ -1,3 +1,4 @@
+use std::convert::TryFrom;
 use sys::input_event;
 use ::{
     EventTime, RangeError, KeyState,
@@ -207,6 +208,30 @@ macro_rules! event_impl {
                     } else {
                         Err(Default::default())
                     })
+            }
+        }
+
+        impl<'a> TryFrom<&'a InputEvent> for &'a $name {
+            type Error = RangeError;
+
+            fn try_from(event: &'a InputEvent) -> Result<Self, Self::Error> {
+                $name::from_ref(event)
+            }
+        }
+
+        impl TryFrom<InputEvent> for $name {
+            type Error = RangeError;
+
+            fn try_from(event: InputEvent) -> Result<Self, Self::Error> {
+                $name::from_ref(&event).map(|&e| e)
+            }
+        }
+
+        impl<'a> TryFrom<&'a mut InputEvent> for &'a mut $name {
+            type Error = RangeError;
+
+            fn try_from(event: &'a mut InputEvent) -> Result<Self, Self::Error> {
+                $name::from_mut(event)
             }
         }
 

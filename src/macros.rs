@@ -73,9 +73,8 @@ macro_rules! impl_iterable {
             }
         }
 
-        #[cfg(feature = "unstable")]
-        impl TryFrom<u16> for $name {
-            type Error = kinds::RangeError;
+        impl std::convert::TryFrom<u16> for $name {
+            type Error = ::kinds::RangeError;
 
             fn try_from(code: u16) -> Result<Self, Self::Error> {
                 Self::from_code(code)

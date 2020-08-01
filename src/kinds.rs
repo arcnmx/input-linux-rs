@@ -1,3 +1,4 @@
+use std::convert::TryFrom;
 use std::mem::transmute;
 use std::{io, fmt, error};
 use sys;
@@ -437,7 +438,6 @@ impl EventKind {
     }
 }
 
-#[cfg(feature = "unstable")]
 impl TryFrom<u16> for EventKind {
     type Error = RangeError;
 
