@@ -100,6 +100,13 @@ impl<T: BitmaskTrait> Bitmask<T> {
         T::index_valid(&self.mask, index)
     }
 
+    /// Unset all bits in the bitmask.
+    pub fn clear(&mut self) {
+        for b in self.slice_mut() {
+            *b = 0;
+        }
+    }
+
     /// Gets the status of an index in the bitmask.
     pub fn get(&self, index: T::Index) -> bool {
         let (offset, shift) = Self::index(index);
@@ -107,21 +114,21 @@ impl<T: BitmaskTrait> Bitmask<T> {
     }
 
     /// Sets the status of an index in the bitmask.
-    pub fn set(&mut self, index: T::Index) {
+    pub fn insert(&mut self, index: T::Index) {
         let (offset, shift) = Self::index(index);
         let v = &mut self.slice_mut()[offset];
         *v |= 1u8 << shift;
     }
 
     /// Clears the status of an index in the bitmask.
-    pub fn clear(&mut self, index: T::Index) {
+    pub fn remove(&mut self, index: T::Index) {
         let (offset, shift) = Self::index(index);
         let v = &mut self.slice_mut()[offset];
         *v &= !(1u8 << shift);
     }
 
     /// Inverts the status of an index in the bitmask.
-    pub fn flip(&mut self, index: T::Index) {
+    pub fn toggle(&mut self, index: T::Index) {
         let (offset, shift) = Self::index(index);
         self.slice_mut()[offset] ^= 1u8 << shift;
     }
@@ -129,7 +136,7 @@ impl<T: BitmaskTrait> Bitmask<T> {
     /// Merges the provided indices into the bitmask.
     pub fn or<I: IntoIterator<Item=T::Index>>(&mut self, indices: I) {
         for index in indices {
-            self.set(index);
+            self.insert(index);
         }
     }
 }
