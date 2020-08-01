@@ -175,6 +175,13 @@ impl InputEvent {
     }
 }
 
+impl SynchronizeEvent {
+    /// Synchronization event
+    pub const fn report(time: EventTime) -> Self {
+        Self::new(time, SynchronizeKind::Report, 0)
+    }
+}
+
 macro_rules! event_impl {
     (@impl_event InputEvent $($tt:tt)*) => { };
     (@impl_event $name:ident $code:ident $kind:path, $codekind:ident, $valuekind:ident) => {

@@ -152,6 +152,20 @@ impl KeyState {
     pub const RELEASED: Self = KeyState { value: 0 };
     pub const PRESSED: Self = KeyState { value: 1 };
     pub const AUTOREPEAT: Self = KeyState { value: 2 };
+
+    pub fn is_pressed(&self) -> bool {
+        match *self {
+            Self::PRESSED => true,
+            _ => false,
+        }
+    }
+
+    pub fn pressed(pressed: bool) -> Self {
+        match pressed {
+            false => Self::RELEASED,
+            true => Self::PRESSED,
+        }
+    }
 }
 
 /// Relative axes.
