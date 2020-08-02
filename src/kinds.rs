@@ -181,9 +181,9 @@ pub enum RelativeAxis {
     Dial = sys::REL_DIAL as _,
     Wheel = sys::REL_WHEEL as _,
     Misc = sys::REL_MISC as _,
-    UnknownA,
-    UnknownB,
-    UnknownC,
+    Reserved = sys::REL_RESERVED as _,
+    WheelHiRes = sys::REL_WHEEL_HI_RES as _,
+    HorizontalWheelHiRes = sys::REL_HWHEEL_HI_RES as _,
     UnknownD,
     UnknownE,
     UnknownF,
@@ -244,7 +244,7 @@ pub enum AbsoluteAxis {
     Unknown2B,
     Unknown2C,
     Unknown2D,
-    Unknown2E,
+    Reserved = sys::ABS_RESERVED as _,
 
     /// MT slot being modified
     MultitouchSlot = sys::ABS_MT_SLOT as _,
@@ -319,6 +319,7 @@ pub enum SwitchKind {
     MuteDevice = sys::SW_MUTE_DEVICE as _,
     /// set = pen inserted
     PenInserted = sys::SW_PEN_INSERTED as _,
+    MachineCover = sys::SW_MACHINE_COVER as _,
 }
 
 /// Miscellaneous events.

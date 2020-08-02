@@ -1,5 +1,5 @@
 #![deny(missing_docs)]
-#![doc(html_root_url = "https://docs.rs/input-linux/0.2.0/")]
+#![doc(html_root_url = "https://docs.rs/input-linux/0.3.0/")]
 
 //! Userspace bindings to the Linux evdev and uinput subsystems.
 //!
