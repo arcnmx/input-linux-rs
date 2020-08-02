@@ -13,6 +13,6 @@ See the [documentation][docs] for up to date information.
 [release-badge]: https://img.shields.io/crates/v/input-linux.svg?style=flat-square
 [cargo]: https://crates.io/crates/input-linux
 [docs-badge]: https://img.shields.io/badge/API-docs-blue.svg?style=flat-square
-[docs]: http://arcnmx.github.io/input-linux-rs/input_linux/
+[docs]: https://docs.rs/input-linux/*/input_linux/
 [license-badge]: https://img.shields.io/badge/license-MIT-ff69b4.svg?style=flat-square
 [license]: https://github.com/arcnmx/input-linux-rs/blob/master/COPYING

@@ -6,7 +6,7 @@ authors = ["arcnmx"]
 description = "evdev and uinput"
 keywords = ["evdev", "uinput", "linux", "input"]
 
-documentation = "http://arcnmx.github.io/input-linux-rs/input_linux"
+documentation = "http://docs.rs/input-linux/*/input_linux"
 repository = "https://github.com/arcnmx/input-linux-rs"
 readme = "README.md"
 license = "MIT"
