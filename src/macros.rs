@@ -15,6 +15,7 @@ macro_rules! impl_iterable {
         impl ::bitmask::BitmaskTrait for $name {
             type Array = [u8; (Self::COUNT + 7) / 8];
             type Index = $name;
+            const ZERO: Self::Array = [0u8; (Self::COUNT + 7) / 8];
 
             fn array_default() -> Self::Array { unsafe { ::std::mem::zeroed() } }
             fn array_slice(array: &Self::Array) -> &[u8] { array }
@@ -68,7 +69,7 @@ macro_rules! impl_iterable {
                 if code < Self::COUNT as u16 {
                     Ok(unsafe { mem::transmute(code) })
                 } else {
-                    Err(Default::default())
+                    Err(::kinds::RangeError)
                 }
             }
         }

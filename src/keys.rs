@@ -1005,13 +1005,13 @@ impl Key {
     /// Determines whether the given value represents a button.
     ///
     /// Buttons are often found on a mouse or gamepad.
-    pub fn is_button(&self) -> bool {
+    pub const fn is_button(&self) -> bool {
         let key = *self as u16;
-        ((key >= Key::Button0 as _) && (key < Key::Ok as _)) || key >= Key::ButtonTriggerHappy1 as _
+        ((key >= Key::Button0 as _) & (key < Key::Ok as _)) | (key >= Key::ButtonTriggerHappy1 as _)
     }
 
     /// Determines whether the given value represents a keyboard key.
-    pub fn is_key(&self) -> bool {
+    pub const fn is_key(&self) -> bool {
         !self.is_button()
     }
 }

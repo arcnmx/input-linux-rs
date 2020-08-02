@@ -17,7 +17,7 @@ pub struct EvdevHandle<F>(F);
 
 impl<F> EvdevHandle<F> {
     /// Create a new handle using an existing open file object.
-    pub fn new(fd: F) -> Self {
+    pub const fn new(fd: F) -> Self {
         EvdevHandle(fd)
     }
 
@@ -27,7 +27,7 @@ impl<F> EvdevHandle<F> {
     }
 
     /// A reference to the contained handle.
-    pub fn as_inner(&self) -> &F {
+    pub const fn as_inner(&self) -> &F {
         &self.0
     }
 

@@ -14,7 +14,7 @@ pub struct EventCodec {
 }
 
 impl EventCodec {
-    pub fn new() -> Self {
+    pub const fn new() -> Self {
         EventCodec {
             _dummy: (),
         }

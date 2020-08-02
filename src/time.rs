@@ -24,7 +24,7 @@ struct TimevalDef {
 
 impl EventTime {
     /// Create a new timestamp.
-    pub fn new(secs: i64, usecs: i64) -> Self {
+    pub const fn new(secs: i64, usecs: i64) -> Self {
         EventTime(timeval {
             tv_sec: secs as time_t,
             tv_usec: usecs as suseconds_t,
@@ -32,12 +32,12 @@ impl EventTime {
     }
 
     /// Create a timestamp given a libc `timeval`.
-    pub fn from_timeval(time: timeval) -> Self {
+    pub const fn from_timeval(time: timeval) -> Self {
         EventTime(time)
     }
 
     /// The timestamp represented as seconds since an epoch.
-    pub fn seconds(&self) -> i64 {
+    pub const fn seconds(&self) -> i64 {
         (self.0).tv_sec as i64
     }
 
@@ -50,7 +50,7 @@ impl EventTime {
     ///
     /// This is meant to be modulo one second, though any value is technically
     /// valid.
-    pub fn microseconds(&self) -> i64 {
+    pub const fn microseconds(&self) -> i64 {
         (self.0).tv_usec as i64
     }
 
@@ -60,7 +60,7 @@ impl EventTime {
     }
 
     /// The inner `libc` type.
-    pub fn into_inner(self) -> timeval {
+    pub const fn into_inner(self) -> timeval {
         self.0
     }
 }

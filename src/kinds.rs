@@ -154,17 +154,13 @@ impl KeyState {
     pub const PRESSED: Self = KeyState { value: 1 };
     pub const AUTOREPEAT: Self = KeyState { value: 2 };
 
-    pub fn is_pressed(&self) -> bool {
-        match *self {
-            Self::PRESSED => true,
-            _ => false,
-        }
+    pub const fn is_pressed(&self) -> bool {
+        self.value == 1
     }
 
-    pub fn pressed(pressed: bool) -> Self {
-        match pressed {
-            false => Self::RELEASED,
-            true => Self::PRESSED,
+    pub const fn pressed(pressed: bool) -> Self {
+        Self {
+            value: pressed as i32,
         }
     }
 }

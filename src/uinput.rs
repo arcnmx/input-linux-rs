@@ -35,7 +35,7 @@ fn copy_name(dest: &mut [c_char; UINPUT_MAX_NAME_SIZE as usize], name: &[u8]) ->
 
 impl<F> UInputHandle<F> {
     /// Create a new handle using an existing open file object.
-    pub fn new(fd: F) -> Self {
+    pub const fn new(fd: F) -> Self {
         UInputHandle(fd)
     }
 
@@ -45,7 +45,7 @@ impl<F> UInputHandle<F> {
     }
 
     /// A reference to the contained handle.
-    pub fn as_inner(&self) -> &F {
+    pub const fn as_inner(&self) -> &F {
         &self.0
     }
 

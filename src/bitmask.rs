@@ -11,6 +11,8 @@ pub trait BitmaskTrait {
     type Array: Sized;
     /// The type that the bitmask can be indexed by.
     type Index: Copy + IterableEnum;
+    /// Empty default data.
+    const ZERO: Self::Array;
 
     /// The default empty state of the bitmask.
     fn array_default() -> Self::Array;
@@ -29,6 +31,7 @@ pub trait BitmaskTrait {
 impl BitmaskTrait for Vec<u8> {
     type Array = Self;
     type Index = u16;
+    const ZERO: Self = Vec::new();
 
     fn array_default() -> Self::Array { vec![0u8; 0x10] }
     fn array_slice(array: &Self::Array) -> &[u8] { array }
@@ -63,6 +66,11 @@ impl<T: BitmaskTrait> Default for Bitmask<T> {
 }
 
 impl<T: BitmaskTrait> Bitmask<T> {
+    /// A new empty bitmask.
+    pub const EMPTY: Self = Self {
+        mask: T::ZERO,
+    };
+
     /// Extracts the underlying bitmask data.
     pub fn into_inner(self) -> T::Array {
         self.mask
