@@ -4,10 +4,7 @@ use sys;
 pub(crate) const STRING_BUFFER_LENGTH: usize = 0x200;
 
 pub(crate) fn convert_error(e: sys::Error) -> io::Error {
-    match e {
-        sys::Error::Sys(errno) => errno.into(),
-        _ => sys::Errno::EINVAL.into(),
-    }
+    e.into()
 }
 
 macro_rules! impl_iterable {

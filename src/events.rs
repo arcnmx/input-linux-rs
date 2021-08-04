@@ -169,7 +169,7 @@ pub struct InputEvent {
 
 impl InputEvent {
     /// Reinterpret this event as an array of bytes
-    pub fn as_bytes(&self) -> &[u8; {core::mem::size_of::<InputEvent>()}] {
+    pub fn as_bytes(&self) -> &[u8; core::mem::size_of::<InputEvent>()] {
         unsafe {
             core::mem::transmute(self)
         }

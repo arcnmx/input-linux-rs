@@ -780,10 +780,13 @@ pub enum Key {
     Screensaver = sys::KEY_SCREENSAVER as _,
     /// Listening Voice Command
     Voicecommand = sys::KEY_VOICECOMMAND as _,
+    /// AL Context-aware desktop assistant
     Assistant = sys::KEY_ASSISTANT as _,
+    /// AC Next Keyboard Layout Select
     KbdLayoutNext = sys::KEY_KBD_LAYOUT_NEXT as _,
+    /// Show/hide emoji picker (HUTRR101)
+    EmojiPicker = sys::KEY_EMOJI_PICKER as _,
 
-    Unknown249,
     Unknown24A,
     Unknown24B,
     Unknown24C,
