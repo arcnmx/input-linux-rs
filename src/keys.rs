@@ -9,7 +9,7 @@ use sys;
 /// AL - Application Launch Button
 /// SC - System Control
 #[repr(u16)]
-#[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+#[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug, enum_utils::FromStr)]
 #[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
 #[allow(missing_docs)]
 pub enum Key {
