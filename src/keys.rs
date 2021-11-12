@@ -1,4 +1,6 @@
-use sys;
+use crate::sys;
+#[cfg(feature = "with-serde")]
+use serde::{Deserialize, Serialize};
 
 /// Keys and Buttons
 ///

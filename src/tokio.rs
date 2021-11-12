@@ -4,10 +4,10 @@ extern crate tokio_util;
 extern crate bytes;
 
 use std::{io, mem, ptr};
-use sys::input_event;
+use crate::sys::input_event;
 use self::tokio_util::codec::{Decoder, Encoder};
 use self::bytes::{BytesMut, BufMut};
-use InputEvent;
+use crate::InputEvent;
 
 pub struct EventCodec {
     _dummy: (),

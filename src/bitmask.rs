@@ -3,7 +3,8 @@
 
 use std::fmt;
 use std::ops::{Deref, DerefMut};
-use enum_iterator::{IterableEnum, EnumIterator};
+use crate::EventKind;
+use crate::enum_iterator::{IterableEnum, EnumIterator};
 
 /// A generic trait that can be used to index by a given type into a set of bits.
 pub trait BitmaskTrait {
@@ -46,7 +47,7 @@ pub type BitmaskVec = Bitmask<Vec<u8>>;
 impl Bitmask<Vec<u8>> {
     /// Reallocate the bitmask to fit all valid code values for the given event
     /// type.
-    pub fn resize(&mut self, kind: ::EventKind) {
+    pub fn resize(&mut self, kind: EventKind) {
         self.data_mut().resize((kind.count_bits().unwrap_or(0x80) + 7) / 8, 0);
     }
 }
@@ -172,7 +173,7 @@ impl<'a, T: BitmaskTrait> Iterator for BitmaskIterator<'a, T> {
 
     fn next(&mut self) -> Option<Self::Item> {
         let mask = &self.mask;
-        self.iter.by_ref().take_while(|i| mask.index_valid(*i)).filter(|i| mask.get(*i)).next()
+        self.iter.by_ref().take_while(|i| mask.index_valid(*i)).find(|i| mask.get(*i))
     }
 }
 

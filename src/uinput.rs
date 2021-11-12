@@ -9,13 +9,12 @@ use std::mem::{MaybeUninit, size_of};
 use std::path::{Path, PathBuf};
 use std::slice::{from_raw_parts, from_raw_parts_mut};
 use std::ffi::{OsStr, OsString, CStr};
-use sys;
+use crate::sys;
 use nix;
-use ::{InputId, AbsoluteInfoSetup, kinds};
-use macros::convert_error;
+use crate::{Key, InputId, AbsoluteInfoSetup, kinds};
+use crate::macros::{convert_error};
 
-pub use sys::UINPUT_VERSION;
-pub use sys::UINPUT_MAX_NAME_SIZE;
+pub use crate::sys::{UINPUT_MAX_NAME_SIZE, UINPUT_VERSION};
 
 /// A handle to a uinput allowing the use of ioctls
 pub struct UInputHandle<F>(F);
@@ -27,7 +26,7 @@ fn copy_name(dest: &mut [c_char; UINPUT_MAX_NAME_SIZE as usize], name: &[u8]) ->
         unsafe {
             ptr::copy_nonoverlapping(name.as_ptr() as *const _, dest.as_mut_ptr() as *mut _, name.len());
         }
-        dest[name.len()] = 0 as _;
+        dest[name.len()] = 0;
 
         Ok(())
     }
@@ -201,7 +200,7 @@ impl<F: AsRawFd> UInputHandle<F> {
         }
         {
             /// `UI_SET_KEYBIT`
-            @set set_keybit(::Key) = ui_set_keybit
+            @set set_keybit(Key) = ui_set_keybit
         }
         {
             /// `UI_SET_RELBIT`

@@ -5,10 +5,13 @@ use std::mem::{MaybeUninit, size_of};
 use std::slice::from_raw_parts_mut;
 use std::os::unix::io::{RawFd, AsRawFd, IntoRawFd, FromRawFd};
 use nix;
-use sys;
-use ::{InputId, EventKind, AbsoluteAxis, AbsoluteInfo};
-use macros::convert_error;
-use bitmask::Bitmask;
+use crate::sys;
+use crate::{
+    AbsoluteAxis, AbsoluteInfo, AutorepeatKind, EventKind, InputId,
+    InputProperty, Key, LedKind, MiscKind, RelativeAxis, SoundKind, SwitchKind
+};
+use crate::macros::convert_error;
+use crate::bitmask::Bitmask;
 
 pub use sys::EV_VERSION;
 
@@ -162,7 +165,7 @@ impl<F: AsRawFd> EvdevHandle<F> {
     }
 
     /// `EVIOCGPROP`
-    pub fn device_properties(&self) -> io::Result<Bitmask<::InputProperty>> {
+    pub fn device_properties(&self) -> io::Result<Bitmask<InputProperty>> {
         let mut bitmask = Bitmask::default();
         self.device_properties_raw(&mut bitmask).map(|_| bitmask)
     }
@@ -194,42 +197,42 @@ impl<F: AsRawFd> EvdevHandle<F> {
         event_bits
     }
 
-    impl_bitmasks! { ::Key, EventKind::Key,
+    impl_bitmasks! { Key, EventKind::Key,
         key_mask, set_key_mask,
         key_bits
     }
 
-    impl_bitmasks! { ::RelativeAxis, EventKind::Relative,
+    impl_bitmasks! { RelativeAxis, EventKind::Relative,
         relative_mask, set_relative_mask,
         relative_bits
     }
 
-    impl_bitmasks! { ::AbsoluteAxis, EventKind::Absolute,
+    impl_bitmasks! { AbsoluteAxis, EventKind::Absolute,
         absolute_mask, set_absolute_mask,
         absolute_bits
     }
 
-    impl_bitmasks! { ::MiscKind, EventKind::Misc,
+    impl_bitmasks! { MiscKind, EventKind::Misc,
         misc_mask, set_misc_mask,
         misc_bits
     }
 
-    impl_bitmasks! { ::SwitchKind, EventKind::Switch,
+    impl_bitmasks! { SwitchKind, EventKind::Switch,
         switch_mask, set_switch_mask,
         switch_bits
     }
 
-    impl_bitmasks! { ::LedKind, EventKind::Led,
+    impl_bitmasks! { LedKind, EventKind::Led,
         led_mask, set_led_mask,
         led_bits
     }
 
-    impl_bitmasks! { ::SoundKind, EventKind::Sound,
+    impl_bitmasks! { SoundKind, EventKind::Sound,
         sound_mask, set_sound_mask,
         sound_bits
     }
 
-    impl_bitmasks! { ::AutorepeatKind, EventKind::Autorepeat,
+    impl_bitmasks! { AutorepeatKind, EventKind::Autorepeat,
         autorepeat_mask, set_autorepeat_mask,
         autorepeat_bits
     }

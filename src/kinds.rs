@@ -1,7 +1,9 @@
 use std::convert::TryFrom;
 use std::mem::transmute;
 use std::{io, fmt, error};
-use sys;
+use crate::{Key, sys};
+#[cfg(feature = "with-serde")]
+use serde::{Deserialize, Serialize};
 
 /// Indicates that a value or event type code was out of range.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -13,7 +15,7 @@ impl From<RangeError> for io::Error {
     }
 }
 
-impl error::Error for RangeError { }
+impl error::Error for RangeError {}
 
 impl fmt::Display for RangeError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -403,7 +405,7 @@ impl EventKind {
 
         match code {
             0..=0x1f | EV_UINPUT => Ok(unsafe { transmute(code) }),
-            _ => return Err(Default::default()),
+            _ => Err(Default::default()),
         }
     }
 
@@ -411,7 +413,7 @@ impl EventKind {
     pub fn count(&self) -> Result<usize, ()> {
         match *self {
             EventKind::Synchronize => Ok(SynchronizeKind::COUNT),
-            EventKind::Key => Ok(::Key::COUNT),
+            EventKind::Key => Ok(Key::COUNT),
             EventKind::Relative => Ok(RelativeAxis::COUNT),
             EventKind::Absolute => Ok(AbsoluteAxis::COUNT),
             EventKind::Misc => Ok(MiscKind::COUNT),
@@ -424,9 +426,10 @@ impl EventKind {
         }
     }
 
-    /// Like `count()` but with an exception for `::Synchronize` representing
-    /// `EventKind`, matching the behaviour of `EVIOCGBIT` and `EVIOCGMASK`.
-    /// If you're using a bitmask you probably want this.
+    /// Like [`count`](Self::count) but with an exception for
+    /// [`Synchronize`](Self::Synchronize) representing `EventKind`, matching
+    /// the behaviour of `EVIOCGBIT` and `EVIOCGMASK`. If you're using a
+    /// bitmask you probably want this.
     pub fn count_bits(&self) -> Result<usize, ()> {
         match *self {
             EventKind::Synchronize => Ok(EventKind::COUNT),
