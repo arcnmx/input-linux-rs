@@ -1,10 +1,12 @@
 use std::convert::TryFrom;
-use sys::input_event;
-use ::{
+use crate::sys::input_event;
+use crate::{
     EventTime, RangeError, KeyState,
     EventKind, SynchronizeKind, Key, RelativeAxis, AbsoluteAxis,
     SwitchKind, MiscKind, LedKind, AutorepeatKind, SoundKind, UInputKind,
 };
+#[cfg(feature = "with-serde")]
+use serde::{Deserialize, Serialize};
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
@@ -159,7 +161,7 @@ pub struct InputEvent {
     /// The code of the event.
     ///
     /// The meaning of this code depends on the `kind` of event. Using the typed
-    /// events via `Event` and `EventRef` is recommended.
+    /// events via [`Event`] and [`EventRef`] is recommended.
     pub code: u16,
     /// The value of the event.
     ///
@@ -369,7 +371,7 @@ impl AsRef<InputEvent> for InputEvent {
 }
 
 impl InputEvent {
-    /// Reinterprets a raw `input_event`.
+    /// Reinterprets a raw [`input_event`].
     pub fn from_raw(event: &input_event) -> Result<&Self, RangeError> {
         EventKind::from_type(event.type_).map(|_| {
             let raw = event as *const _ as *const _;
@@ -377,7 +379,7 @@ impl InputEvent {
         })
     }
 
-    /// Reinterprets a raw `input_event` into a mutable reference.
+    /// Reinterprets a raw [`input_event`] into a mutable reference.
     pub fn from_raw_mut(event: &mut input_event) -> Result<&mut Self, RangeError> {
         EventKind::from_type(event.type_).map(|_| {
             let raw = event as *mut _ as *mut _;
@@ -385,13 +387,13 @@ impl InputEvent {
         })
     }
 
-    /// Reinterprets the event as a raw `input_event`.
+    /// Reinterprets the event as a raw [`input_event`].
     pub fn as_raw(&self) -> &input_event {
         let raw = self as *const _ as *const _;
         unsafe { &*raw }
     }
 
-    /// Reinterprets the event as a mutable raw `input_event`.
+    /// Reinterprets the event as a mutable raw [`input_event`].
     pub unsafe fn as_raw_mut(&mut self) -> &mut input_event {
         let raw = self as *mut _ as *mut _;
         &mut *raw
@@ -435,7 +437,7 @@ macro_rules! input_event_enum {
         }
 
         impl Event {
-            /// Converts a generic `InputEvent` to a typed event.
+            /// Converts a generic [`InputEvent`] to a typed event.
             pub fn new(event: InputEvent) -> Result<Self, RangeError> {
                 match event.kind {
                 $(
@@ -447,7 +449,7 @@ macro_rules! input_event_enum {
         }
 
         impl<'a> EventRef<'a> {
-            /// Wraps the generic `InputEvent` into an event.
+            /// Wraps the generic [`InputEvent`] into an event.
             pub fn new(event: &'a InputEvent) -> Result<Self, RangeError> {
                 match event.kind {
                 $(
@@ -459,7 +461,7 @@ macro_rules! input_event_enum {
         }
 
         impl<'a> EventMut<'a> {
-            /// Wraps the generic `InputEvent` into a mutable event.
+            /// Wraps the generic [`InputEvent`] into a mutable event.
             pub fn new(event: &'a mut InputEvent) -> Result<Self, RangeError> {
                 match event.kind {
                 $(

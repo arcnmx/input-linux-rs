@@ -1,8 +1,10 @@
 use std::{fmt, cmp};
 use std::hash::{Hash, Hasher};
 use std::ops::{Deref, DerefMut};
-use sys::timeval;
+use crate::sys::timeval;
 use nix::libc::{time_t, suseconds_t};
+#[cfg(feature = "with-serde")]
+use serde::{Serialize, Deserialize};
 
 /// An event timestamp.
 #[repr(C)]
@@ -31,7 +33,7 @@ impl EventTime {
         })
     }
 
-    /// Create a timestamp given a libc `timeval`.
+    /// Create a timestamp given a libc [`timeval`].
     pub const fn from_timeval(time: timeval) -> Self {
         EventTime(time)
     }
@@ -59,7 +61,7 @@ impl EventTime {
         (self.0).tv_usec = value as suseconds_t
     }
 
-    /// The inner `libc` type.
+    /// The inner `libc` [`timeval`].
     pub const fn into_inner(self) -> timeval {
         self.0
     }
@@ -157,4 +159,4 @@ impl Ord for EventTime {
     }
 }
 
-impl Eq for EventTime { }
+impl Eq for EventTime {}

@@ -2,14 +2,14 @@
 
 use std::marker::PhantomData;
 
-/// Allows `EnumIterator` to iterate over an enum type.
+/// Allows [`EnumIterator`] to iterate over an enum type.
 pub trait IterableEnum: Sized {
     /// Given an index into the iterator, return the value and the next index.
     ///
     /// Iterators shall start by calling this with `0`.
     fn iter_next(v: usize) -> Option<(usize, Self)>;
 
-    /// Instantiates an `EnumIterator` for an iterable type.
+    /// Instantiates an [`EnumIterator`] for an iterable type.
     fn iter() -> EnumIterator<Self>;
 }
 

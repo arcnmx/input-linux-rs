@@ -1,6 +1,3 @@
-extern crate input_linux;
-extern crate nix;
-
 use std::os::unix::fs::OpenOptionsExt;
 use std::{fs::OpenOptions, io, thread, time::Duration};
 

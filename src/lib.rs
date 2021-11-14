@@ -1,49 +1,45 @@
 #![deny(missing_docs)]
-#![doc(html_root_url = "https://docs.rs/input-linux/0.4.0/")]
+#![doc(html_root_url = "https://docs.rs/input-linux/0.5.0/")]
 
 //! Userspace bindings to the Linux evdev and uinput subsystems.
 //!
-//! Start by looking at the `EvdevHandle` and `UInputHandle` types.
+//! Start by looking at the [`EvdevHandle`] and [`UInputHandle`] types.
 
-pub extern crate input_linux_sys as sys;
-extern crate nix;
+pub use input_linux_sys as sys;
 #[cfg(feature = "with-serde")]
-extern crate serde;
-#[cfg(feature = "with-serde")]
-#[macro_use]
-extern crate serde_derive;
+use serde::{Deserialize, Serialize, };
 
 #[macro_use]
 mod macros;
 
 mod kinds;
-pub use kinds::*;
+pub use crate::kinds::*;
 
 mod time;
-pub use time::EventTime;
+pub use crate::time::EventTime;
 
 mod events;
-pub use events::*;
+pub use crate::events::*;
 
 mod keys;
-pub use keys::Key;
+pub use crate::keys::Key;
 
 pub mod evdev;
-pub use evdev::EvdevHandle;
+pub use crate::evdev::EvdevHandle;
 
 pub mod uinput;
-pub use uinput::UInputHandle;
+pub use crate::uinput::UInputHandle;
 
 pub mod enum_iterator;
 
 pub mod bitmask;
-pub use bitmask::Bitmask;
+pub use crate::bitmask::Bitmask;
 
 #[cfg(feature = "with-tokio")]
 mod tokio;
 
 #[cfg(feature = "with-tokio")]
-pub use tokio::EventCodec;
+pub use crate::tokio::EventCodec;
 
 #[repr(C)]
 #[derive(Copy, Clone, Default, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
@@ -76,13 +72,13 @@ impl<'a> From<&'a InputId> for &'a sys::input_id {
 
 impl From<sys::input_id> for InputId {
     fn from(id: sys::input_id) -> Self {
-        <&InputId>::from(&id).clone()
+        *<&InputId>::from(&id)
     }
 }
 
 impl From<InputId> for sys::input_id {
     fn from(id: InputId) -> Self {
-        <&sys::input_id>::from(&id).clone()
+        *<&sys::input_id>::from(&id)
     }
 }
 
@@ -152,12 +148,12 @@ impl<'a> From<&'a AbsoluteInfo> for &'a sys::input_absinfo {
 
 impl From<sys::input_absinfo> for AbsoluteInfo {
     fn from(info: sys::input_absinfo) -> Self {
-        <&AbsoluteInfo>::from(&info).clone()
+        *<&AbsoluteInfo>::from(&info)
     }
 }
 
 impl From<AbsoluteInfo> for sys::input_absinfo {
     fn from(info: AbsoluteInfo) -> Self {
-        <&sys::input_absinfo>::from(&info).clone()
+        *<&sys::input_absinfo>::from(&info)
     }
 }
