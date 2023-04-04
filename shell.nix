@@ -1,1 +1,1 @@
-{ pkgs ? import <nixpkgs> { }, ci ? import <ci> { inherit pkgs; } }: ci.config.shell
+(import ./. { }).devShells.default

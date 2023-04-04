@@ -1,32 +1,26 @@
 { config, channels, pkgs, lib, ... }: with pkgs; with lib; let
-  featuresStr = optionalString (config.features != [ ]) (
-    "--features " + concatStringsSep "," config.features
-  );
-  impureCommand = name: command: ci.command {
-    inherit name command;
-    impure = true;
-  };
+  inherit (import ./. { inherit pkgs; }) checks;
 in {
   config = {
     name = "input-linux";
     ci.gh-actions.enable = true;
-    cache.cachix.arc.enable = true;
-    channels = {
-      rust = "master";
+    cache.cachix = {
+      ci.signingKey = "";
+      arc.enable = true;
     };
-    environment = {
-      test = {
-        inherit (config.rustChannel.buildChannel) cargo;
-      };
+    channels = {
+      nixpkgs = "stable";
     };
     tasks = {
-      build.inputs = [
-        (impureCommand "cargo-build" "cargo build ${featuresStr}")
-        (impureCommand "cargo-test" "cargo test ${featuresStr}")
-      ];
+      test.inputs = singleton (checks.test.override {
+        buildFeatures = config.features;
+      });
     };
+    system = "x86_64-linux";
     jobs = {
-      default = { };
+      default = {
+        tasks.version.inputs = singleton checks.version;
+      };
       all.features = [ "with-serde" "with-tokio" ];
       tokio.features = [ "with-tokio" ];
       serde.features = [ "with-serde" ];
@@ -37,14 +31,6 @@ in {
     features = mkOption {
       type = with types; listOf str;
       default = [ ];
-    };
-    rustChannel = mkOption {
-      type = types.unspecified;
-      default = channels.rust.stable;
-    };
-    shell = mkOption {
-      type = types.unspecified;
-      default = config.rustChannel.mkShell { };
     };
   };
 }

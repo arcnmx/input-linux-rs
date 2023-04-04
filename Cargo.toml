@@ -12,6 +12,12 @@ repository = "https://github.com/arcnmx/input-linux-rs"
 readme = "README.md"
 license = "MIT"
 
+include = [
+	"src/**/*.rs",
+	"/README*",
+	"/COPYING*",
+]
+
 [dependencies]
 input-linux-sys = "^0.7.0"
 nix = "^0.22.0"
