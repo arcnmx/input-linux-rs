@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 /// Keys and Buttons
 ///
-/// Most of the keys/buttons are modeled after USB HUT 1.12 (see http://www.usb.org/developers/hidpage).
+/// Most of the keys/buttons are modeled after USB HUT 1.12 (see <http://www.usb.org/developers/hidpage>).
 ///
 /// ## Comment Abbreviations
 /// AC - Application Control

@@ -18,6 +18,7 @@ impl EventCodec {
     }
 
     #[cfg(feature = "bytes")]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "bytes")))]
     pub fn decode_bytes(&mut self, src: &mut BytesMut) -> Result<Option<InputEvent>, io::Error> {
         if src.len() >= mem::size_of::<InputEvent>() {
             let src = src.split_to(mem::size_of::<InputEvent>());
@@ -34,6 +35,7 @@ impl EventCodec {
     }
 
     #[cfg(feature = "bytes")]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "bytes")))]
     pub fn encode_bytes(&mut self, item: InputEvent, dst: &mut BytesMut) -> Result<(), io::Error> {
         dst.reserve(mem::size_of::<InputEvent>());
         dst.put_slice(item.as_bytes());
@@ -42,12 +44,14 @@ impl EventCodec {
 }
 
 #[cfg(feature = "tokio-util-0_6")]
+#[cfg_attr(feature = "dox", doc(cfg(feature = "tokio-util-0_6")))]
 mod tokio_util_impl_0_6 {
     use tokio_util_0_6::codec::{Encoder, Decoder};
     include!("tokio_impl.rs");
 }
 
 #[cfg(feature = "tokio-util-0_7")]
+#[cfg_attr(feature = "dox", doc(cfg(feature = "tokio-util-0_7")))]
 mod tokio_util_impl_0_7 {
     use tokio_util_0_7::codec::{Encoder, Decoder};
     include!("tokio_impl.rs");

@@ -1,5 +1,6 @@
 #![deny(missing_docs)]
 #![doc(html_root_url = "https://docs.rs/input-linux/0.5.0/")]
+#![cfg_attr(feature = "dox", feature(doc_cfg))]
 
 //! Userspace bindings to the Linux evdev and uinput subsystems.
 //!
@@ -36,6 +37,7 @@ pub mod bitmask;
 pub use crate::bitmask::Bitmask;
 
 #[cfg(feature = "codec")]
+#[cfg_attr(feature = "dox", doc(cfg(feature = "codec")))]
 mod codec;
 
 #[cfg(feature = "codec")]

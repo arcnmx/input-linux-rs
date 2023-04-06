@@ -22,9 +22,7 @@ in {
       default = {
         tasks.version.inputs = singleton checks.version;
       };
-      all = {
-        inherit (input-linux.lib.crate.package.metadata.docs.rs) features;
-      };
+      all.features = lib.remove "dox" input-linux.lib.crate.package.metadata.docs.rs.features;
       serde.features = [ "serde" ];
     } // genAttrs input-linux.lib.tokio-util-features (feat: {
       features = singleton feat;
