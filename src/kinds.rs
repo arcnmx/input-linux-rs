@@ -232,7 +232,7 @@ pub enum AbsoluteAxis {
     Unknown1F,
 
     Volume = sys::ABS_VOLUME as _,
-    Unknown21,
+    Profile = sys::ABS_PROFILE as _,
     Unknown22,
     Unknown23,
     Unknown24,

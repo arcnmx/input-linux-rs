@@ -262,8 +262,8 @@ pub enum Key {
     PauseCD = sys::KEY_PAUSECD as _,
     Prog3 = sys::KEY_PROG3 as _,
     Prog4 = sys::KEY_PROG4 as _,
-    /// AL Dashboard
-    Dashboard = sys::KEY_DASHBOARD as _,
+    /// AC Desktop Show All Applications
+    AllApplications = sys::KEY_ALL_APPLICATIONS as _,
     Suspend = sys::KEY_SUSPEND as _,
     /// AC Close
     Close = sys::KEY_CLOSE as _,
@@ -788,11 +788,15 @@ pub enum Key {
     KbdLayoutNext = sys::KEY_KBD_LAYOUT_NEXT as _,
     /// Show/hide emoji picker (HUTRR101)
     EmojiPicker = sys::KEY_EMOJI_PICKER as _,
+    /// Start or Stop Voice Dictation Session (HUTRR99)
+    Dictate = sys::KEY_DICTATE as _,
+    /// Enables programmatic access to camera devices. (HUTRR72)
+    CameraAccessEnable = sys::KEY_CAMERA_ACCESS_ENABLE as _,
+    /// Disables programmatic access to camera devices. (HUTRR72)
+    CameraAccessDisable = sys::KEY_CAMERA_ACCESS_DISABLE as _,
+    /// Toggles the current state of the camera access control. (HUTRR72)
+    CameraAccessToggle = sys::KEY_CAMERA_ACCESS_TOGGLE as _,
 
-    Unknown24A,
-    Unknown24B,
-    Unknown24C,
-    Unknown24D,
     Unknown24E,
     Unknown24F,
 
@@ -859,22 +863,39 @@ pub enum Key {
     PrivacyScreenToggle = sys::KEY_PRIVACY_SCREEN_TOGGLE as _,
     SelectiveScreenshot = sys::KEY_SELECTIVE_SCREENSHOT as _,
 
-    Unknown27B,
-    Unknown27C,
-    Unknown27D,
-    Unknown27E,
-    Unknown27F,
+    /// Move the focus to the next user controllable element within a UI container
+    NextElement = sys::KEY_NEXT_ELEMENT as _,
+    /// Move the focus to the previous user controllable element within a UI container
+    PreviousElement = sys::KEY_PREVIOUS_ELEMENT as _,
 
-    Unknown280,
-    Unknown281,
-    Unknown282,
-    Unknown283,
-    Unknown284,
-    Unknown285,
-    Unknown286,
-    Unknown287,
-    Unknown288,
-    Unknown289,
+    /// Toggle Autopilot engagement
+    AutopilotEngageToggle = sys::KEY_AUTOPILOT_ENGAGE_TOGGLE as _,
+
+    /// Marine navigation shortcut key
+    MarkWaypoint = sys::KEY_MARK_WAYPOINT as _,
+    /// Marine navigation shortcut key
+    SOS = sys::KEY_SOS as _,
+    /// Marine navigation shortcut key
+    NavChart = sys::KEY_NAV_CHART as _,
+    /// Marine navigation shortcut key
+    FishingChart = sys::KEY_FISHING_CHART as _,
+    /// Marine navigation shortcut key
+    SingleRangeRadar = sys::KEY_SINGLE_RANGE_RADAR as _,
+    /// Marine navigation shortcut key
+    DualRangeRadar = sys::KEY_DUAL_RANGE_RADAR as _,
+    /// Marine navigation shortcut key
+    RadarOverlay = sys::KEY_RADAR_OVERLAY as _,
+    /// Marine navigation shortcut key
+    TraditionalSonar = sys::KEY_TRADITIONAL_SONAR as _,
+    /// Marine navigation shortcut key
+    ClearVuSonar = sys::KEY_CLEARVU_SONAR as _,
+    /// Marine navigation shortcut key
+    SideVuSonar = sys::KEY_SIDEVU_SONAR as _,
+    /// Marine navigation shortcut key
+    NavInfo = sys::KEY_NAV_INFO as _,
+    /// Marine navigation shortcut key
+    BrightnessMenu = sys::KEY_BRIGHTNESS_MENU as _,
+
     Unknown28A,
     Unknown28B,
     Unknown28C,
