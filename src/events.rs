@@ -5,12 +5,12 @@ use crate::{
     EventKind, SynchronizeKind, Key, RelativeAxis, AbsoluteAxis,
     SwitchKind, MiscKind, LedKind, AutorepeatKind, SoundKind, UInputKind,
 };
-#[cfg(feature = "with-serde")]
+#[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
 /// Synchronization events are used by evdev to group events or convey other
 /// out-of-band information.
 pub struct SynchronizeEvent {
@@ -25,7 +25,7 @@ pub struct SynchronizeEvent {
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
 /// An event that indicates the state of a key has changed.
 pub struct KeyEvent {
     /// The timestamp associated with the event.
@@ -39,7 +39,7 @@ pub struct KeyEvent {
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
 /// Events that occur when the state of a relative axis is changed.
 pub struct RelativeEvent {
     /// The timestamp associated with the event.
@@ -53,7 +53,7 @@ pub struct RelativeEvent {
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
 /// Events that occur when the state of an absolute axis is changed.
 pub struct AbsoluteEvent {
     /// The timestamp associated with the event.
@@ -67,7 +67,7 @@ pub struct AbsoluteEvent {
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
 /// Special switch events.
 pub struct SwitchEvent {
     /// The timestamp associated with the event.
@@ -81,7 +81,7 @@ pub struct SwitchEvent {
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
 /// Miscellaneous events.
 pub struct MiscEvent {
     /// The timestamp associated with the event.
@@ -95,7 +95,7 @@ pub struct MiscEvent {
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
 /// An event that indicates whether the specified LED should turn on/off.
 pub struct LedEvent {
     /// The timestamp associated with the event.
@@ -109,7 +109,7 @@ pub struct LedEvent {
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
 /// An event that configures the autorepeat behaviour of the input device.
 pub struct AutorepeatEvent {
     /// The timestamp associated with the event.
@@ -123,7 +123,7 @@ pub struct AutorepeatEvent {
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
 /// An event that indicates the device should play a specified sound.
 pub struct SoundEvent {
     /// The timestamp associated with the event.
@@ -137,7 +137,7 @@ pub struct SoundEvent {
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
 /// A special event type used to send force-feedback events to uinput.
 pub struct UInputEvent {
     /// The timestamp associated with the event.
@@ -151,7 +151,7 @@ pub struct UInputEvent {
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
 /// A generic event.
 pub struct InputEvent {
     /// The timestamp associated with the event.
@@ -404,7 +404,7 @@ macro_rules! input_event_enum {
     ($($variant:ident($ty:ident),)*) => {
         /// An owned and typed input event.
         #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-        #[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+        #[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
         pub enum Event {
         $(
             #[allow(missing_docs)]

@@ -49,7 +49,7 @@
           }; }
         ];
       };
-      test = { outputs'devShells'plain, rustPlatform, source, buildFeatures ? [ "with-tokio" "with-serde" ] }: rustPlatform.buildRustPackage {
+      test = { outputs'devShells'plain, rustPlatform, source, buildFeatures ? [ "tokio-util" "serde" ] }: rustPlatform.buildRustPackage {
         pname = self.lib.crate.package.name;
         inherit (self.lib.crate) version cargoLock;
         inherit (outputs'devShells'plain.override { enableRust = false; }) buildInputs nativeBuildInputs;

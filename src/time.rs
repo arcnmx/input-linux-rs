@@ -3,19 +3,19 @@ use std::hash::{Hash, Hasher};
 use std::ops::{Deref, DerefMut};
 use crate::sys::timeval;
 use nix::libc::{time_t, suseconds_t};
-#[cfg(feature = "with-serde")]
+#[cfg(feature = "serde")]
 use serde::{Serialize, Deserialize};
 
 /// An event timestamp.
 #[repr(C)]
 #[derive(Copy, Clone)]
-#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
 pub struct EventTime(
-#[cfg_attr(feature = "with-serde", serde(with = "TimevalDef"))]
+#[cfg_attr(feature = "serde", serde(with = "TimevalDef"))]
 timeval
 );
 
-#[cfg(feature = "with-serde")]
+#[cfg(feature = "serde")]
 #[derive(Serialize, Deserialize)]
 #[serde(remote = "timeval")]
 #[allow(dead_code)]

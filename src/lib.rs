@@ -6,7 +6,7 @@
 //! Start by looking at the [`EvdevHandle`] and [`UInputHandle`] types.
 
 pub use input_linux_sys as sys;
-#[cfg(feature = "with-serde")]
+#[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize, };
 
 #[macro_use]
@@ -35,15 +35,15 @@ pub mod enum_iterator;
 pub mod bitmask;
 pub use crate::bitmask::Bitmask;
 
-#[cfg(feature = "with-tokio")]
+#[cfg(feature = "tokio-util")]
 mod tokio;
 
-#[cfg(feature = "with-tokio")]
+#[cfg(feature = "tokio-util")]
 pub use crate::tokio::EventCodec;
 
 #[repr(C)]
 #[derive(Copy, Clone, Default, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
 /// Identifies an input device.
 pub struct InputId {
     /// Identifies the bus where the input device is found, see `sys::BUS_*`
@@ -84,7 +84,7 @@ impl From<InputId> for sys::input_id {
 
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
 /// A descriptor used to create a virtual uinput absolute axis.
 pub struct AbsoluteInfoSetup {
     /// The axis to attach the `AbsoluteInfo` constraints to.
@@ -111,7 +111,7 @@ impl From<AbsoluteInfoSetup> for sys::uinput_abs_setup {
 
 #[repr(C)]
 #[derive(Copy, Clone, Default, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
 /// Describes the capabilities and constraints of an input device's absolute axis.
 pub struct AbsoluteInfo {
     /// latest reported value for the axis

@@ -2,7 +2,7 @@ use std::convert::TryFrom;
 use std::mem::transmute;
 use std::{io, fmt, error};
 use crate::{Key, sys};
-#[cfg(feature = "with-serde")]
+#[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 
 /// Indicates that a value or event type code was out of range.
@@ -26,7 +26,7 @@ impl fmt::Display for RangeError {
 /// Device properties and quirks.
 #[repr(u16)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
 #[allow(missing_docs)]
 pub enum InputProperty {
     Pointer = sys::INPUT_PROP_POINTER as _,
@@ -66,7 +66,7 @@ pub enum InputProperty {
 /// Event types
 #[repr(u16)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
 #[allow(missing_docs)]
 pub enum EventKind {
     Synchronize = sys::EV_SYN as _,
@@ -110,7 +110,7 @@ pub enum EventKind {
 /// UInput feedback events.
 #[repr(u16)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
 #[allow(missing_docs)]
 pub enum UInputKind {
     Unknown0 = 0,
@@ -121,7 +121,7 @@ pub enum UInputKind {
 /// Synchronization events.
 #[repr(u16)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
 #[allow(missing_docs)]
 pub enum SynchronizeKind {
     Report = sys::SYN_REPORT as _,
@@ -170,7 +170,7 @@ impl KeyState {
 /// Relative axes.
 #[repr(u16)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
 #[allow(missing_docs)]
 pub enum RelativeAxis {
     X = sys::REL_X as _,
@@ -194,7 +194,7 @@ pub enum RelativeAxis {
 /// Absolute axes.
 #[repr(u16)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
 #[allow(missing_docs)]
 pub enum AbsoluteAxis {
     X = sys::ABS_X as _,
@@ -285,7 +285,7 @@ pub enum AbsoluteAxis {
 /// Switch events.
 #[repr(u16)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
 #[allow(missing_docs)]
 pub enum SwitchKind {
     /// set = lid shut
@@ -327,7 +327,7 @@ pub enum SwitchKind {
 /// Miscellaneous events.
 #[repr(u16)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
 #[allow(missing_docs)]
 pub enum MiscKind {
     /// Serial number, only exported for tablets ("Transducer Serial Number")
@@ -349,7 +349,7 @@ pub enum MiscKind {
 /// LEDs.
 #[repr(u16)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
 #[allow(missing_docs)]
 pub enum LedKind {
     NumLock = sys::LED_NUML as _,
@@ -373,7 +373,7 @@ pub enum LedKind {
 /// Autorepeat values.
 #[repr(u16)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
 #[allow(missing_docs)]
 pub enum AutorepeatKind {
     Delay = sys::REP_DELAY as _,
@@ -383,7 +383,7 @@ pub enum AutorepeatKind {
 /// Sounds
 #[repr(u16)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
 #[allow(missing_docs)]
 pub enum SoundKind {
     Click = sys::SND_CLICK as _,
@@ -464,7 +464,7 @@ impl From<KeyState> for i32 {
     }
 }
 
-#[cfg(feature = "with-serde")]
+#[cfg(feature = "serde")]
 mod key_state_serde {
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use super::KeyState as KeyStateSuper;

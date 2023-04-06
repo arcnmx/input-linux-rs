@@ -1,5 +1,5 @@
 use crate::sys;
-#[cfg(feature = "with-serde")]
+#[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 
 /// Keys and Buttons
@@ -12,7 +12,7 @@ use serde::{Deserialize, Serialize};
 /// SC - System Control
 #[repr(u16)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-#[cfg_attr(feature = "with-serde", derive(Deserialize, Serialize))]
+#[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
 #[allow(missing_docs)]
 pub enum Key {
     Reserved = sys::KEY_RESERVED as _,

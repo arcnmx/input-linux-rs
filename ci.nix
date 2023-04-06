@@ -1,5 +1,6 @@
 { config, channels, pkgs, lib, ... }: with pkgs; with lib; let
-  inherit (import ./. { inherit pkgs; }) checks;
+  input-linux = import ./. { inherit pkgs; };
+  inherit (input-linux) checks;
 in {
   config = {
     name = "input-linux";
@@ -21,9 +22,11 @@ in {
       default = {
         tasks.version.inputs = singleton checks.version;
       };
-      all.features = [ "with-serde" "with-tokio" ];
-      tokio.features = [ "with-tokio" ];
-      serde.features = [ "with-serde" ];
+      all = {
+        inherit (input-linux.lib.crate.package.metadata.docs.rs) features;
+      };
+      tokio.features = [ "tokio-util" ];
+      serde.features = [ "serde" ];
     };
   };
 
