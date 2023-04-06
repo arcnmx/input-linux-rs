@@ -25,9 +25,10 @@ in {
       all = {
         inherit (input-linux.lib.crate.package.metadata.docs.rs) features;
       };
-      tokio.features = [ "tokio-util" ];
       serde.features = [ "serde" ];
-    };
+    } // genAttrs input-linux.lib.tokio-util-features (feat: {
+      features = singleton feat;
+    });
   };
 
   options = {

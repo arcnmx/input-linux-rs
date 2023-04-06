@@ -49,7 +49,7 @@
           }; }
         ];
       };
-      test = { outputs'devShells'plain, rustPlatform, source, buildFeatures ? [ "tokio-util" "serde" ] }: rustPlatform.buildRustPackage {
+      test = { outputs'devShells'plain, rustPlatform, source, buildFeatures ? [ "serde" ] ++ self.lib.tokio-util-features }: rustPlatform.buildRustPackage {
         pname = self.lib.crate.package.name;
         inherit (self.lib.crate) version cargoLock;
         inherit (outputs'devShells'plain.override { enableRust = false; }) buildInputs nativeBuildInputs;
@@ -64,6 +64,7 @@
         path = ./Cargo.toml;
       };
       inherit (self.lib.crate) version;
+      tokio-util-features = [ "tokio-util-0_7" "tokio-util-0_6" ];
     };
     config = {
       name = "input-linux-rs";

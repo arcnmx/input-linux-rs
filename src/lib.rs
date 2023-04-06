@@ -35,11 +35,11 @@ pub mod enum_iterator;
 pub mod bitmask;
 pub use crate::bitmask::Bitmask;
 
-#[cfg(feature = "tokio-util")]
-mod tokio;
+#[cfg(feature = "codec")]
+mod codec;
 
-#[cfg(feature = "tokio-util")]
-pub use crate::tokio::EventCodec;
+#[cfg(feature = "codec")]
+pub use crate::codec::EventCodec;
 
 #[repr(C)]
 #[derive(Copy, Clone, Default, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]

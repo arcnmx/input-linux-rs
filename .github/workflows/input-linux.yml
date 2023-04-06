@@ -199,8 +199,8 @@ jobs:
         command: ci-build-cache
         quiet: false
         stdin: ${{ runner.temp }}/ci.build.cache
-  tokio:
-    name: input-linux-tokio
+  tokio-util-0_6:
+    name: input-linux-tokio-util-0_6
     runs-on: ubuntu-latest
     steps:
     - id: checkout
@@ -215,13 +215,13 @@ jobs:
       name: nix setup
       uses: arcnmx/ci/actions/nix/run@master
       with:
-        attrs: ci.job.tokio.run.setup
+        attrs: ci.job.tokio-util-0_6.run.setup
         quiet: false
     - id: ci-dirty
       name: nix test dirty
       uses: arcnmx/ci/actions/nix/run@master
       with:
-        attrs: ci.job.tokio.run.test
+        attrs: ci.job.tokio-util-0_6.run.test
         command: ci-build-dirty
         quiet: false
         stdout: ${{ runner.temp }}/ci.build.dirty
@@ -229,7 +229,7 @@ jobs:
       name: nix test build
       uses: arcnmx/ci/actions/nix/run@master
       with:
-        attrs: ci.job.tokio.run.test
+        attrs: ci.job.tokio-util-0_6.run.test
         command: ci-build-realise
         ignore-exit-code: true
         quiet: false
@@ -240,7 +240,7 @@ jobs:
       name: nix test results
       uses: arcnmx/ci/actions/nix/run@master
       with:
-        attrs: ci.job.tokio.run.test
+        attrs: ci.job.tokio-util-0_6.run.test
         command: ci-build-summarise
         quiet: false
         stdin: ${{ runner.temp }}/ci.build.dirty
@@ -252,7 +252,64 @@ jobs:
       name: nix test cache
       uses: arcnmx/ci/actions/nix/run@master
       with:
-        attrs: ci.job.tokio.run.test
+        attrs: ci.job.tokio-util-0_6.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  tokio-util-0_7:
+    name: input-linux-tokio-util-0_7
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.tokio-util-0_7.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.tokio-util-0_7.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.tokio-util-0_7.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.tokio-util-0_7.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.tokio-util-0_7.run.test
         command: ci-build-cache
         quiet: false
         stdin: ${{ runner.temp }}/ci.build.cache
