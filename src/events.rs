@@ -604,6 +604,54 @@ macro_rules! input_event_enum {
                     _ => Ok(Event::Unknown(event)),
                 }
             }
+
+            /// Converts a generic [`InputEvent`] to a typed event.
+            ///
+            /// Unlike [`Event::new`] this will fall back to [`Event::Unknown`] when an event fails to validate.
+            pub fn with_event(event: InputEvent) -> Self {
+                Self::new(event)
+                    .unwrap_or_else(|_| Event::Unknown(event))
+            }
+
+            /// Extracts the contained event.
+            pub fn into_event(self) -> InputEvent {
+                match self {
+                $(
+                    Event::$variant(e) => e.into_event(),
+                )*
+                    Event::Unknown(event) => event,
+                }
+            }
+
+            /// Borrows the event.
+            pub fn as_event(&self) -> &InputEvent {
+                match *self {
+                $(
+                    Event::$variant(ref event) => event.as_event(),
+                )*
+                    Event::Unknown(ref event) => event,
+                }
+            }
+
+            /// Borrows the event.
+            pub fn to_ref(&self) -> EventRef {
+                match *self {
+                $(
+                    Event::$variant(ref event) => EventRef::$variant(event),
+                )*
+                    Event::Unknown(ref event) => EventRef::Unknown(event),
+                }
+            }
+
+            /// Mutably borrows the event.
+            pub fn to_mut(&mut self) -> EventMut {
+                match *self {
+                $(
+                    Event::$variant(ref mut event) => EventMut::$variant(event),
+                )*
+                    Event::Unknown(ref mut event) => EventMut::Unknown(event),
+                }
+            }
         }
 
         impl<'a> EventRef<'a> {
@@ -616,6 +664,33 @@ macro_rules! input_event_enum {
                     _ => Ok(EventRef::Unknown(event)),
                 }
             }
+
+            /// Clones the referenced event.
+            pub fn to_owned(self) -> Event {
+                match self {
+                $(
+                    EventRef::$variant(event) => Event::$variant(event.clone()),
+                )*
+                    EventRef::Unknown(event) => Event::Unknown(event.clone()),
+                }
+            }
+
+            /// Reborrows the event.
+            pub fn to_ref(&self) -> EventRef {
+                unsafe {
+                    transmute(*self)
+                }
+            }
+
+            /// Borrows the referenced event.
+            pub fn as_event(self) -> &'a InputEvent {
+                match self {
+                $(
+                    EventRef::$variant(e) => e.as_event(),
+                )*
+                    EventRef::Unknown(event) => event,
+                }
+            }
         }
 
         impl<'a> EventMut<'a> {
@@ -626,6 +701,66 @@ macro_rules! input_event_enum {
                     EventKind::$variant => $ty::from_mut(event).map(EventMut::$variant),
                 )*
                     _ => Ok(EventMut::Unknown(event)),
+                }
+            }
+
+            /// Clones the referenced event.
+            pub fn to_owned(self) -> Event {
+                match self {
+                $(
+                    EventMut::$variant(event) => Event::$variant(event.clone()),
+                )*
+                    EventMut::Unknown(event) => Event::Unknown(event.clone()),
+                }
+            }
+
+            /// Borrows the referenced event.
+            pub fn into_ref(self) -> EventRef<'a> {
+                match self {
+                $(
+                    EventMut::$variant(event) => EventRef::$variant(event),
+                )*
+                    EventMut::Unknown(event) => EventRef::Unknown(event),
+                }
+            }
+
+            /// Borrows the referenced event.
+            pub fn to_ref(&self) -> EventRef {
+                match self {
+                $(
+                    EventMut::$variant(event) => EventRef::$variant(event),
+                )*
+                    EventMut::Unknown(event) => EventRef::Unknown(event),
+                }
+            }
+
+            /// Reborrows the event.
+            pub fn to_mut(&mut self) -> EventMut {
+                match self {
+                $(
+                    EventMut::$variant(event) => EventMut::$variant(event),
+                )*
+                    EventMut::Unknown(event) => EventMut::Unknown(event),
+                }
+            }
+
+            /// Borrows the referenced event.
+            pub fn as_event(&self) -> &InputEvent {
+                match self {
+                $(
+                    EventMut::$variant(event) => event.as_event(),
+                )*
+                    EventMut::Unknown(event) => event,
+                }
+            }
+
+            /// Mutably borrows the referenced event.
+            pub unsafe fn as_event_mut(self) -> &'a mut InputEvent {
+                match self {
+                $(
+                    EventMut::$variant(e) => e.as_event_mut(),
+                )*
+                    EventMut::Unknown(event) => event,
                 }
             }
         }
@@ -656,79 +791,73 @@ macro_rules! input_event_enum {
 
         impl From<Event> for InputEvent {
             fn from(event: Event) -> Self {
-                match event {
-                $(
-                    Event::$variant(ref event) => <&InputEvent as From<_>>::from(event).clone(),
-                )*
-                    Event::Unknown(event) => event,
-                }
+                event.into_event()
+            }
+        }
+
+        impl From<InputEvent> for Event {
+            fn from(event: InputEvent) -> Self {
+                Event::with_event(event)
             }
         }
 
         impl<'a> From<&'a Event> for EventRef<'a> {
             fn from(event: &'a Event) -> Self {
-                match *event {
-                $(
-                    Event::$variant(ref event) => EventRef::$variant(event),
-                )*
-                    Event::Unknown(ref event) => EventRef::Unknown(event),
-                }
+                event.to_ref()
             }
         }
 
         impl<'a> From<&'a mut Event> for EventMut<'a> {
             fn from(event: &'a mut Event) -> Self {
-                match *event {
-                $(
-                    Event::$variant(ref mut event) => EventMut::$variant(event),
-                )*
-                    Event::Unknown(ref mut event) => EventMut::Unknown(event),
-                }
+                event.to_mut()
             }
         }
 
         impl<'a> From<EventRef<'a>> for &'a InputEvent {
             fn from(event: EventRef<'a>) -> Self {
-                match event {
-                $(
-                    EventRef::$variant(event) => event.as_ref(),
-                )*
-                    EventRef::Unknown(event) => event,
-                }
+                event.as_event()
             }
         }
 
-        impl<'a> From<&'a EventMut<'a>> for &'a InputEvent {
-            fn from(event: &'a EventMut<'a>) -> Self {
-                match *event {
-                $(
-                    EventMut::$variant(ref event) => event.as_ref(),
-                )*
-                    EventMut::Unknown(ref event) => event,
-                }
+        impl<'a> From<EventMut<'a>> for &'a InputEvent {
+            fn from(event: EventMut<'a>) -> Self {
+                event.into_ref().as_event()
+            }
+        }
+
+        impl<'a> From<EventMut<'a>> for EventRef<'a> {
+            fn from(event: EventMut<'a>) -> Self {
+                event.into_ref()
+            }
+        }
+
+        impl<'a, 'b> From<&'a EventMut<'b>> for &'a InputEvent {
+            fn from(event: &'a EventMut<'b>) -> Self {
+                event.as_event()
+            }
+        }
+
+        impl<'a, 'b> From<&'a EventMut<'b>> for EventRef<'a> {
+            fn from(event: &'a EventMut<'b>) -> Self {
+                event.to_ref()
             }
         }
 
         impl AsRef<InputEvent> for Event {
             fn as_ref(&self) -> &InputEvent {
-                match *self {
-                $(
-                    Event::$variant(ref event) => event.as_ref(),
-                )*
-                    Event::Unknown(ref event) => event.as_ref(),
-                }
+                self.as_event()
             }
         }
 
         impl<'a> AsRef<InputEvent> for EventRef<'a> {
             fn as_ref(&self) -> &InputEvent {
-                From::from(*self)
+                self.as_event()
             }
         }
 
         impl<'a> AsRef<InputEvent> for EventMut<'a> {
             fn as_ref(&self) -> &InputEvent {
-                From::from(self)
+                self.as_event()
             }
         }
     };
