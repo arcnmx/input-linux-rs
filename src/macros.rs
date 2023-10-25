@@ -49,11 +49,16 @@ macro_rules! impl_iterable {
             pub fn bitmask() -> crate::bitmask::Bitmask<Self> {
                 Default::default()
             }
+
+            /// Get the raw [code](crate::InputEvent.code) value of the enum.
+            pub const fn code(&self) -> u16 {
+                *self as _
+            }
         }
 
         impl From<$name> for u16 {
             fn from(v: $name) -> Self {
-                v as _
+                v.code()
             }
         }
     };

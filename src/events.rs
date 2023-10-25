@@ -1,4 +1,6 @@
-use std::convert::TryFrom;
+use core::convert::TryFrom;
+use core::mem::{transmute, size_of};
+use core::hint::unreachable_unchecked;
 use crate::sys::input_event;
 use crate::{
     EventTime, RangeError, KeyState,
@@ -170,12 +172,61 @@ pub struct InputEvent {
 }
 
 impl InputEvent {
-    /// Reinterpret this event as an array of bytes
-    pub fn as_bytes(&self) -> &[u8; core::mem::size_of::<InputEvent>()] {
-        unsafe {
-            core::mem::transmute(self)
+    /// Constructs an empty event.
+    pub const fn zeroed() -> Self {
+        Self {
+            time: EventTime::new(0, 0),
+            kind: EventKind::Synchronize,
+            code: SynchronizeKind::Report.code(),
+            value: 0,
         }
     }
+
+    /// Reinterprets a raw [`input_event`].
+    pub fn with_raw(event: input_event) -> Result<Self, RangeError> {
+        EventKind::from_type(event.type_).map(move |_| unsafe {
+            Self::with_raw_unchecked(event)
+        })
+    }
+
+    /// Reinterprets a raw [`input_event`].
+    ///
+    /// # Safety
+    ///
+    /// The input event must have a valid [event kind](EventKind).
+    pub unsafe fn with_raw_unchecked(event: input_event) -> Self {
+        unsafe {
+            transmute(event)
+        }
+    }
+
+    /// Reinterpret this event as an array of bytes.
+    pub fn into_bytes(self) -> [u8; size_of::<InputEvent>()] {
+        unsafe {
+            transmute(self)
+        }
+    }
+
+    /// Reinterpret this event as a byte slice.
+    pub fn as_bytes(&self) -> &[u8; size_of::<InputEvent>()] {
+        unsafe {
+            transmute(self)
+        }
+    }
+
+    /// Reinterpret this event as a mutable byte slice.
+    pub unsafe fn as_bytes_mut(&mut self) -> &mut [u8; size_of::<InputEvent>()] {
+        transmute(self)
+    }
+}
+
+#[test]
+fn input_event_zeroed() {
+    use core::mem::MaybeUninit;
+
+    let event = InputEvent::zeroed().into_raw();
+    let zeroed: input_event = unsafe { MaybeUninit::zeroed().assume_init() };
+    assert_eq!(event, zeroed);
 }
 
 impl SynchronizeEvent {
@@ -193,6 +244,19 @@ macro_rules! event_impl {
             fn time(&self) -> &EventTime { &self.time }
             fn code(&self) -> u16 { self.$code as _ }
             fn value(&self) -> i32 { self.value.into() }
+
+            fn with_event(event: InputEvent) -> Result<Self, RangeError> {
+                $codekind::from_code(event.code)
+                    .and_then(move |_| if event.kind == $kind {
+                        Ok(unsafe { Self::with_event_unchecked(event) })
+                    } else {
+                        Err(Default::default())
+                    })
+            }
+
+            unsafe fn with_event_unchecked(event: InputEvent) -> Self {
+                transmute(event)
+            }
 
             fn from_ref(event: &InputEvent) -> Result<&Self, RangeError> {
                 $codekind::from_code(event.code)
@@ -274,26 +338,32 @@ macro_rules! event_impl {
 
             /// Reinterpret a generic event without checking for validity.
             pub unsafe fn from_event<E: AsRef<input_event>>(event: &E) -> &Self {
-                let raw = event.as_ref() as *const _ as *const _;
-                &*raw
+                let raw = event.as_ref();
+                transmute(raw)
             }
 
             /// Reinterpret a mutable generic event without checking for validity.
             pub unsafe fn from_event_mut(event: &mut InputEvent) -> &mut Self {
-                let raw = event as *mut _ as *mut _;
-                &mut *raw
+                transmute(event)
+            }
+
+            /// A generic input event.
+            pub fn into_event(self) -> InputEvent {
+                unsafe {
+                    transmute(self)
+                }
             }
 
             /// A generic input event reference.
             pub fn as_event(&self) -> &InputEvent {
-                let raw = self as *const _ as *const _;
-                unsafe { &*raw }
+                unsafe {
+                    transmute(self)
+                }
             }
 
             /// A mutable generic input event reference.
             pub unsafe fn as_event_mut(&mut self) -> &mut InputEvent {
-                let raw = self as *mut _ as *mut _;
-                &mut *raw
+                transmute(self)
             }
         }
     };
@@ -329,6 +399,27 @@ pub trait GenericEvent: AsRef<InputEvent> + AsRef<input_event> {
     /// The value associated with the event.
     fn value(&self) -> i32;
 
+    /// Interprets a generic event into a concrete event type.
+    fn with_event(event: InputEvent) -> Result<Self, RangeError> where
+        Self: Clone,
+    {
+        Self::from_ref(&event).cloned()
+    }
+
+    /// Interprets a generic event into a concrete event type.
+    ///
+    /// # Safety
+    ///
+    /// The event must match `Self`'s [event kind](Self::event_kind) and have a valid [code](Self::code).
+    unsafe fn with_event_unchecked(event: InputEvent) -> Self where
+        Self: Clone,
+    {
+        match Self::from_ref(&event) {
+            Ok(event) => event.clone(),
+            Err(..) => unreachable_unchecked(),
+        }
+    }
+
     /// Interprets a generic event reference into a concrete event type.
     fn from_ref(event: &InputEvent) -> Result<&Self, RangeError>;
     /// Interprets a mutable generic event reference into a concrete event type.
@@ -362,6 +453,14 @@ impl GenericEvent for InputEvent {
     fn from_mut(event: &mut InputEvent) -> Result<&mut Self, RangeError> {
         Ok(event)
     }
+
+    fn with_event(event: InputEvent) -> Result<Self, RangeError> {
+        Ok(event)
+    }
+
+    unsafe fn with_event_unchecked(event: InputEvent) -> Self {
+        event
+    }
 }
 
 impl AsRef<InputEvent> for InputEvent {
@@ -371,32 +470,91 @@ impl AsRef<InputEvent> for InputEvent {
 }
 
 impl InputEvent {
-    /// Reinterprets a raw [`input_event`].
+    /// Reinterprets a raw [`input_event`] reference.
     pub fn from_raw(event: &input_event) -> Result<&Self, RangeError> {
-        EventKind::from_type(event.type_).map(|_| {
-            let raw = event as *const _ as *const _;
-            unsafe { &*raw }
+        EventKind::from_type(event.type_).map(|_| unsafe {
+            Self::from_raw_unchecked(event)
         })
+    }
+
+    /// Reinterprets a raw [`input_event`] reference.
+    ///
+    /// # Safety
+    ///
+    /// The input event must have a valid [event kind](EventKind).
+    pub unsafe fn from_raw_unchecked(event: &input_event) -> &Self {
+        transmute(event)
     }
 
     /// Reinterprets a raw [`input_event`] into a mutable reference.
     pub fn from_raw_mut(event: &mut input_event) -> Result<&mut Self, RangeError> {
-        EventKind::from_type(event.type_).map(|_| {
-            let raw = event as *mut _ as *mut _;
-            unsafe { &mut *raw }
+        EventKind::from_type(event.type_).map(move |_| unsafe {
+            Self::from_raw_mut_unchecked(event)
         })
     }
 
+    /// Reinterprets a raw [`input_event`] into a mutable reference.
+    ///
+    /// # Safety
+    ///
+    /// The input event must have a valid [event kind](EventKind).
+    pub unsafe fn from_raw_mut_unchecked(event: &mut input_event) -> &mut Self {
+        transmute(event)
+    }
+
     /// Reinterprets the event as a raw [`input_event`].
+    pub fn into_raw(self) -> input_event {
+        unsafe {
+            transmute(self)
+        }
+    }
+
+    /// Reinterprets the event as a raw [`input_event`] reference.
     pub fn as_raw(&self) -> &input_event {
-        let raw = self as *const _ as *const _;
-        unsafe { &*raw }
+        unsafe {
+            transmute(self)
+        }
     }
 
     /// Reinterprets the event as a mutable raw [`input_event`].
     pub unsafe fn as_raw_mut(&mut self) -> &mut input_event {
-        let raw = self as *mut _ as *mut _;
-        &mut *raw
+        transmute(self)
+    }
+}
+
+impl From<InputEvent> for input_event {
+    fn from(event: InputEvent) -> Self {
+        event.into_raw()
+    }
+}
+
+impl<'a> From<&'a InputEvent> for &'a input_event {
+    fn from(event: &'a InputEvent) -> Self {
+        event.as_raw()
+    }
+}
+
+impl TryFrom<input_event> for InputEvent {
+    type Error = RangeError;
+
+    fn try_from(event: input_event) -> Result<Self, Self::Error> {
+        InputEvent::with_raw(event)
+    }
+}
+
+impl<'a> TryFrom<&'a input_event> for &'a InputEvent {
+    type Error = RangeError;
+
+    fn try_from(event: &'a input_event) -> Result<Self, Self::Error> {
+        InputEvent::from_raw(event)
+    }
+}
+
+impl<'a> TryFrom<&'a mut input_event> for &'a mut InputEvent {
+    type Error = RangeError;
+
+    fn try_from(event: &'a mut input_event) -> Result<Self, Self::Error> {
+        InputEvent::from_raw_mut(event)
     }
 }
 
@@ -441,7 +599,7 @@ macro_rules! input_event_enum {
             pub fn new(event: InputEvent) -> Result<Self, RangeError> {
                 match event.kind {
                 $(
-                    EventKind::$variant => $ty::from_ref(&event).map(Clone::clone).map(Event::$variant),
+                    EventKind::$variant => $ty::with_event(event).map(Event::$variant),
                 )*
                     _ => Ok(Event::Unknown(event)),
                 }
