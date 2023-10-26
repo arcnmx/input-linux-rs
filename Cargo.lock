@@ -89,6 +89,7 @@ version = "0.6.0"
 dependencies = [
  "bytes",
  "input-linux-sys",
+ "libc",
  "nix",
  "serde",
  "tokio-util 0.6.10",

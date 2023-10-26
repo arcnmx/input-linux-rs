@@ -1,14 +1,15 @@
 //! An interface to the Linux kernel's event devices (`/dev/input/*`).
 
 use std::{io, fs};
-use std::mem::{MaybeUninit, size_of};
+use std::mem::{MaybeUninit, size_of, transmute};
 use std::slice::from_raw_parts_mut;
 use std::os::unix::io::{RawFd, AsRawFd, IntoRawFd, FromRawFd};
 use nix;
 use crate::sys;
 use crate::{
     AbsoluteAxis, AbsoluteInfo, AutorepeatKind, EventKind, InputId,
-    InputProperty, Key, LedKind, MiscKind, RelativeAxis, SoundKind, SwitchKind
+    InputProperty, Key, LedKind, MiscKind, RelativeAxis, SoundKind, SwitchKind,
+    InputEvent,
 };
 use crate::macros::convert_error;
 use crate::bitmask::Bitmask;
@@ -76,6 +77,42 @@ impl<F: AsRawFd> EvdevHandle<F> {
         let events = unsafe { from_raw_parts_mut(events.as_mut_ptr() as *mut u8, size_of::<sys::input_event>() * events.len()) };
         nix::unistd::read(self.fd(), events)
             .map(|len| len / size_of::<sys::input_event>()).map_err(convert_error)
+    }
+
+    /// Read events from the input device
+    pub fn read_input_events(&self, events: &mut [MaybeUninit<InputEvent>]) -> io::Result<&mut [InputEvent]> {
+        unsafe {
+            let res = libc::read(self.fd(), events.as_mut_ptr() as *mut _, events.len() * size_of::<InputEvent>());
+            sys::Errno::result(res)
+                .map_err(convert_error)
+                .and_then(|len| {
+                    let count = len as usize / size_of::<InputEvent>();
+                    let events = &mut events[..count];
+                    for event in events.iter() {
+                        let event = event.as_ptr() as *const sys::input_event;
+                        let _ = InputEvent::from_raw(&*event)?;
+                    }
+                    Ok(transmute(events))
+                })
+        }
+    }
+
+    /// Read a single event from the input device
+    pub fn read_input_event(&self) -> io::Result<InputEvent> {
+        let mut events = [MaybeUninit::<InputEvent>::uninit()];
+        self.read_input_events(&mut events)
+            .and_then(|read| match read.is_empty() {
+                true => Err(io::Error::new(io::ErrorKind::UnexpectedEof, "empty evdev read")),
+                false => Ok(unsafe {
+                    events[0].assume_init()
+                }),
+            })
+    }
+
+    /// Read a single event from the input device
+    pub fn read_event(&self) -> io::Result<crate::Event> {
+        self.read_input_event()
+            .map(From::from)
     }
 
     /// Write events to the input device
