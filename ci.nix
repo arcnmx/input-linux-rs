@@ -1,16 +1,17 @@
-{ config, channels, pkgs, lib, ... }: with pkgs; with lib; let
-  input-linux = import ./. { inherit pkgs; };
+{ config, pkgs, env, lib, ... }: with pkgs; with lib; let
+  input-linux = import ./. { pkgs = null; };
   inherit (input-linux) checks;
 in {
   config = {
     name = "input-linux";
+    ci.version = "v0.6";
     ci.gh-actions.enable = true;
     cache.cachix = {
       ci.signingKey = "";
       arc.enable = true;
     };
     channels = {
-      nixpkgs = "stable";
+      nixpkgs = mkIf (env.platform != "impure") "stable";
     };
     tasks = {
       test.inputs = singleton (checks.test.override {

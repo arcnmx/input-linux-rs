@@ -33,13 +33,13 @@
       };
       default = { outputs'devShells }: outputs'devShells.plain;
     };
-    legacyPackages = { callPackageSet }: callPackageSet {
+    legacyPackages = {
       source = { rust'builders }: rust'builders.wrapSource self.lib.crate.src;
 
       outputHashes = { rust'builders }: rust'builders.cargoOutputHashes {
         inherit (self.lib) crate;
       };
-    } { };
+    };
     checks = {
       version = { rust'builders, source }: rust'builders.check-contents {
         src = source;
