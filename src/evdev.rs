@@ -11,6 +11,7 @@ use crate::{
     AbsoluteAxis, AbsoluteInfo, AutorepeatKind, EventKind, InputId,
     InputProperty, Key, LedKind, MiscKind, RelativeAxis, SoundKind, SwitchKind,
     ForceFeedbackKind, ForceFeedbackStatusKind,
+    InputEvent,
 };
 use crate::macros::convert_error;
 use crate::bitmask::Bitmask;
@@ -85,7 +86,45 @@ impl<F: AsRawFd> EvdevHandle<F> {
     pub fn read(&self, events: &mut [sys::input_event]) -> io::Result<usize> {
         let events = unsafe { from_raw_parts_mut(events.as_mut_ptr() as *mut u8, size_of::<sys::input_event>() * events.len()) };
         nix::unistd::read(self.fd(), events)
-            .map(|len| len / size_of::<sys::input_event>()).map_err(convert_error)
+            .map(|len| len / size_of::<sys::input_event>())
+            .map_err(convert_error)
+    }
+
+    /// Read events from the input device
+    pub fn read_input_events<'e>(&self, events: &'e mut [MaybeUninit<InputEvent>]) -> io::Result<&'e mut [InputEvent]> {
+        let res = {
+            let events = unsafe { from_raw_parts_mut(events.as_mut_ptr() as *mut sys::input_event, events.len()) };
+            self.read(events)
+        };
+        res.and_then(|count| {
+            let events = &mut events[..count];
+            for event in events.iter() {
+                let event = event.as_ptr() as *const sys::input_event;
+                let _ = InputEvent::from_raw(unsafe { &*event })?;
+            }
+            Ok(unsafe {
+                from_raw_parts_mut(events.as_mut_ptr() as *mut InputEvent, events.len())
+            })
+        })
+    }
+
+    /// Read a single event from the input device
+    pub fn read_input_event(&self) -> io::Result<InputEvent> {
+        let mut events = [MaybeUninit::<InputEvent>::uninit()];
+        let res = self.read_input_events(&mut events)
+            .and_then(|read| match read.is_empty() {
+                true => Err(io::Error::new(io::ErrorKind::UnexpectedEof, "empty evdev read")),
+                false => Ok(()),
+            });
+        res.map(|()| unsafe {
+            events[0].assume_init()
+        })
+    }
+
+    /// Read a single event from the input device
+    pub fn read_event(&self) -> io::Result<crate::Event> {
+        self.read_input_event()
+            .map(From::from)
     }
 
     /// Write events to the input device
