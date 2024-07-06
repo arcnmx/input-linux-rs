@@ -8,7 +8,8 @@ use nix;
 use crate::sys;
 use crate::{
     AbsoluteAxis, AbsoluteInfo, AutorepeatKind, EventKind, InputId,
-    InputProperty, Key, LedKind, MiscKind, RelativeAxis, SoundKind, SwitchKind
+    InputProperty, Key, LedKind, MiscKind, RelativeAxis, SoundKind, SwitchKind,
+    ForceFeedbackKind,
 };
 use crate::macros::convert_error;
 use crate::bitmask::Bitmask;
@@ -235,6 +236,11 @@ impl<F: AsRawFd> EvdevHandle<F> {
     impl_bitmasks! { AutorepeatKind, EventKind::Autorepeat,
         autorepeat_mask, set_autorepeat_mask,
         autorepeat_bits
+    }
+
+    impl_bitmasks! { ForceFeedbackKind, EventKind::ForceFeedback,
+        force_feedback_mask, set_force_feedback_mask,
+        force_feedback_bits
     }
 
     /// `EVIOCGMASK`
