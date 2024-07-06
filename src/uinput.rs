@@ -224,7 +224,7 @@ impl<F: AsRawFd> UInputHandle<F> {
         }
         {
             /// `UI_SET_FFBIT`
-            @set set_ffbit(i32) = ui_set_ffbit
+            @set set_ffbit(kinds::ForceFeedbackKind) = ui_set_ffbit
         }
         {
             /// `UI_SET_PHYS`

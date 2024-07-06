@@ -97,9 +97,8 @@ dependencies = [
 
 [[package]]
 name = "input-linux-sys"
-version = "0.8.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1a687a25a4973027df9153753a5589f97fe1e958f694a34eea5606ae65299ab8"
+version = "0.9.0"
+source = "git+https://github.com/WhatAmISupposedToPutHere/input-linux-sys-rs#ca9915bb2cb8c712b9caa5e4d49be414cf576083"
 dependencies = [
  "libc",
  "nix",
