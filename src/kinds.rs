@@ -500,6 +500,36 @@ pub enum ForceFeedbackKind {
     Unknown5F,
     Gain = sys::FF_GAIN as _,
     Autocenter = sys::FF_AUTOCENTER as _,
+    Unknown62,
+    Unknown63,
+    Unknown64,
+    Unknown65,
+    Unknown66,
+    Unknown67,
+    Unknown68,
+    Unknown69,
+    Unknown6A,
+    Unknown6B,
+    Unknown6C,
+    Unknown6D,
+    Unknown6E,
+    Unknown6F,
+    Unknown70,
+    Unknown71,
+    Unknown72,
+    Unknown73,
+    Unknown74,
+    Unknown75,
+    Unknown76,
+    Unknown77,
+    Unknown78,
+    Unknown79,
+    Unknown7A,
+    Unknown7B,
+    Unknown7C,
+    Unknown7D,
+    Unknown7E,
+    Unknown7F,
 }
 
 impl_iterable! { InputProperty(0, sys::INPUT_PROP_CNT) }
@@ -635,4 +665,4 @@ impl_iterable! { AutorepeatKind(0, sys::REP_CNT) }
 
 impl_iterable! { SoundKind(0, sys::SND_CNT) }
 
-impl_iterable! { ForceFeedbackKind(0, sys::FF_AUTOCENTER + 1) }
+impl_iterable! { ForceFeedbackKind(0, sys::FF_CNT) }
