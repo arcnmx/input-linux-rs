@@ -557,6 +557,7 @@ impl EventKind {
             EventKind::Led => Ok(LedKind::COUNT),
             EventKind::Sound => Ok(SoundKind::COUNT),
             EventKind::Autorepeat => Ok(AutorepeatKind::COUNT),
+            EventKind::ForceFeedback => Ok(ForceFeedbackKind::COUNT),
             EventKind::UInput => Ok(UInputKind::COUNT),
             _ => Err(()),
         }
