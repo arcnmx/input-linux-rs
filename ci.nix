@@ -4,7 +4,7 @@
 in {
   config = {
     name = "input-linux";
-    ci.version = "v0.6";
+    ci.version = "v0.7";
     ci.gh-actions.enable = true;
     cache.cachix = {
       ci.signingKey = "";
