@@ -532,6 +532,16 @@ pub enum ForceFeedbackKind {
     Unknown7F,
 }
 
+/// Force feedback status events.
+#[repr(u16)]
+#[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
+#[allow(missing_docs)]
+pub enum ForceFeedbackStatusKind {
+    Stopped = sys::FF_STATUS_STOPPED as _,
+    Playing = sys::FF_STATUS_PLAYING as _,
+}
+
 impl_iterable! { InputProperty(0, sys::INPUT_PROP_CNT) }
 
 impl EventKind {
@@ -558,6 +568,7 @@ impl EventKind {
             EventKind::Sound => Ok(SoundKind::COUNT),
             EventKind::Autorepeat => Ok(AutorepeatKind::COUNT),
             EventKind::ForceFeedback => Ok(ForceFeedbackKind::COUNT),
+            EventKind::ForceFeedbackStatus => Ok(ForceFeedbackStatusKind::COUNT),
             EventKind::UInput => Ok(UInputKind::COUNT),
             _ => Err(()),
         }
@@ -667,3 +678,5 @@ impl_iterable! { AutorepeatKind(0, sys::REP_CNT) }
 impl_iterable! { SoundKind(0, sys::SND_CNT) }
 
 impl_iterable! { ForceFeedbackKind(0, sys::FF_CNT) }
+
+impl_iterable! { ForceFeedbackStatusKind(0, sys::FF_STATUS_MAX + 1) }

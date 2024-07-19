@@ -6,7 +6,7 @@ use crate::{
     EventTime, RangeError, KeyState,
     EventKind, SynchronizeKind, Key, RelativeAxis, AbsoluteAxis,
     SwitchKind, MiscKind, LedKind, AutorepeatKind, SoundKind, UInputKind,
-    ForceFeedbackKind,
+    ForceFeedbackKind, ForceFeedbackStatusKind,
 };
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
@@ -141,7 +141,7 @@ pub struct SoundEvent {
 #[repr(C)]
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
 #[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
-/// An event that indicates a force feedback effect.
+/// An event that configures a force feedback effect.
 pub struct ForceFeedbackEvent {
     /// The timestamp associated with the event.
     pub time: EventTime,
@@ -149,6 +149,20 @@ pub struct ForceFeedbackEvent {
     /// The force effect.
     pub kind: ForceFeedbackKind,
     /// The value or state associated with the effect.
+    pub value: i32,
+}
+
+#[repr(C)]
+#[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(feature = "serde", derive(Deserialize, Serialize))]
+/// An event that indicates the status of a force feedback effect.
+pub struct ForceFeedbackStatusEvent {
+    /// The timestamp associated with the event.
+    pub time: EventTime,
+    event: EventKind,
+    /// The kind of status update.
+    pub kind: ForceFeedbackStatusKind,
+    /// The value or state associated with the update.
     pub value: i32,
 }
 
@@ -452,6 +466,7 @@ event_impl! {
     struct AutorepeatEvent : EventKind::Autorepeat { kind: AutorepeatKind, value: i32 }
     struct SoundEvent : EventKind::Sound { sound: SoundKind, value: i32 }
     struct ForceFeedbackEvent : EventKind::ForceFeedback { kind: ForceFeedbackKind, value: i32 }
+    struct ForceFeedbackStatusEvent : EventKind::ForceFeedbackStatus { kind: ForceFeedbackStatusKind, value: i32 }
     struct UInputEvent : EventKind::UInput { code: UInputKind, value: i32 }
     struct InputEvent : Unknown { code: u16, value: i32 }
 }
@@ -890,5 +905,6 @@ input_event_enum! {
     Autorepeat(AutorepeatEvent),
     Sound(SoundEvent),
     ForceFeedback(ForceFeedbackEvent),
+    ForceFeedbackStatus(ForceFeedbackStatusEvent),
     UInput(UInputEvent),
 }

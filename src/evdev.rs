@@ -10,7 +10,7 @@ use crate::sys;
 use crate::{
     AbsoluteAxis, AbsoluteInfo, AutorepeatKind, EventKind, InputId,
     InputProperty, Key, LedKind, MiscKind, RelativeAxis, SoundKind, SwitchKind,
-    ForceFeedbackKind,
+    ForceFeedbackKind, ForceFeedbackStatusKind,
 };
 use crate::macros::convert_error;
 use crate::bitmask::Bitmask;
@@ -250,6 +250,11 @@ impl<F: AsRawFd> EvdevHandle<F> {
     impl_bitmasks! { ForceFeedbackKind, EventKind::ForceFeedback,
         force_feedback_mask, set_force_feedback_mask,
         force_feedback_bits
+    }
+
+    impl_bitmasks! { ForceFeedbackStatusKind, EventKind::ForceFeedbackStatus,
+        force_feedback_status_mask, set_force_feedback_status_mask,
+        force_feedback_status_bits
     }
 
     /// `EVIOCGMASK`
