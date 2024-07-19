@@ -47,9 +47,9 @@ fn main() -> io::Result<()> {
     for _ in 0..50 {
         const ZERO: EventTime = EventTime::new(0, 0);
         let events = [
-            *InputEvent::from(RelativeEvent::new(ZERO, RelativeAxis::X, 5)).as_raw(),
-            *InputEvent::from(RelativeEvent::new(ZERO, RelativeAxis::Y, 5)).as_raw(),
-            *InputEvent::from(SynchronizeEvent::new(ZERO, SynchronizeKind::Report, 0)).as_raw(),
+            InputEvent::from(RelativeEvent::new(ZERO, RelativeAxis::X, 5)).into_raw(),
+            InputEvent::from(RelativeEvent::new(ZERO, RelativeAxis::Y, 5)).into_raw(),
+            InputEvent::from(SynchronizeEvent::new(ZERO, SynchronizeKind::Report, 0)).into_raw(),
         ];
         uhandle.write(&events)?;
         thread::sleep(Duration::from_micros(15_000));
