@@ -4,6 +4,7 @@ use std::{io, fs};
 use std::mem::{MaybeUninit, size_of};
 use std::slice::from_raw_parts_mut;
 use std::os::unix::io::{RawFd, AsRawFd, IntoRawFd, FromRawFd};
+use std::os::fd::{AsFd, BorrowedFd};
 use nix;
 use crate::sys;
 use crate::{
@@ -38,6 +39,14 @@ impl<F> EvdevHandle<F> {
     /// A mutable reference to the contained handle.
     pub fn as_inner_mut(&mut self) -> &mut F {
         &mut self.0
+    }
+}
+
+impl<F: AsRawFd> AsFd for EvdevHandle<F> {
+    fn as_fd<'a>(&'a self) -> BorrowedFd<'a> {
+        unsafe {
+            BorrowedFd::borrow_raw(self.fd())
+        }
     }
 }
 

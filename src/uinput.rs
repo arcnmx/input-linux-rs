@@ -4,6 +4,7 @@
 use std::{io, fs, ptr};
 use std::os::unix::io::{RawFd, AsRawFd, IntoRawFd, FromRawFd};
 use std::os::unix::ffi::OsStrExt;
+use std::os::fd::{AsFd, BorrowedFd};
 use std::os::raw::c_char;
 use std::mem::{MaybeUninit, size_of};
 use std::path::{Path, PathBuf};
@@ -12,7 +13,7 @@ use std::ffi::{OsStr, OsString, CStr};
 use crate::sys;
 use nix;
 use crate::{Key, InputId, AbsoluteInfoSetup, kinds};
-use crate::macros::{convert_error};
+use crate::macros::convert_error;
 
 pub use crate::sys::{UINPUT_MAX_NAME_SIZE, UINPUT_VERSION};
 
@@ -51,6 +52,14 @@ impl<F> UInputHandle<F> {
     /// A mutable reference to the contained handle.
     pub fn as_inner_mut(&mut self) -> &mut F {
         &mut self.0
+    }
+}
+
+impl<F: AsRawFd> AsFd for UInputHandle<F> {
+    fn as_fd<'a>(&'a self) -> BorrowedFd<'a> {
+        unsafe {
+            BorrowedFd::borrow_raw(self.fd())
+        }
     }
 }
 
