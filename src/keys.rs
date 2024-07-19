@@ -751,9 +751,11 @@ pub enum Key {
 
     /// Ambient light sensor
     AlsToggle = sys::KEY_ALS_TOGGLE as _,
+    /// Display rotation lock
     RotateLockToggle = sys::KEY_ROTATE_LOCK_TOGGLE as _,
+    /// Display refresh rate toggle
+    RefreshRateToggle = sys::KEY_REFRESH_RATE_TOGGLE as _,
 
-    Unknown232,
     Unknown233,
     Unknown234,
     Unknown235,
@@ -796,9 +798,10 @@ pub enum Key {
     CameraAccessDisable = sys::KEY_CAMERA_ACCESS_DISABLE as _,
     /// Toggles the current state of the camera access control. (HUTRR72)
     CameraAccessToggle = sys::KEY_CAMERA_ACCESS_TOGGLE as _,
-
-    Unknown24E,
-    Unknown24F,
+    /// Toggles the system bound accessibility UI/command (HUTRR116)
+    Accessibility = sys::KEY_ACCESSIBILITY as _,
+    /// Toggles the system-wide "Do Not Disturb" control (HUTRR94)
+    DoNotDisturb = sys::KEY_DO_NOT_DISTURB as _,
 
     /// Set Brightness to Minimum
     BrightnessMin = sys::KEY_BRIGHTNESS_MIN as _,

@@ -1,9 +1,10 @@
 //! An interface to the Linux kernel's event devices (`/dev/input/*`).
 
-use std::{io, fs};
+use std::io;
 use std::mem::{MaybeUninit, size_of};
 use std::slice::from_raw_parts_mut;
 use std::os::unix::io::{RawFd, AsRawFd, IntoRawFd, FromRawFd};
+use std::os::fd::{AsFd, BorrowedFd, OwnedFd};
 use nix;
 use crate::sys;
 use crate::{
@@ -41,6 +42,14 @@ impl<F> EvdevHandle<F> {
     }
 }
 
+impl<F: AsRawFd> AsFd for EvdevHandle<F> {
+    fn as_fd<'a>(&'a self) -> BorrowedFd<'a> {
+        unsafe {
+            BorrowedFd::borrow_raw(self.fd())
+        }
+    }
+}
+
 impl<F: AsRawFd> AsRawFd for EvdevHandle<F> {
     fn as_raw_fd(&self) -> RawFd {
         self.fd()
@@ -59,7 +68,7 @@ impl<F: FromRawFd> FromRawFd for EvdevHandle<F> {
     }
 }
 
-impl EvdevHandle<fs::File> {
+impl EvdevHandle<OwnedFd> {
     /// Create a new handle from a raw file descriptor.
     pub unsafe fn from_fd(fd: RawFd) -> Self {
         FromRawFd::from_raw_fd(fd)
@@ -82,7 +91,7 @@ impl<F: AsRawFd> EvdevHandle<F> {
     /// Write events to the input device
     pub fn write(&self, events: &[sys::input_event]) -> io::Result<usize> {
         let events = unsafe { from_raw_parts_mut(events.as_ptr() as *mut u8, size_of::<sys::input_event>() * events.len()) };
-        nix::unistd::write(self.fd(), events)
+        nix::unistd::write(self, events)
             .map(|len| len / size_of::<sys::input_event>()).map_err(convert_error)
     }
 

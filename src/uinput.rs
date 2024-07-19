@@ -4,6 +4,7 @@
 use std::{io, fs, ptr};
 use std::os::unix::io::{RawFd, AsRawFd, IntoRawFd, FromRawFd};
 use std::os::unix::ffi::OsStrExt;
+use std::os::fd::{AsFd, BorrowedFd, OwnedFd};
 use std::os::raw::c_char;
 use std::mem::{MaybeUninit, size_of};
 use std::path::{Path, PathBuf};
@@ -12,7 +13,7 @@ use std::ffi::{OsStr, OsString, CStr};
 use crate::sys;
 use nix;
 use crate::{Key, InputId, AbsoluteInfoSetup, kinds};
-use crate::macros::{convert_error};
+use crate::macros::convert_error;
 
 pub use crate::sys::{UINPUT_MAX_NAME_SIZE, UINPUT_VERSION};
 
@@ -54,6 +55,14 @@ impl<F> UInputHandle<F> {
     }
 }
 
+impl<F: AsRawFd> AsFd for UInputHandle<F> {
+    fn as_fd<'a>(&'a self) -> BorrowedFd<'a> {
+        unsafe {
+            BorrowedFd::borrow_raw(self.fd())
+        }
+    }
+}
+
 impl<F: IntoRawFd> IntoRawFd for UInputHandle<F> {
     fn into_raw_fd(self) -> RawFd {
         self.0.into_raw_fd()
@@ -66,7 +75,7 @@ impl<F: FromRawFd> FromRawFd for UInputHandle<F> {
     }
 }
 
-impl UInputHandle<fs::File> {
+impl UInputHandle<OwnedFd> {
     /// Create a new handle from a raw file descriptor.
     pub unsafe fn from_fd(fd: RawFd) -> Self {
         FromRawFd::from_raw_fd(fd)
@@ -101,7 +110,7 @@ impl<F: AsRawFd> UInputHandle<F> {
         }
 
         let setup = unsafe { from_raw_parts(&setup as *const _ as *const u8, size_of::<sys::uinput_user_dev>()) };
-        nix::unistd::write(self.fd(), setup).map_err(convert_error)?;
+        nix::unistd::write(self, setup).map_err(convert_error)?;
 
         self.dev_create()
     }
@@ -130,7 +139,7 @@ impl<F: AsRawFd> UInputHandle<F> {
     /// Write input events to the device
     pub fn write(&self, events: &[sys::input_event]) -> io::Result<usize> {
         let events = unsafe { from_raw_parts(events.as_ptr() as *const u8, size_of::<sys::input_event>() * events.len()) };
-        nix::unistd::write(self.fd(), events)
+        nix::unistd::write(self, events)
             .map(|c| c / size_of::<sys::input_event>()).map_err(convert_error)
     }
 
