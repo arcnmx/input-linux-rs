@@ -20,8 +20,8 @@ timeval
 #[serde(remote = "timeval")]
 #[allow(dead_code)]
 struct TimevalDef {
-    tv_sec: i64,
-    tv_usec: i64,
+    tv_sec: time_t,
+    tv_usec: suseconds_t,
 }
 
 impl EventTime {
